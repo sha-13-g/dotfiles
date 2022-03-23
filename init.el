@@ -1,4 +1,4 @@
- ;; -*- lexical-binding: t; -*-
+; -*- lexical-binding: t; -*-
 ;; (server-start)
 (setq-default tab-width 2)
 (setq-default evil-shift-width tab-width)
@@ -46,13 +46,15 @@
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (use-package doom-themes
-  :ensure t
+ :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-one t))
 
+;;(use-package app-launcher
+;;  :straight '(app-launcher :host github :repo "SebastienWae/app-launcher"))
 
 (use-package ivy
   :diminish
@@ -71,10 +73,6 @@
          ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1))
-
-;; (global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
-
-(define-key emacs-lisp-mode-map (kbd "C-x M-t") 'counsel-load-theme)
 
 (use-package doom-modeline
   :ensure t
@@ -97,7 +95,7 @@
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-         ("C-j" . counsel-ibuffer)
+         ("C-j" . persp-counsel-switch-buffer)
          ("C-x C-f" . counsel-find-file)
          :map minibuffer-local-map
          ("C-r" . counsel-minibuffer-history)))
@@ -123,10 +121,7 @@
     :global-prefix "C-SPC")
 
   (general-create-definer gbl/ctrl-c-keys
-    :prefix "C-c")
-  (gbl/leader-key
-  "t" '(:ignore t :which-key "toggles")
-  "tt" '(counsel-load-theme :which-key "Choose theme")))
+    :prefix "C-c"))
 
 
 (defun glb/evil-hook ()
@@ -152,7 +147,6 @@
   :config
 ;;  (add-hook 'evil-mode-hook 'dw/evil-hook)
   (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-normal-state-map (kbd "C-p") 'package-install)
   (define-key evil-visual-state-map (kbd "C-g") 'evil-normal-state)
   
@@ -162,23 +156,6 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
-
-(gbl/leader-key
-  "w" '(:ignore t :which-key "windows")
-  "wc" '(evil-window-delete :which-key "delete current window")
-  "wh" 'evil-window-left
-  "wj" 'evil-window-down
-  "wk" 'evil-window-up
-  "wl" 'evil-window-right
-
-  "wH" 'evil-window-move-far-left
-  "wJ" 'evil-window-move-very-bottom
-  "wK" 'evil-window-move-very-top
-  "wL" 'evil-window-move-far-right
-
-  "wv" 'evil-window-vsplit
-  "ws" 'evil-window-split
-  "wc" 'evil-window-delete)
 
 (use-package evil-collection
   :ensure t
@@ -194,6 +171,31 @@
 
 
 (use-package hydra)
+(defhydra hydra-window-management (:timeout 4)
+  "window management"
+  ("c" evil-window-delete "d-c-w" )
+  ("o" delete-other-windows "d-o-w")
+  ("Q" evil-quit "Quit Emacs")
+  
+  ("h" evil-window-left "m-l")
+  ("j" evil-window-down "m-d")
+  ("k" evil-window-up "m-u")
+  ("l" evil-window-right "m-r")
+
+  ("H" evil-window-move-far-left "m-w-l")
+  ("J" evil-window-move-very-bottom "m-w-d")
+  ("K" evil-window-move-very-top "m-w-u")
+  ("L" evil-window-move-far-right "m-w-r")
+
+  ("[" evil-window-increase-height "sz-w-up")
+  ("]" evil-window-decrease-height "sz-w-up")
+  (">" evil-window-increase-width "sz-w-up")
+  ("<" evil-window-decrease-width "sz-w-up")
+
+  ("v" evil-window-vsplit "v-s")
+  ("s" evil-window-split "h-s")
+  ("q" nil  "quit" :exit t))
+ 
 (defhydra hydra-text-scale (:timeout 4)
   "Scale text"
   ("k" text-scale-increase "in")
@@ -202,7 +204,10 @@
   ("q" nil  "quit" :exit t))
 
 (gbl/leader-key
-  "ts" '(hydra-text-scale/body :which-key "scale text"))
+  "t" '(:ignore t :which-key "toggles")
+  "ts" '(hydra-text-scale/body :which-key "scale text")
+  "tt" '(counsel-load-theme :which-key "Choose theme")
+  "w" '(hydra-window-management/body :which-key "windows"))
 
 (use-package projectile
   :diminish projectile-mode
@@ -239,6 +244,32 @@
   (aw-minibuffer-flag t)
   :config
   (ace-window-display-mode 1))
+
+(use-package paren
+  :ensure t
+  :config
+  (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
+  (show-paren-mode 1))
+
+
+;; Set default connection mode to SSH
+(setq tramp-default-method "ssh")
+
+;; Use nerd-commenter for comment
+(use-package evil-nerd-commenter
+  :bind ("M-/" . evilnc-comment-or-uncomment-lines)) 
+
+(use-package perspective
+  :demand t
+  :bind (("C-k" . persp-switch)
+         ("C-[" . persp-next)
+         ("C-x k" . persp-kill-buffer*))
+  :custom
+  (persp-initial-frame-name "Main")
+  :config
+  ;; Running `persp-mode' multiple times resets the perspective list...
+  (unless (equal persp-mode t)
+    (persp-mode)))
 
 ;; (setq large-file-warning-threshold nil)
 ;; (setq ad-redefinition-action 'accept)
@@ -292,99 +323,10 @@
 ;;   (unicode-fonts-setup))
 
 
-;; (require 'use-package)
-
-;; ;; Uncomment this to get a reading on packages that get loaded at startup
-;; ;;(setq use-package-verbose t)
-
-;; ;; On non-Guix systems, "ensure" packages by default
-;; ;;(setq use-package-always-ensure)
-
-;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-;; (global-set-key (kbd "C-M-u") 'universal-argument)
-
-
-
 ;; (use-package minions
 ;;   :hook (doom-modeline-mode . minions-mode))
 
 
-;;   ;; Enable flashing mode-line on errors
-;;   (doom-themes-visual-bell-config)
-;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
-;;   (doom-themes-treemacs-config)
-;;   ;; Corrects (and improves) org-mode's native fontification.
-;;   (doom-themes-org-config))
-;; (set-default-coding-systems 'utf-8)
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(vertico-current ((t (:background "#3a3f5a")))))
-;; (use-package emojify
-;;   :hook (erc-mode . emojify-mode)
-;;   :commands emojify-mode)
-
-;; (setq display-time-format "%l:%M %p %b %y"
-;;       display-time-default-load-average nil)
-;; (use-package diminish)
-
-;; ;; (use-package perspective
-;; ;;   :demand t
-;; ;;   :bind (("C-M-k" . persp-switch)
-;; ;;          ("C-M-n" . persp-next)
-;; ;;          ("C-x k" . persp-kill-buffer*))
-;; ;;   :custom
-;; ;;   (persp-initial-frame-name "Main")
-;; ;;   :config
-;; ;;   ;; Running `persp-mode' multiple times resets the perspective list...
-;; ;;   (unless (equal persp-mode t)
-;; ;;     (persp-mode)))
-
-;; (add-hook 'kill-emacs-hook #'persp-state-save)
-
-;; (gbl/leader-key 'normal
-;; 		"pi" 'package-install
-;; 		"ww"  '(evil-save t)'
-;; 		"wq"  'evil-save-and-close
-;;     "j"   '(:ignore t :which-key "jump")
-;;     "jj"  '(avy-goto-char :which-key "jump to char")
-;;     "jw"  '(avy-goto-word-0 :which-key "jump to word")
-;;     "jl"  '(avy-goto-line :which-key "jump to line"))
-;; 		"t"  '(:ignore t :which-key "toggles")
-;; 		"tw" 'whitespace-mode
-;;     "tp" 'parinfer-toggle-mode
-;; 		"tt" '(load-theme :which-key "choose theme")
-;;     ;; "fn" '((lambda () (interactive) (counsel-find-file "~/Notes/")) :which-key "notes")
-;;     ;; "fd"  '(:ignore t :which-key "dotfiles")
-;;     ;; "ff" '((lambda () (interactive) (find-file)  :which-key "find file")
-;;     ;; "fdd" '((lambda () (interactive) (find-file "~/.dotfiles/Desktop.org")) :which-key "desktop")
-;;     ;; "fde" '((lambda () (interactive) (find-file (expand-file-name "~/.dotfiles/Emacs.org"))) :which-key "edit config")
-;;     ;; "fdE" '((lambda () (interactive) (dw/org-file-show-headings "~/.dotfiles/Emacs.org")) :which-key "edit config")
-;;     ;; "fdm" '((lambda () (interactive) (find-file "~/.dotfiles/Mail.org")) :which-key "mail")
-;;     ;; "fdM" '((lambda () (interactive) (counsel-find-file "~/.dotfiles/.config/guix/manifests/")) :which-key "manifests")
-;;     ;; "fds" '((lambda () (interactive) (dw/org-file-jump-to-heading "~/.dotfiles/Systems.org" "Base Configuration")) :which-key "base system")
-;;     ;; "fdS" '((lambda () (interactive) (dw/org-file-jump-to-heading "~/.dotfiles/Systems.org" system-name)) :which-key "this system")
-;;     ;; "fdp" '((lambda () (interactive) (dw/org-file-jump-to-heading "~/.dotfiles/Desktop.org" "Panel via Polybar")) :which-key "polybar")
-;;     ;; "fdw" '((lambda () (interactive) (find-file (expand-file-name "~/.dotfiles/Workflow.org"))) :which-key "workflow")
-;;     ;; "fdv" '((lambda () (interactive) (find-file "~/.dotfiles/.config/vimb/config")) :which-key "vimb")
-
-;; (use-package paren
-;;   :ensure t
-;;   :config
-;;   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
-;;   (show-paren-mode 1))
-
-;; ;; (unless (or dw/is-termux
-;; ;;            (eq system-type 'windows-nt))
-;; (setq epa-pinentry-mode 'loopback)
-;; (pinentry-start)
-
-;; ;; Set default connection mode to SSH
-;; (setq tramp-default-method "ssh")
- (use-package evil-nerd-commenter
-   :bind ("M-/" . evilnc-comment-or-uncomment-lines)) 
 
 ;; (use-package ws-butler
 ;;   :hook ((text-mode . ws-butler-mode)
@@ -534,56 +476,3 @@
 ;;   :defer 1
 ;;   :config
 ;;   (default-text-scale-mode))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
- '(custom-safe-themes
-   '("234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" default))
- '(exwm-floating-border-color "#242530")
- '(fci-rule-color "#6272a4")
- '(highlight-tail-colors
-   ((("#2c3e3c" "#2a3b2e" "green")
-     . 0)
-    (("#313d49" "#2f3a3b" "brightcyan")
-     . 20)))
- '(jdee-db-active-breakpoint-face-colors (cons "#1E2029" "#bd93f9"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1E2029" "#50fa7b"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
- '(objed-cursor-color "#ff5555")
- '(package-selected-packages
-   '(exwm-firefox-evil org-evil evil-magit ripgrep counsel-projectile magit projectile dashboard rainbow-mode rainbow-delimiters ws-butler which-key vertico use-package pinentry perspective paren-completer origami-predef minions general exwm evil-nerd-commenter evil-collection emojify elm-mode doom-themes doom-modeline diminish counsel consult-dir bufler ace-window))
- '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
- '(rustic-ansi-faces
-   ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
- '(vc-annotate-background "#282a36")
- '(vc-annotate-color-map
-   (list
-    (cons 20 "#50fa7b")
-    (cons 40 "#85fa80")
-    (cons 60 "#bbf986")
-    (cons 80 "#f1fa8c")
-    (cons 100 "#f5e381")
-    (cons 120 "#face76")
-    (cons 140 "#ffb86c")
-    (cons 160 "#ffa38a")
-    (cons 180 "#ff8ea8")
-    (cons 200 "#ff79c6")
-    (cons 220 "#ff6da0")
-    (cons 240 "#ff617a")
-    (cons 260 "#ff5555")
-    (cons 280 "#d45558")
-    (cons 300 "#aa565a")
-    (cons 320 "#80565d")
-    (cons 340 "#6272a4")
-    (cons 360 "#6272a4")))
- '(vc-annotate-very-old-color nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
