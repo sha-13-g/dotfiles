@@ -1,5 +1,5 @@
  ;; -*- lexical-binding: t; -*-
-(server-start)
+;; (server-start)
 (setq-default tab-width 2)
 (setq-default evil-shift-width tab-width)
 
@@ -97,7 +97,7 @@
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
+         ("C-j" . counsel-ibuffer)
          ("C-x C-f" . counsel-find-file)
          :map minibuffer-local-map
          ("C-r" . counsel-minibuffer-history)))
@@ -162,6 +162,23 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
+
+(gbl/leader-key
+  "w" '(:ignore t :which-key "windows")
+  "wc" '(evil-window-delete :which-key "delete current window")
+  "wh" 'evil-window-left
+  "wj" 'evil-window-down
+  "wk" 'evil-window-up
+  "wl" 'evil-window-right
+
+  "wH" 'evil-window-move-far-left
+  "wJ" 'evil-window-move-very-bottom
+  "wK" 'evil-window-move-very-top
+  "wL" 'evil-window-move-far-right
+
+  "wv" 'evil-window-vsplit
+  "ws" 'evil-window-split
+  "wc" 'evil-window-delete)
 
 (use-package evil-collection
   :ensure t
