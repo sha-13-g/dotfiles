@@ -1,5 +1,6 @@
 #! /bin/sh
 
-picom -b 
 
+nitrogen --restore
+picom &
 exec dbus-launch --exit-with-session emacs -mm --debug-init
