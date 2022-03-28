@@ -2,7 +2,12 @@
 (defvar gbl/default-font-size 90)
 (defvar gbl/default-variable-font-size 90)
 ;; Make frame transparency overridable
+
 (defvar gbl/frame-transparency '(90 . 90))
+;;(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+;;(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+;;(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
@@ -117,8 +122,8 @@
   (general-evil-setup t)
   (general-create-definer gbl/leader-keys
     :keymaps '(normal insert visual emacs)
-    :prefix ";"
-    :global-prefix "C-;")
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
   (gbl/leader-keys
     "t"  '(:ignore t :which-key "Toggles")
@@ -139,7 +144,8 @@
     "oc"  '(org-capture t :which-key "Capture")
     "ox"  '(org-export-dispatch t :which-key "Export")
     "w"   '(evil-window-map t :which-key "Window")
-    "q"   '(evil-quit  t :which-key "Quit"))
+    "q"   '(delete-window  t :which-key "Quit")
+    "Q"   '(save-buffers-kill-terminal  t :which-key "Quit"))
 
 ;; (general-define-key
 ;;  "C-=" 'text-scale-increase
@@ -304,7 +310,7 @@
   :diminish which-key-mode
   :config
   (which-key-mode)
-  (setq which-key-idle-delay 0))
+  (setq which-key-idle-delay 0.5))
 
 (use-package ivy
   :diminish
@@ -917,13 +923,13 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   (ido-mode 1)
   (add-hook 'exwm-init-hook #'exwm-config--fix/ido-buffer-window-other-frame))
 
-;; (defun gbl/run-in-bg (command)
-;;   (let ((command-parts (split-string command "[ ]+")))
-;;     apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr  command-parts))))
+(defun gbl/run-in-bg (command)
+  (let ((command-parts (split-string command "[ ]+")))
+    apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr  command-parts))))
 
 ;; (defun exwm-init-hook
-;;     (exwm-workspace-switch-create 1)
-;;   (gbl/run-in-bg "nm-applet"))
+;;       (exwm-workspace-switch-create 1))
+;;   ;; (gbl/run-in-bg "nm-applet"))
 
 (use-package exwm
   :config
