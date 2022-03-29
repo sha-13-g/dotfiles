@@ -1,9 +1,12 @@
-; You will most likely need to adjust this font size for your system!
+; you will most likely need to adjust this font size for your system!
 (defvar gbl/default-font-size 90)
 (defvar gbl/default-variable-font-size 90)
 ;; Make frame transparency overridable
 
-(defvar gbl/frame-transparency '(90 . 90))
+(auto-complete-mode)
+
+(defvar gbl/frame-transparency '(60 . 90))
+(defvar gbl/frame-transparency-beta '(80 . 90))           
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 ;;(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
@@ -53,6 +56,12 @@
 ;(setq user-emacs-directory "~/.cache/emacs")
 
 (use-package no-littering)
+
+(add-to-list 'load-path "~/.emacs.d/autopair/") ;; comment if autopair.el is in standard load path 
+
+(require 'autopair)
+
+(autopair-global-mode)
 
 ;; no-littering doesn't set this by default so we must place
 ;; auto save files in the same path as it uses for sessions
@@ -145,8 +154,9 @@
     "ox"  '(org-export-dispatch t :which-key "Export")
     "w"   '(evil-window-map t :which-key "Window")
     "q"   '(delete-window  t :which-key "Quit")
-    "Q"   '(save-buffers-kill-terminal  t :which-key "Quit"))
-
+    "C"   '(delete-frame  t :which-key "Quit Frame")
+    "Q"   '(save-buffers-kill-terminal  t :which-key "Quit Emacs")
+    ","   '(counsel-switch-buffer :which-key "switch buffer"))
 ;; (general-define-key
 ;;  "C-=" 'text-scale-increase
 ;;  "C--" 'text-scale-decrease
@@ -297,13 +307,13 @@
   :commands command-log-mode)
 
 (use-package doom-themes
-  :init (load-theme 'doom-palenight t))
+  :init (load-theme 'doom-solarized-dark t))
 
 (use-package all-the-icons)
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 20)))
+  :custom ((doom-modeline-height 35)))
 
 (use-package which-key
   :defer 0
@@ -315,8 +325,8 @@
 (use-package ivy
   :diminish
   :bind (("C-/" . swiper)
+         ("C-\\" . swiper-thing-at-point)
          :map ivy-minibuffer-map
-         ("tab" . ivy-alt-done)
          ("C-l" . ivy-alt-done)
          ("C-j" . ivy-next-line)
          ("C-k" . ivy-previous-line)
@@ -807,9 +817,10 @@
   :init
   (setq ivy-posframe-display-functions-alist
     '((swiper                     . ivy-posframe-display-at-frame-bottom-center)
+      (which-key                  . ivy-posframe-display-at-frame-bottom-center)
       (complete-symbol            . ivy-posframe-display-at-point)
-      (counsel-M-x                . ivy-posframe-display-at-window-center)
-      (counsel-esh-history        . ivy-posframe-display-at-window-center)
+      (counsel-M-x                . ivy-posframe-display-at-frame-bottom-center)
+      (counsel-esh-history        . ivy-posframe-display-at-frame-bottom-center)
       (counsel-describe-function  . ivy-display-function-fallback)
       (counsel-describe-variable  . ivy-display-function-fallback)
       (counsel-find-file          . ivy-display-function-fallback)
@@ -818,128 +829,14 @@
       (dmenu                      . ivy-posframe-display-at-frame-top-center)
       (nil                        . ivy-posframe-display))
     ivy-posframe-height-alist
-    '((swiper . 20)
+    '((swiper . 10)
       (dmenu . 20)
       (t . 10)))
   :config
   (ivy-posframe-mode 1)) ; 1 enables posframe-mode, 0 disables it.
 
-(defun exwm-setup ()
-  "Default configuration of EXWM."
-  ;; Set the initial workspace number.
-  ;; Make class name the buffer name
-  ;; Line-editing shortcuts
-  (add-hook 'exwm-update-class-hook
-            (lambda ()
-              (exwm-workspace-rename-buffer exwm-class-name)))
-  ;; Global keybindings.
-    (setq exwm-input-global-keys
-          `(([?\s-r] . exwm-reset)
-            ;; ([?\s-r] . hydra-exwm-move-resize/body)
-            ([?\s-i] . exwm-input-toggle-keyboard)
-            ([?\s-f] . exwm-layout-toggle-fullscreen)
-            ([?\s-F] . exwm-floating-toggle-floating)
-            ([?\s-s] . exwm-workspace-switch-to-buffer)
-            ([?\s-e] . dired-jump)
-            ([?\s-E] . (lambda () (interactive) (dired "~")))
-            ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
-            ([?\s-Q] . (lambda () (interactive) (kill-buffer)))
-            ;; 's-w': Switch workspace.
-	    ([?\s-=] . text-scale-increase)
-	    ([?\s--] . text-scale-decrease)
-            ([?\s-h] . windmove-left)
-            ([?\s-l] . windmove-right)
-            ([?\s-j] . windmove-down)
-            ([?\s-k] . windmove-up)
-            ([?\s-\C-h] . shrink-window-horizontally)
-            ([?\s-\C-l] . enlarge-window-horizontally)
-            ([?\s-\C-j] . shrink-window)
-            ([?\s-\C-k] . enlarge-window)
-            ([?\s-\C-w] . exwm-workspace-switch)
-            ([?\s-H] . windmove-swap-states-left)
-            ([?\s-L] . windmove-swap-states-right)
-            ([?\s-J] . windmove-swap-states-down)
-            ([?\s-K] . windmove-swap-states-up)
-            ([?\s-w] . exwm-workspace-switch)
-            ;; 's-&': Launch application.
-            ([?\s-d] . (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-            ;; 's-N': Switch to certain workspace.
-            ,@(mapcar (lambda (i)
-                        `(,(kbd (format "s-%d" i)) .
-                          (lambda ()
-                            (interactive)
-                            (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9))))
-  (setq exwm-input-prefix-keys
-    '(?\C-x
-      ?\C-h
-      ?\M-x
-      ?\M-&
-      ?\M-:				
-      ?\C-j  ;; Next workspace
-      ?\C-k  ;; Popper toggle
-      ?\C-\;    ;; Ctrl+Space
-      ?\C-\,))
-  ;; Enable EXWM
-  (exwm-enable)
-  ;; Configure Ido
-  (exwm-config-ido))
-
-(defun exwm-config--fix/ido-buffer-window-other-frame ()
-  "Fix `ido-buffer-window-other-frame'."
-  (defalias 'exwm-config-ido-buffer-window-other-frame
-    (symbol-function #'ido-buffer-window-other-frame))
-  (defun ido-buffer-window-other-frame (buffer)
-    "This is a version redefined by EXWM.
-You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
-    (with-current-buffer (window-buffer (selected-window))
-      (if (and (derived-mode-p 'exwm-mode)
-               exwm--floating-frame)
-          ;; Switch from a floating frame.
-          (with-current-buffer buffer
-            (if (and (derived-mode-p 'exwm-mode)
-                     exwm--floating-frame
-                     (eq exwm--frame exwm-workspace--current))
-                ;; Switch to another floating frame.
-                (frame-root-window exwm--floating-frame)
-              ;; Do not switch if the buffer is not on the current workspace.
-              (or (get-buffer-window buffer exwm-workspace--current)
-                  (selected-window))))
-        (with-current-buffer buffer
-          (when (derived-mode-p 'exwm-mode)
-            (if (eq exwm--frame exwm-workspace--current)
-                (when exwm--floating-frame
-                  ;; Switch to a floating frame on the current workspace.
-                  (frame-selected-window exwm--floating-frame))
-              ;; Do not switch to exwm-mode buffers on other workspace (which
-              ;; won't work unless `exwm-layout-show-all-buffers' is set)
-              (unless exwm-layout-show-all-buffers
-                (selected-window)))))))))
-
-(defun exwm-config-ido ()
-  "Configure Ido to work with EXWM."
-  (ido-mode 1)
-  (add-hook 'exwm-init-hook #'exwm-config--fix/ido-buffer-window-other-frame))
-
-(defun gbl/run-in-bg (command)
-  (let ((command-parts (split-string command "[ ]+")))
-    apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr  command-parts))))
-
-;; (defun exwm-init-hook
-;;       (exwm-workspace-switch-create 1))
-;;   ;; (gbl/run-in-bg "nm-applet"))
-
-(use-package exwm
+(use-package ace-jump-mode)
+(use-package flymake
   :config
-  (start-process-shell-command "setxkbmap" nil "setxkbmap -option 'grp:shifts_toggle, ctrl:swapcaps' -layout 'fr' -variant 'us-azerty' -model 'pc105'") 
-  ;; (add-hook 'exwm-init-hook #'gbl/exwm-init-hook) ;
-  (require 'exwm-randr)
-  (exwm-randr-enable)
-  (require 'exwm-systemtray)
-  (setq exwm-systemtray-height 35)
-  (exwm-systemtray-enable)
-  (exwm-setup))
-
-(require 'ido)
+  (setq flymake-max-parallel-syntax-checks 8)
+  (flymake-mode))
