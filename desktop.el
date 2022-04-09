@@ -1,4 +1,3 @@
-(server-start)
 (defun exwm-setup ()
   "Default configuration of EXWM."
   ;; Set the initial workspace number.
@@ -31,7 +30,7 @@
 	    ([?\s-=] . text-scale-increase)
 	    ([?\s--] . text-scale-decrease)
             ([?\s-h] . windmove-left)
-            ([?\s-l] . windmove-right)
+            ([?\s-m] . windmove-right)
             ([?\s-j] . windmove-down)
             ([?\s-k] . windmove-up)
             ([?\s-\C-h] . shrink-window-horizontally)
@@ -40,7 +39,7 @@
             ([?\s-\C-k] . enlarge-window)
             ([?\s-\C-w] . exwm-workspace-switch)
             ([?\s-H] . evil-window-move-far-left)
-            ([?\s-L] . evil-window-move-far-right)
+            ([?\s-M] . evil-window-move-far-right)
             ([?\s-J] . evil-window-move-very-top)
             ([?\s-K] . evil-window-move-very-bottom)
             ([?\s-w] . exwm-workspace-switch)
@@ -118,7 +117,29 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
 
 (defun gbl/exwm-init-hook ()
   ;; Make workspace 1 be the one where we land at startup
-  (exwm-workspace-switch-create 1)
+    (with-eval-after-load 'perspective
+	;; Set up perspective names on initial workspaces
+	(exwm-workspace-switch-create 0)
+	(persp-switch "Terminals")
+	(persp-kill "main")
+
+	(exwm-workspace-switch-create 1)
+
+	(exwm-workspace-switch-create 2)
+	(persp-switch "Browsers")
+	(persp-kill "main")
+
+	(exwm-workspace-switch-create 3)
+	(persp-switch "Design")
+	(persp-kill "main")
+
+	(exwm-workspace-switch-create 4)
+	(persp-switch "Media")
+	(persp-kill "main")
+
+	;; Make workspace 1 be the one where we land at startup
+	(exwm-workspace-switch-create 1)
+	(persp-rename "Editor"))
 
   ;; Open eshell by default
   ;;(eshell)
@@ -229,3 +250,5 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   (gbl/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
+
+(provide 'desktop)
