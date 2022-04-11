@@ -155,7 +155,7 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   ;; Also take a look at display-time-format and format-time-string
 
   ;; Start the Polybar panel
-  (gbl/start-panel)
+  ;; (gbl/start-panel)			;
 
   ;; Launch apps that will run in the background
   (gbl/run-in-bg "dunst")

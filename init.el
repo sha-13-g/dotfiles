@@ -25,22 +25,25 @@
 (add-hook 'emacs-startup-hook #'gbl/display-startup-time)
 
 ;; Initialize package sources
-(require 'package)
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 
   ;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq straight-use-package-by-default t)
 
 (use-package auto-package-update
   :custom
@@ -116,7 +119,9 @@
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
 (use-package peep-dired)
+
 (defun gbl/show-and-copy-buffer-path ()
   "Show and copy the full path to the current file in the minibuffer."
   (interactive)
@@ -459,7 +464,8 @@
   (visual-line-mode 1))
 
 (use-package org
-  :pin org
+;;  :straight nil
+;  :pin org			
   :commands (org-capture org-agenda)
   :hook (org-mode . gbl/org-mode-setup)
   :config
@@ -470,9 +476,9 @@
   (setq org-log-into-drawer t)
 
   (setq org-agenda-files
-        '("~/personal/organisation/OrgFiles/Tasks.org"
-          "~/personal/organisation/OrgFiles/Habits.org"
-          "~/personal/organisation/OrgFiles/Birthdays.org"))
+        '("~/personal/organisation/org-files/Tasks.org"
+          "~/personal/organisation/org-files/Habits.org"
+          "~/personal/organisation/org-files/Birthdays.org"))
 
   (require 'org-habit)
   (add-to-list 'org-modules 'org-habit)
@@ -553,28 +559,28 @@
 
   (setq org-capture-templates
     `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/personal/organisation/OrgFiles/Tasks.org" "Inbox")
+      ("tt" "Task" entry (file+olp "~/personal/organisation/org-files/Tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
       ("j" "Journal Entries")
       ("jj" "Journal" entry
-           (file+olp+datetree "~/personal/organisation/OrgFiles/Journal.org")
+           (file+olp+datetree "~/personal/organisation/org-files/Journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
            :clock-in :clock-resume
            :empty-lines 1)
       ("jm" "Meeting" entry
-           (file+olp+datetree "~/personal/organisation/OrgFiles/Journal.org")
+           (file+olp+datetree "~/personal/organisation/org-files/Journal.org")
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
 
       ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/personal/organisation/OrgFiles/Journal.org")
+      ("we" "Checking Email" entry (file+olp+datetree "~/personal/organisation/org-files/Journal.org")
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
       ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/personal/organisation/OrgFiles/Metrics.org" "Weight")
+      ("mw" "Weight" table-line (file+headline "~/personal/organisation/org-files/Metrics.org" "Weight")
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   (define-key global-map (kbd "C-c j")
@@ -790,7 +796,7 @@
   (eshell-git-prompt-use-theme 'powerline))
 
 (use-package dired
-  :ensure nil
+  :straight nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :custom ((dired-listing-switches "-agho --group-directories-first"))
@@ -800,12 +806,15 @@
     "l" 'dired-single-buffer))
 
 (use-package dired-single
+  :straight nil
   :commands (dired dired-jump))
 
 (use-package all-the-icons-dired
+  :straight nil
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package dired-open
+  :straight nil
   :commands (dired dired-jump)
   :config
   ;; Doesn't work as expected!
@@ -814,6 +823,7 @@
                                 ("mkv" . "mpv"))))
 
 (use-package dired-hide-dotfiles
+  :straight nil
   :hook (dired-mode . dired-hide-dotfiles-mode)
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
