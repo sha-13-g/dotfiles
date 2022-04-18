@@ -314,6 +314,7 @@
   (setq evil-want-C-u-scroll t)
   (setq evil-vsplit-window-right t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-want-minibuffer t)
   ;; (setq evil-undo-system 'undo-redo)
   :config
   (evil-mode 1)
