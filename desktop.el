@@ -21,27 +21,26 @@
             ([?\s-i] . exwm-input-toggle-keyboard)
             ([?\s-f] . exwm-layout-toggle-fullscreen)
             ([?\s-F] . exwm-floating-toggle-floating)
-            ([?\s-s] . exwm-workspace-switch-to-buffer)
-            ([?\s-e] . dired-jump)
-            ([?\s-E] . (lambda () (interactive) (dired "~")))
+            ([?\s-s] . (start-process-shell-command "shutdown" nil "shutdown now"))
+            ([?\s-c] . evil-window-delete)
+            ([?\s-e] . counsel-linux-app)
             ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
-            ([?\s-Q] . (lambda () (interactive) (kill-buffer)))
+            ([?\s-q] . (lambda () (interactive) (kill-buffer)))
             ;; 's-w': Switch workspace.
 	    ([?\s-=] . text-scale-increase)
 	    ([?\s--] . text-scale-decrease)
-            ([?\s-h] . windmove-left)
-            ([?\s-m] . windmove-right)
-            ([?\s-j] . windmove-down)
-            ([?\s-k] . windmove-up)
-            ([?\s-\C-h] . shrink-window-horizontally)
-            ([?\s-\C-l] . enlarge-window-horizontally)
-            ([?\s-\C-j] . shrink-window)
-            ([?\s-\C-k] . enlarge-window)
-            ([?\s-\C-w] . exwm-workspace-switch)
-            ([?\s-H] . evil-window-move-far-left)
-            ([?\s-M] . evil-window-move-far-right)
-            ([?\s-J] . evil-window-move-very-top)
-            ([?\s-K] . evil-window-move-very-bottom)
+            ;; ([?\s-h] . windmove-left)
+            ;; ([?\s-m] . windmove-right)
+            ;; ([?\s-j] . windmove-down)
+            ;; ([?\s-k] . windmove-up)
+            ([?\s-\C-h] . windmove-left)
+            ([?\s-\C-l] . windmove-right)
+            ([?\s-\C-j] . windmove-down)
+            ([?\s-\C-k] . windmove-up)
+            ([?\s-H] . windmove-swap-states-left)
+            ([?\s-L] . windmove-swap-states-right)
+            ([?\s-K] . windmove-swap-states-up)
+            ([?\s-J] . windmove-swap-states-down)
             ([?\s-w] . exwm-workspace-switch)
             ;; 's-&': Launch application.
             ([?\s-d] . (lambda (command)
@@ -55,7 +54,8 @@
                             (exwm-workspace-switch-create ,i))))
                       (number-sequence 0 9))))
 
-    (exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
+    (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)
+    (exwm-input-set-key (kbd "s-<return>") 'evil-window-split)
 
   (setq exwm-input-prefix-keys
     '(?\C-x
@@ -65,15 +65,12 @@
       ?\M-:				
       ?\C-j  ;; Next workspace
       ?\C-k  ;; Popper toggle
-      ?\C-\     ;; Ctrl+Space
-      ?\C-\,))
+      ?\C-\ ))     ;; Ctrl+Spacev
   
    (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
 
   ;; Enable EXWM
-  (exwm-enable)
-  ;; Configure Ido
-  (exwm-config-ido))
+  (exwm-enable))
 
 (defun exwm-config--fix/ido-buffer-window-other-frame ()
   "Fix `ido-buffer-window-other-frame'."
@@ -106,11 +103,6 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
               (unless exwm-layout-show-all-buffers
                 (selected-window)))))))))
 
-(defun exwm-config-ido ()
-  "Configure Ido to work with EXWM."
-  (ido-mode 1)
-  (add-hook 'exwm-init-hook #'exwm-config--fix/ido-buffer-window-other-frame))
-
   (defun gbl/run-in-bg (command)
     (let ((command-parts (split-string command "[ ]+")))
       (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
@@ -120,26 +112,24 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
     (with-eval-after-load 'perspective
 	;; Set up perspective names on initial workspaces
 	(exwm-workspace-switch-create 0)
-	(persp-switch "Terminals")
+	(persp-switch "")
 	(persp-kill "main")
 
-	(exwm-workspace-switch-create 1)
-
 	(exwm-workspace-switch-create 2)
-	(persp-switch "Browsers")
+	(persp-switch "")
 	(persp-kill "main")
 
 	(exwm-workspace-switch-create 3)
-	(persp-switch "Design")
+	(persp-switch "")
 	(persp-kill "main")
 
 	(exwm-workspace-switch-create 4)
-	(persp-switch "Media")
+	(persp-switch "")
 	(persp-kill "main")
 
 	;; Make workspace 1 be the one where we land at startup
 	(exwm-workspace-switch-create 1)
-	(persp-rename "Editor"))
+	(persp-rename ""))
 
   ;; Open eshell by default
   ;;(eshell)
@@ -176,8 +166,6 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   ;; (exwm-systemtray-enable)
   (exwm-setup))
 
-(require 'ido)
-
 (use-package desktop-environment
   :after exwm
   :config (desktop-environment-mode)
@@ -187,29 +175,29 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   (desktop-environment-brightness-normal-increment "5%+")
   (desktop-environment-brightness-normal-decrement "5%-"))
 
-(defvar gbl/polybar-process nil
-  "Holds the process of the running Polybar instance, if any")
+;; (defvar gbl/polybar-process nil
+;;   "Holds the process of the running Polybar instance, if any")
 
-(defun gbl/kill-panel ()
-  (interactive)
-  (when gbl/polybar-process
-    (ignore-errors
-      (kill-process gbl/polybar-process)))
-  (setq gbl/polybar-process nil))
+;; (defun gbl/kill-panel ()
+;;   (interactive)
+;;   (when gbl/polybar-process
+;;     (ignore-errors
+;;       (kill-process gbl/polybar-process)))
+;;   (setq gbl/polybar-process nil))
 
-(defun gbl/start-panel ()
-  (interactive)
-  (gbl/kill-panel)
-  (setq gbl/polybar-process (start-process-shell-command "polybar" nil "polybar panel --config=.config/polybar/config.ini")))
+;; (defun gbl/start-panel ()
+;;   (interactive)
+;;   (gbl/kill-panel)
+;;   (setq gbl/polybar-process (start-process-shell-command "polybar" nil "polybar panel --config=.config/polybar/config.ini")))
 
-(defun gbl/send-polybar-hook (module-name hook-index)
-  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+;; (defun gbl/send-polybar-hook (module-name hook-index)
+;;   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
-(defun gbl/send-polybar-exwm-workspace ()
-  (gbl/send-polybar-hook "exwm-workspace" 1))
+;; (defun gbl/send-polybar-exwm-workspace ()
+;;   (gbl/send-polybar-hook "exwm-workspace" 1))
 
 ;; Update panel indicator when workspace changes
-(add-hook 'exwm-workspace-switch-hook #'gbl/send-polybar-exwm-workspace)
+;; (add-hook 'exwm-workspace-switch-hook #'gbl/send-polybar-exwm-workspace)
 
 (defun gbl/disable-desktop-notifications ()
   (interactive)
@@ -250,5 +238,3 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   (gbl/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
-
-(provide 'desktop)

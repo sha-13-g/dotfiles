@@ -4,14 +4,16 @@
 ;; Make frame transparency overridable
 
 ;;(auto-complete-mode)
+
 (defvar gbl/frame-transparency '(60 . 90))
 (defvar gbl/frame-transparency-beta '(80 . 90))
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 ;;(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 ;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; The defaultemacs. is 800 kilobytes.  Measured in bytes.
+(setq visible-bell 1)
+(show-paren-mode)
+;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (defun gbl/display-startup-time ()
@@ -37,37 +39,28 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
   ;; Initialize use-package on non-Linux platforms
 (require 'use-package)
-
 (setq straight-use-package-by-default t)
 
-;; (use-package auto-complete
-;;   :bind (:map ac-completing-map
-;; 	      ("C-j" . ac-next)
-;; 	      ("C-k" . ac-previous)
-;; 	      ("C-l" . ac-complete))
-;;   :custom
-;;   (ac-delay 0)
-;;   (ac-quick-help-delay 0)
-;;   :init
-;;  (ac-config-default))
-
-;; (use-package auto-package-update
-;;   :custom
-;;   (auto-package-update-interval 7)
-;;   (auto-package-update-prompt-before-update t)
-;;   (auto-package-update-hide-results t)
-;;   :config
-;;   (auto-package-update-maybe)
-;;   (auto-package-update-at-time "09:00"))
+(use-package auto-package-update
+  :custom
+  (auto-package-update-interval 7)
+  (auto-package-update-prompt-before-update t)
+  (auto-package-update-hide-results t)
+  :config
+  (auto-package-update-maybe)
+  (auto-package-update-at-time "09:00"))
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
 ;(setq user-emacs-directory "~/.cache/emacs")
 
-;; (use-package no-littering)
+(use-package no-littering)
 
 (use-package perspective
   :bind
@@ -75,19 +68,19 @@
   :init
   (persp-mode))
 
-;; (add-hook 'kill-emacs-hook #'persp-state-save)
+(add-hook 'kill-emacs-hook #'persp-state-save)
 
 (add-to-list 'load-path "~/.emacs.d/autopair/") ;; comment if autopair.el is in standard load path
-;; (add-to-list 'load-path "~/.emacs.d/") ;; comment if autopair.el is in standard load path
+(add-to-list 'load-path "~/.emacs.d/") ;; comment if autopair.el is in standard load path
 
 (require 'autopair)
-(setq visible-bell t)
+
 (autopair-global-mode)
 
 ;; no-littering doesn't set this by default so we must place
 ;; auto save files in the same path as it uses for sessions
-;; (setq auto-save-file-name-transforms
-;;       `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+(setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 (setq inhibit-startup-message t)
 
@@ -100,11 +93,9 @@
 
 ;; Set up the visible bell
 ;; (setq visible-bell t)
-(setq ring-bell-function 'ignore)
 
 (column-number-mode)
 (global-display-line-numbers-mode t)
-(menu-bar--display-line-numbers-mode-relative)
 
 ;; Set frame transparency
 (set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency)
@@ -122,7 +113,7 @@
 
 (set-face-attribute 'default nil :font "Fira Code Retina" :height gbl/default-font-size)
 
-;; (add-hook 'javascript-mode-hook #'lsp)
+(add-hook 'javascript-mode-hook #'lsp)
 
 ;; Set the fixed pitch face
 (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height gbl/default-font-size)
@@ -143,7 +134,6 @@
     (if file-name
         (message (kill-new file-name))
       (error "Buffer not visiting a file"))))
-
 (defun gbl/show-buffer-path-name ()
   "Show the full path to the current file in the minibuffer."
   (interactive)
@@ -153,7 +143,6 @@
           (message file-name)
           (kill-new file-name))
       (error "Buffer not visiting a file"))))
-
 (use-package general
   :after evil
   :config
@@ -165,8 +154,8 @@
 
   (gbl/leader-keys
     "t"  '(:ignore t :which-key "Toggles")
-    "tt" '(consult-theme :which-key "choose theme")
-    "fde" '(lambda () (interactive) (find-file (expand-fle-name "~/.emacs.d/emacs.org")))
+    "tt" '(counsel-load-theme :which-key "choose theme")
+    "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/emacs.org")))
 
     "o"   '(:ignore t :which-key "org mode")
 
@@ -185,7 +174,7 @@
     "q"   '(delete-window  t :which-key "Quit")
     "C"   '(delete-frame  t :which-key "Quit Frame")
     "Q"   '(save-buffers-kill-terminal  t :which-key "Quit Emacs")
-    ","   '(switch-to-buffer :which-key "switch buffer"))
+    ","   '(counsel-switch-buffer :which-key "switch buffer"))
 ;; (general-define-key
 ;;  "C-=" 'text-scale-increase
 ;;  "C--" 'text-scale-decrease
@@ -202,19 +191,16 @@
  ;; "C-<" 'evil-window-decrease-width
  ;; "C-k" 'evil-window-increase-height
  ;; "C-j" 'evil-window-decrease-height)
-  (general-define-key
-   "C-M-k" '(scroll-other-window-down :which-key "Scroll other window down")
-   "C-M-j" '(scroll-other-window :which-key "Scroll other window up"))
 
 (gbl/leader-keys
   "b"  '(:ignore t :which-key "Buffer")
-  "b b"   '(ibuffer :which-key "Ibuffer")
+  "b b"   '(counsel-ibuffer :which-key "Ibuffer")
   "b c"   '(clone-indirect-buffer-other-window :which-key "Clone indirect buffer other window")
   "b k"   '(kill-current-buffer :which-key "Kill current buffer")
   "b n"   '(next-buffer :which-key "Next buffer")
   "b p"   '(previous-buffer :which-key "Previous buffer")
   "b B"   '(ibuffer-list-buffers :which-key "Ibuffer list buffers")
-  "b s"   '(switch-to-buffer :which-key "Switch buffer")
+  "b s"   '(counsel-switch-buffer :which-key "Switch buffer")
   "b K"   '(kill-buffer :which-key "Kill buffer"))
 
 (gbl/leader-keys
@@ -233,8 +219,8 @@
   "d p" '(peep-dired :which-key "Peep-dired"))
 (gbl/leader-keys
   "f"  '(:ignore t :which-key "File")
-  "."     '(find-file :which-key "Find file")
-  "f f"   '(find-file :which-key "Find file")
+  "."     '(counsel-find-file :which-key "Find file")
+  "f f"   '(counsel-find-file :which-key "Find file")
   "f r"   '(counsel-recentf :which-key "Recent files")
   "f s"   '(save-buffer :which-key "Save file")
   "f u"   '(sudo-edit-find-file :which-key "Sudo find file")
@@ -257,25 +243,11 @@
   "r v"   '(view-register :which-key "View a register")
   "r w"   '(window-configuration-to-register :which-key "Window configuration to register")
   "r +"   '(increment-register :which-key "Increment register")
-  "r SPC" '(consult-register-store :which-key "Point to register"))
+  "r SPC" '(point-to-register :which-key "Point to register"))
 
 (gbl/leader-keys
-  "s" '(:ignore t :which-key "Search")
-  "s f"   '(consult-find :which-key "Find file in project")
-  "s o"   '(consult-outline :which-key "Search to headers")
-  "s m"   '(consult-mark :which-key "Goto mark")
-  "s M"   '(consult-globabl-mark :which-key "Goto all marks")
-  "s i"   '(consult-imenu :which-key "Imenu")
-  "s I"   '(consult-imenu-multi :which-key "Imenu multi")
-  "s l"   '(consult-locate :which-key "Find file")
-  "s g"   '(consult-grep :which-key "Grep in project")
-  "s G"   '(consult-git-grep :which-key "Grep in git")
-  "s r"   '(consult-ripgrep :which-key "Ripgrep in project"))
-
-(gbl/leader-keys
-  "SPC"   '(execute-extended-command :which-key "M-x")
+  "SPC"   '(counsel-M-x :which-key "M-x")
   "c c"   '(compile :which-key "Compile")
-  "c f"   '(consult-flymake :which-key "show error")
   "c C"   '(recompile :which-key "Recompile")
   "h r r" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :which-key "Reload emacs config"))
 
@@ -305,7 +277,7 @@
       term-mode))
     (add-to-list 'evil-emacs-state-modes mode)))
 
-;; (use-package undo-tree)
+(use-package undo-tree)
 
 (use-package evil
   :init
@@ -334,9 +306,6 @@
 
 (use-package evil-tutor)
 
-(use-package yasnippet
-  :init
-  (yas-global-mode 1))
 
 (use-package dashboard
   :init      ;; tweak dashboard config before loading it
@@ -355,8 +324,8 @@
   (dashboard-setup-startup-hook)
   (dashboard-modify-heading-icons '((recents . "file-text")
                               (bookmarks . "book"))))
-;; (use-package command-log-mode
-;;   :commands command-log-mode)
+(use-package command-log-mode
+  :commands command-log-mode)
 
 (use-package doom-themes
   :init (load-theme 'doom-solarized-dark t))
@@ -365,88 +334,60 @@
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 25)))
+  :custom ((doom-modeline-height 35)))
 
 (use-package which-key
   :defer 0
   :diminish which-key-mode
   :config
   (which-key-mode)
-  (setq which-key-idle-delay 1))
-
+  (setq which-key-idle-delay 0.5))
 
 (use-package vertico
-  :bind (:map vertico-map
-	      ("C-j" . vertico-next)
-	      ("C-k" . vertico-previous)
-	      ("C-l" . vertico-exit)
-	      :map minibuffer-local-map
-	      ("M-h" . vertico-next))
-  :custom
-  (vertico-cycle t)
   :init
   (vertico-mode))
 
-(use-package orderless
+(use-package ivy
+  :diminish
+  :bind (("C-/" . swiper)
+         ("C-\\" . swiper-thing-at-point)
+         :map ivy-minibuffer-map
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(setq ivy-initial-inputs-alist nil)
+(use-package ivy-rich
+  :after ivy
   :init
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
-  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+  (ivy-rich-mode 1))
 
-(use-package consult
-  ;; Replace bindings. Lazily loaded due by `use-package'.
-  :bind (;; C-c bindings (mode-specific-map)
-         ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ("C-/" . consult-line)
-         ("C-\\" . consult-line-multi)
-
-         :map isearch-mode-map
-         ("C-/" . consult-line)                  ;; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-
+(use-package counsel
+  :bind (("C-," . 'counsel-switch-buffer)
          :map minibuffer-local-map
-         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  ;; The :init configuration is always executed (Not lazy)
-  :init
-
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.1
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Optionally replace `completing-read-multiple' with an enhanced version.
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
-
-(use-package savehist
-  :init
-  (savehist-mode))
-
-(use-package marginalia
-  :after vertico
+         ("C-r" . 'counsel-minibuffer-history))
   :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init (marginalia-mode))
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+  :config
+  (counsel-mode 1))
 
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; uncomment the following line to have sorting remembered across sessions!
+  ;(prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
@@ -459,44 +400,44 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-;; (use-package ;; hydra
-;; ;;   :defer t)
+;; (use-package hydra
+;;   :defer t)
 
-(defhydra hydra-window-management (:timeout 4)
-  "window management"
-  ;; ("c" evil-window-delete "Delete current window" )
-  ;; ("o" delete-other-windows "Delete others window")
-  ;; ("Q" evil-quit "Quit Emacs")
+;; (defhydra hydra-window-management (:timeout 4)
+;;   "window management"
+;;   ("c" evil-window-delete "Delete current window" )
+;;   ("o" delete-other-windows "Delete others window")
+;;   ("Q" evil-quit "Quit Emacs")
 
-  ;; ("h" evil-window-left "Move left")
-  ;; ("j" evil-window-down "Move down")
-  ;; ("k" evil-window-up "Move up")
-  ;; ("l" evil-window-right "Move right")
+;;   ("h" evil-window-left "Move left")
+;;   ("j" evil-window-down "Move down")
+;;   ("k" evil-window-up "Move up")
+;;   ("l" evil-window-right "Move right")
 
-  ;; ("H" evil-window-move-far-left "Move window left")
-  ;; ("J" evil-window-move-very-bottom "Move window down")
-  ;; ("K" evil-window-move-very-top "Move window up")
-  ;; ("L" evil-window-move-far-right "Move window right")
+;;   ("H" evil-window-move-far-left "Move window left")
+;;   ("J" evil-window-move-very-bottom "Move window down")
+;;   ("K" evil-window-move-very-top "Move window up")
+;;   ("L" evil-window-move-far-right "Move window right")
 
-  ("k" evil-window-increase-height "Increase height")
-  ("j" evil-window-decrease-height "Decrease height")
-  ("l" evil-window-increase-width "Increase width")
-  ("h" evil-window-decrease-width "Decrease height")
+;;   ("[" evil-window-increase-height "Increase height")
+;;   ("]" evil-window-decrease-height "Decrease height")
+;;   (">" evil-window-increase-width "Increase width")
+;;   ("<" evil-window-decrease-width "Decrease height")
 
-  ;; ("v" evil-window-vsplit "Vertical split")
-  ;; ("s" evil-window-split "Horizontal split")
-  ("q" nil  "quit" :exit t))
+;;   ("v" evil-window-vsplit "Vertical split")
+;;   ("s" evil-window-split "Horizontal split")
+;;   ("q" nil  "quit" :exit t))
 
-(defhydra hydra-text-scale (:timeout 4)
-  "Scale text"
-  ("k" text-scale-increase "in")
-  ("j" text-scale-decrease "out")
-  ("a" text-scale-adjust "adjust")
-  ("q" nil  "quit" :exit t))
+;; (defhydra hydra-text-scale (:timeout 4)
+;;   "Scale text"
+;;   ("k" text-scale-increase "in")
+;;   ("j" text-scale-decrease "out")
+;;   ("a" text-scale-adjust "adjust")
+;;   ("q" nil  "quit" :exit t))
 
-(gbl/leader-keys
-  "ts" '(hydra-text-scale/body :which-key "scale text")
-  "w" '(hydra-window-management/body :which-key "windows"))
+;; (gbl/leader-keys
+  ;; "ts" '(hydra-text-scale/body :which-key "scale text")
+  ;; "w" '(hydra-window-management/body :which-key "windows"))
 
 (defun gbl/org-font-setup ()
   ;; Replace list hyphen with dot
@@ -697,65 +638,107 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gbl/org-babel-tangle-config)))
 
-(use-package company-mode
-  :straight nil
-  :custom
-  (company-idle-delay 0)
-  (company-minimum-prefix-length 0)
-  (company-show-quick-access t)
-  (company-show-doc-buffer 0)
-  :bind (:map company-active-map
-	      ("C-l" . company-complete-selection))
+(defun gbl/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
   :init
-  (global-company-mode))
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t))
 
-(use-package emmet-mode)
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
 
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-(add-hook 'css-mode-hook  'emmet-mode)
-(add-hook 'web-mode-hook  'emmet-mode)
+(use-package lsp-treemacs
+  :after lsp)
 
-(use-package web-mode)
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp)
+  :config
+  (setq typescript-indent-level 2))
 
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ejs?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(use-package lsp-ivy
+  :after lsp)
 
-(setq web-mode-enable-current-column-highlight t)
-(setq web-mode-markup-indent-offset 2)
-(setq web-mode-engines-alist
-      '(("php"    . "\\.phtml\\'")
-        ("ejs"  . "\\.ejs\\.")))
+(use-package dap-mode
+  ;; Uncomment the config below if you want all UI panes to be hidden by default!
+  ;; :custom
+  ;; (lsp-enable-dap-auto-configure nil)
+  ;; :config
+  ;; (dap-ui-mode 1)
+  :commands dap-debug
+  :config
+  ;; Set up Node debugging
+  (require 'dap-node)
+  (dap-node-setup) ;; Automatically installs Node debug adapter if needed
 
-(setq web-mode-ac-sources-alist
-  '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
-    ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
-    ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
+  ;; Bind `C-c l d` to `dap-hydra` for easy access
+  (general-define-key
+    :keymaps 'lsp-mode-map
+    :prefix lsp-keymap-prefix
+    "d" '(dap-hydra t :wk "debugger")))
 
-(add-hook 'web-mode-before-auto-complete-hooks
-          '(lambda ()
-             (let ((web-mode-cur-language
-                    (web-mode-language-at-pos)))
-               (if (string= web-mode-cur-language "php")
-                   (yas-activate-extra-mode 'php-mode)
-                 (yas-deactivate-extra-mode 'php-mode))
-               (if (string= web-mode-cur-language "css")
-                   (setq emmet-use-css-transform t)
-                 (setq emmet-use-css-transform nil)))))
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
 
-(use-package eglot)
+(use-package javascript-mode
+  :mode "\\.js\\'"
+  :hook (javascript-mode . lsp))
 
-(add-hook 'typescript-mode-hook 'eglot-ensure)
-(add-hook 'js-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'eglot-ensure)
-(add-hook 'html-mode-hook 'eglot-ensure)
-(add-hook 'css-mode-hook 'eglot-ensure)
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  ;; NOTE: Set these if Python 3 is called "python3" on your system!
+  ;; (python-shell-interpreter "python3")
+  ;; (dap-python-executable "python3")
+  (dap-python-debugger 'debugpy)
+  :config
+  (require 'dap-python))
+
+(use-package pyvenv
+  :after python-mode
+  :config
+  (pyvenv-mode 1))
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  ;; NOTE: Set this to the folder where you keep your Git repos!
+  (when (file-directory-p "~/personal/lab")
+    (setq projectile-project-search-path '("~/personal/lab")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
 
 (use-package magit
   :commands magit-status
@@ -777,7 +760,7 @@
 (use-package term
   :commands term
   :config
-  (setq explicit-shell-file-name "fish") ;; Change this to zsh, etc
+  (setq explicit-shell-file-name "bash") ;; Change this to zsh, etc
   ;;(setq explicit-zsh-args '())         ;; Use 'explicit-<shell>-args for shell-specific args
 
   ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
@@ -863,3 +846,34 @@
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
+
+(use-package ivy-posframe
+  :init
+  (setq ivy-posframe-display-functions-alist
+    '((swiper                     . ivy-posframe-display-at-frame-bottom-center)
+      (which-key                  . ivy-posframe-display-at-frame-bottom-center)
+      (complete-symbol            . ivy-posframe-display-at-point)
+      (counsel-M-x                . ivy-posframe-display-at-frame-bottom-center)
+      (counsel-esh-history        . ivy-posframe-display-at-frame-bottom-center)
+      (counsel-describe-function  . ivy-display-function-fallback)
+      (counsel-describe-variable  . ivy-display-function-fallback)
+      (counsel-find-file          . ivy-display-function-fallback)
+      (counsel-recentf            . ivy-display-function-fallback)
+      (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+      (dmenu                      . ivy-posframe-display-at-frame-top-center)
+      (nil                        . ivy-posframe-display))
+    ivy-posframe-height-alist
+    '((swiper . 10)
+      (dmenu . 20)
+      (t . 10)))
+  :config
+  (ivy-posframe-mode 1)) ; 1 enables posframe-mode, 0 disables it.
+
+;; (use-package ace-jump-mode)
+;; (use-package flymake
+;;   :config
+;;   (setq flymake-max-parallel-syntax-checks 8)
+;;   (flymake-mode))
+
+
+(require 'desktop)
