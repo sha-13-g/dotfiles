@@ -71,7 +71,7 @@
 
 (use-package perspective
   :bind
-  ("C-x C-b" . persp-list-buffers)   ; or use a nicer switcher, see below
+  ("C-x C-l" . persp-list-buffers)   ; or use a nicer switcher, see below
   :init
   (persp-mode))
 
