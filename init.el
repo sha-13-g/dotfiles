@@ -81,7 +81,7 @@
 ;; (add-to-list 'load-path "~/.emacs.d/") ;; comment if autopair.el is in standard load path
 
 (require 'autopair)
-(setq visible-bell t)
+;; (setq visible-bell t)
 (autopair-global-mode)
 
 ;; no-littering doesn't set this by default so we must place
