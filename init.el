@@ -4,7 +4,7 @@
 ;; Make frame transparency overridable
 
 ;;(auto-complete-mode)
-(defvar gbl/frame-transparency '(50 . 90))
+(defvar gbl/frame-transparency '(60 . 90))
 (defvar gbl/frame-transparency-beta '(80 . 90))
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
@@ -20,7 +20,7 @@
                    (float-time
                      (time-subtract after-init-time before-init-time)))
            gcs-done))
-(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 (add-hook 'emacs-startup-hook #'gbl/display-startup-time)
 
 
@@ -78,7 +78,7 @@
 ;; (add-hook 'kill-emacs-hook #'persp-state-save)
 
 (add-to-list 'load-path "~/.emacs.d/autopair/") ;; comment if autopair.el is in standard load path
-;; (add-to-list 'load-path "~/.emacs.d/") ;; comment if autopair.el is in standard load path
+(add-to-list 'load-path "~/.emacs.d/") ;; comment if autopair.el is in standard load path
 
 (require 'autopair)
 ;; (setq visible-bell t)
@@ -98,7 +98,7 @@
 
 (menu-bar-mode -1)            ; Disable the menu bar
 
-;; Set up the visible bell
+;; set up the visible bell
 ;; (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 
@@ -153,6 +153,13 @@
           (message file-name)
           (kill-new file-name))
       (error "Buffer not visiting a file"))))
+
+
+(use-package multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c")'mc/edit-lines)
+(global-set-key (kbd "C->")'mc/mark-next-like-this)
+(global-set-key (kbd "C-<")'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<")'mc/mark-all-like-this)
 
 (use-package general
   :after evil
@@ -314,7 +321,6 @@
   (setq evil-want-C-u-scroll t)
   (setq evil-vsplit-window-right t)
   (setq evil-want-C-i-jump nil)
-  (setq evil-want-minibuffer t)
   ;; (setq evil-undo-system 'undo-redo)
   :config
   (evil-mode 1)
@@ -339,34 +345,61 @@
   :init
   (yas-global-mode 1))
 
-(use-package dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.emacs.d/emacs-dash.png")  ;; use custom image as banner
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 3)
-                          (projects . 3)
-                          (registers . 3)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                              (bookmarks . "book"))))
+;; (use-package dashboard
+;;      :init
+;;      (progn
+;; 	(setq dashboard-center-content t)
+;; 	(setq dashboard-startup-banner "~/Downloads/l.png")
+;; 	(setq dashboard-set-file-icons t)
+;; 	(setq dashboard-banner-logo-title " Remember VIM Is Always Better  ")
+;; 	(setq dashboard-set-heading-icon t)
+;; 	(setq dashboard-items '((recents . 5)
+;;                           (agenda . 5 )
+;;                           (bookmarks . 3)
+;;                           (projects . 3)
+;;                           (registers . 3))))
+;;      :config
+;;      (dashboard-setup-startup-hook)
+;;      (dashboard-modify-heading-icons '((recents . "file-text")
+;;                               (bookmarks . "book"))))
 ;; (use-package command-log-mode
 ;;   :commands command-log-mode)
+
+(use-package exotica-theme)
+  ;; :init (load-theme 'exotica t)
+
+(use-package underwater-theme)
 
 (use-package doom-themes
   :init (load-theme 'doom-solarized-dark t))
 
 (use-package all-the-icons)
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 25)))
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
+(use-package treemacs-all-the-icons)
+(use-package mode-icons
+  :demand t
+  :config
+  (mode-icons-mode))
+
+(use-package treemacs)
+(use-package treemacs-evil
+  :after (treemacs evil))
+
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter "⚙"
+	   minions-mode-line-delimiters (cons "" ""))
+  (minions-mode 1))
+
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification))
+
+(use-package hide-mode-line
+  :commands (hide-mode-line-mode))
 
 (use-package which-key
   :defer 0
@@ -452,16 +485,16 @@
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
+  (describe-function-function #'helpful-callable)
+  (describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ;; ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
+  ;; ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
-
-;; (use-package ;; hydra
-;; ;;   :defer t)
+ 
+(use-package  hydra
+   :defer t)
 
 (defhydra hydra-window-management (:timeout 4)
   "window management"
@@ -497,6 +530,7 @@
 
 (gbl/leader-keys
   "ts" '(hydra-text-scale/body :which-key "scale text")
+  "E" '(treemacs :which-key "File Explorer")
   "w" '(hydra-window-management/body :which-key "windows"))
 
 (defun gbl/org-font-setup ()
@@ -702,13 +736,19 @@
   :straight nil
   :custom
   (company-idle-delay 0)
-  (company-minimum-prefix-length 0)
+  (company-minimum-prefix-length 1)
   (company-show-quick-access t)
   (company-show-doc-buffer 0)
-  :bind (:map company-active-map
-	      ("C-l" . company-complete-selection))
+  ;; :bind (:map company-active-map
+  ;; 	      ("TAB" . yas-expand)
+  ;; 	      ("C-l" . company-complete-selection))
   :init
   (global-company-mode))
+
+
+(use-package flycheck
+  :init
+  (global-flycheck-mode))
 
 (use-package emmet-mode)
 
@@ -749,6 +789,9 @@
                (if (string= web-mode-cur-language "css")
                    (setq emmet-use-css-transform t)
                  (setq emmet-use-css-transform nil)))))
+
+(straight-use-package
+ '(typescript-mode :type git :flavor melpa :host github :repo "emacs-typescript/typescript.el"))
 
 (use-package eglot)
 
@@ -862,5 +905,17 @@
   (evil-collection-define-key 'normal 'dired-mode-map
     "H" 'dired-hide-dotfiles-mode))
 
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
+(require 'desktop)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("~/personal/formation/practice/OrgMode.org" "/home/gbl13/personal/organisation/org-files/Tasks.org" "/home/gbl13/personal/organisation/org-files/Habits.org" "/home/gbl13/personal/organisation/org-files/Birthdays.org")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

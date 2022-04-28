@@ -3,7 +3,7 @@
   ;; Set the initial workspace number.
   ;; Make class name the buffer name
   ;; Line-editing shortcuts
-  (setq exwm-workspace-number 5)
+  (setq exwm-workspace-number 9)
 
   (add-hook 'exwm-update-class-hook
             (lambda ()
@@ -29,18 +29,18 @@
             ;; 's-w': Switch workspace.
 	    ([?\s-=] . text-scale-increase)
 	    ([?\s--] . text-scale-decrease)
-            ;; ([?\s-h] . windmove-left)
-            ;; ([?\s-m] . windmove-right)
-            ;; ([?\s-j] . windmove-down)
-            ;; ([?\s-k] . windmove-up)
-            ([?\s-\C-h] . windmove-left)
-            ([?\s-\C-l] . windmove-right)
-            ([?\s-\C-j] . windmove-down)
-            ([?\s-\C-k] . windmove-up)
-            ([?\s-H] . windmove-swap-states-left)
-            ([?\s-L] . windmove-swap-states-right)
-            ([?\s-K] . windmove-swap-states-up)
-            ([?\s-J] . windmove-swap-states-down)
+            ([?\s-p] . switch-to-prev-buffer)
+            ([?\s-j] . switch-to-buffer)
+            ([?\s-k] . find-file)
+            ([?\s-n] . switch-to-next-buffer)
+            ([?\s-H] . windmove-left)
+            ([?\s-L] . windmove-right)
+            ([?\s-J] . windmove-down)
+            ([?\s-K] . windmove-up)
+            ([?\s-\C-h] . windmove-swap-states-left)
+            ([?\s-\C-l] . windmove-swap-states-right)
+            ([?\s-\C-j] . windmove-swap-states-up)
+            ([?\s-\C-k] . windmove-swap-states-down)
             ([?\s-w] . exwm-workspace-switch)
             ;; 's-&': Launch application.
             ([?\s-d] . (lambda (command)
@@ -60,11 +60,9 @@
   (setq exwm-input-prefix-keys
     '(?\C-x
       ?\C-h
-      ?\M-x
       ?\M-&
-      ?\M-:				
-      ?\C-j  ;; Next workspace
-      ?\C-k  ;; Popper toggle
+      ?\M-:
+      ?\C-g  ;; Next workspace
       ?\C-\ ))     ;; Ctrl+Spacev
   
    (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -158,7 +156,7 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
 
 (use-package exwm
   :config
-  (start-process-shell-command "setxkbmap" nil "setxkbmap -option 'grp:shifts_toggle, ctrl:swapcaps' -layout 'fr' -variant 'us-azerty' -model 'pc105'") 
+  ;; (start-process-shell-command "setxkbmap" nil "setxkbmap -option 'grp:shifts_toggle, ctrl:swapcaps' -layout 'fr' -variant 'us-azerty' -model 'pc105'") 
   (require 'exwm-randr)
   (exwm-randr-enable)
   ;; (require 'exwm-systemtray)
@@ -238,3 +236,5 @@ You can find the original one at `exwm-config-ido-buffer-window-other-frame'."
   (gbl/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
+
+(provide 'desktop)
