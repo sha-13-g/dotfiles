@@ -1,10 +1,10 @@
 ; you will most likely need to adjust this font size for your system!
-(defvar gbl/default-font-size 90)
-(defvar gbl/default-variable-font-size 90)
+(defvar gbl/default-font-size 105)
+(defvar gbl/default-variable-font-size 105)
 ;; Make frame transparency overridable
 
 ;;(auto-complete-mode)
-(defvar gbl/frame-transparency '(60 . 90))
+(defvar gbl/frame-transparency '(70 . 90))
 (defvar gbl/frame-transparency-beta '(80 . 90))
 ;;(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 ;;(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
@@ -393,6 +393,8 @@
 	   minions-mode-line-delimiters (cons "" ""))
   (minions-mode 1))
 
+;;(use-package plantuml)
+
 (use-package moody
   :config
   (setq x-underline-at-descent-line t)
@@ -568,6 +570,9 @@
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
+(setq org-plantuml-jar-path
+      (expand-file-name "~/src/plantuml.jar"))
+
 (use-package org
 ;;  :straight nil
 ;  :pin org			
@@ -579,6 +584,7 @@
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+
 
   (setq org-agenda-files
         '("~/personal/organisation/org-files/Tasks.org"
@@ -710,7 +716,8 @@
   (org-babel-do-load-languages
       'org-babel-load-languages
       '((emacs-lisp . t)
-      (python . t)))
+	(python . t)
+	(plantuml . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
@@ -720,6 +727,7 @@
 
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("plant" . "src plantuml"))
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 ;; Automatically tangle our Emacs.org config file when we save it
@@ -789,6 +797,8 @@
                (if (string= web-mode-cur-language "css")
                    (setq emmet-use-css-transform t)
                  (setq emmet-use-css-transform nil)))))
+(straight-use-package
+ '(plantuml-mode :type git :flavor melpa :host github :repo "skuro/plantuml-mode"))
 
 (straight-use-package
  '(typescript-mode :type git :flavor melpa :host github :repo "emacs-typescript/typescript.el"))
