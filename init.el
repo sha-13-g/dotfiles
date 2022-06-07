@@ -1,4 +1,4 @@
-;; Max Masterton's Configuration for the GNU/Emacs elisp interpreter
+ ;; Max Masterton's Configuration for the GNU/Emacs elisp interpreter
 ;;                       __                            
 ;;   __ _ _ __  _   _   / /__ _ __ ___   __ _  ___ ___ 
 ;;  / _` | '_ \| | | | / / _ \ '_ ` _ \ / _` |/ __/ __|
@@ -29,18 +29,23 @@
 (defvar gbl/leader "C-SPC")
 
 
+;; Functions definition
+(defun launcher (prog)
+  (interactive)
+  (start-process-shell-command prog nil prog))
+
 ;; System packages
 (use-package system-packages)
 
 ;; Setting up auto-package update so that packages are updated automatically
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7) ; Every seven days
-  (auto-package-update-prompt-before-update t) ; Ask permission first
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "09:00")) ; At 9:00AM
+;; (use-package auto-package-update
+;;   :custom
+;;   (auto-package-update-interval 7) ; Every seven days
+;;   (auto-package-update-prompt-before-update t) ; Ask permission first
+;;   (auto-package-update-hide-results t)
+;;   :config
+;;   (auto-package-update-maybe)
+;;   (auto-package-update-at-time "09:00")) ; At 9:00AM
 
 ;; Real auto-save feature
 (use-package real-auto-save
@@ -79,8 +84,8 @@
 	  indent-tabs-mode t)
 
 ;; Setting up contact details, used by mu4e and magit
-(setq user-full-name "Max Masterton"
-	  user-mail-address "me@maxmasterton.tech")
+(setq user-full-name "Ganfina Brice-Loic"
+	  user-mail-address "ganfinab@gmail.com")
 
 ;; Dashboard
 (use-package dashboard										  
@@ -143,12 +148,6 @@
   "Insert a tab char. (ASCII 9, \t)"
   (interactive)
   (insert "\t"))
-
-(global-set-key (kbd "TAB") 'my-insert-tab-char)
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
-(global-set-key (kbd "<menu>") 'M-x) ; On UK keyboards, press menu to open Counsel-M-x
-;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
-(global-set-key (kbd "M-:") 'evil-ex)
 
 ;; Put numbers on every buffer, unless specified otherwise in the dolist.
 (column-number-mode)
@@ -240,6 +239,8 @@
 (use-package all-the-icons)
 (use-package emojify)
 
+;;;; Completion
+
 ;; Installing vertico
 ;; vertico is an autocompletion engine for Emacs, vertico-rich allows suggestions to have descriptions
 (use-package vertico
@@ -262,24 +263,28 @@
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
-
+        completion-category-overrides '((file (styles partial-completion)))
+		orderless-component-separator "[ &]"))
 
 (use-package consult
   :after vertico
   :bind (;; C-c bindings (mode-specifiC-map)
          ("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
+         ("C-c M" . consult-minor-mode-menu)
+         ("C-c o" . consult-outline)
+         ("C-c i" . consult-imenu)
+         ("C-c f" . consult-flycheck)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ("C-:" . consult-line)
+         ("C-s" . consult-line)
          ("C-\\" . consult-line-multi)
 
          :map isearch-mode-map
-         ("C-:" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("C-s" . consult-line)                  ;; needed by consult-line to detect isearch
          ("M-s l" . consult-line-multi)            ;; needed by consult-line to detect isearch
 
          :map minibuffer-local-map
@@ -298,6 +303,12 @@
   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   :init (marginalia-mode))
 
+(use-package embark
+  :bind (
+		 ("C-:" . embark-act)
+		 :map minibuffer-local-map
+		 ("C-:" . embark-act)))
+
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
@@ -309,7 +320,10 @@
   ;; ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-(use-package vertico-posframe)
+;; (use-package mini-popup)
+;; (use-package vertico-posframe
+;;   :init
+;;   (vertico-posframe-mode))
 
 ;; Using Winum to label open windows
 (use-package winum
@@ -324,8 +338,7 @@
   (setq telephone-line-height 24
       telephone-line-evil-use-short-tag t))
 
-(setq display-time-day-and-date t)
-(display-time-mode 1) ; Display time on n the modeline
+;; (display-time-mode 1) ; Display time on n the modeline
 (telephone-line-mode 1)
 
 ;; Use syntax highlighting to match pairs of delimiters ({} or [] or ()).
@@ -363,7 +376,7 @@
 (nvmap :states '(normal visual) :keymaps 'override :prefix gbl/leader
 	   "f f" '(find-file :which-key "Find file")
 	   "f ." '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "open emacs init.el")
-	   "f r" '(counsel-recentf :which-key "Recent files")
+	   "f r" '(consult-recent-file :which-key "Recent files")
 	   "f s" '(save-buffer :which-key "Save file")
 	   "f u" '(sudo-edit :which-key "Sudo edit file")
 	   "f R" '(rename-file :which-ke "Rename file")
@@ -387,12 +400,16 @@
 	   "c"	'(compile :which-key "Compile")
 	   "C"	'(recompile :which-key "Recompile")
 	   "l"	'((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :which-key "Reload config")
-	   "t"	'(toggle-truncate-lines :which-key "Toggle truncated lines")
-	   "g"	'(counsel-projectile-rg :which-key "Ripgrep across project")
+	   ;; "t"	'(toggle-truncate-lines :which-key "Toggle truncated lines")
 	   "s"	'(hydra-text-scale/body :which-key "Scale text")
-	   "S"	'(consult-line :which-key "Search using swiper") ; I don't find this binding worth using.
 	   "r"	'(writeroom-mode :which-key "Writeroom mode")
-	   "."	'(find-file :which-key "Find file"))
+	   ","	'(switch-to-buffer :which-key "Switch to buffer")
+	   ";"	'(find-file :which-key "Find file"))
+
+(nvmap :prefix gbl/leader
+  "g" 	'(:ignore t :which-key "Grep command")
+  "g g" '(consult-grep :which-key "Grep across project")
+  "g r" '(consult-ripgrep :which-key "Ripgrep across project"))
 
 ; Dependencies for standard keybindings:
 (use-package writeroom-mode)
@@ -440,18 +457,23 @@
 		(other-window 1)
 		(switch-to-buffer (other-buffer))))))
 
-(defun eshell-h ()
-  "Une function qui lance eshell hortizontallement."
-  (interactive)
-  (evil-window-new)
-  (evil-window-decrease-height 10)
-  (eshell-mode))
+;; (defun eshell ()
+;;   "Une function qui lance eshell hortizontallement."
+;;   (interactive)
+;;   (evil-window-new)
+;;   (evil-window-decrease-height 10)
+;;   (eshell-mode))
 
 ;; Setting up EVIL
 ;; Vim emulation within emacs. Limited functionality within EXWM.
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode))
+
 (use-package evil
   :init
   (setq evil-want-integration t)
+  (setq evil-undo-system 'undo-tree)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-vsplit-window-right t ; when v-splitting a window select right window
@@ -577,7 +599,9 @@
   :commands (dired dired-jump)
   :config
   (setq dired-open-extensions '(("png" . "feh")
-								("mvk" . "mpv"))))
+								("mvk" . "mpv")
+								("avi" . "mpv")
+								("mp4" . "mpv"))))
 
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -602,8 +626,8 @@
 (setq dired-open-extentions '(("gif" . "sxiv") ;; When a gif is selected, it must be opened within sxiv.
 							  ("jpg" . "sxiv")
 							  ("png" . "sxiv")
-							  ("mkv" . "vlc")
-							  ("mp4" . "vlc")))
+							  ("mkv" . "mpv")
+							  ("mp4" . "mpv")))
 
 ;; Dired will have all-the-icons, same as in treemacs
 (use-package all-the-icons-dired
@@ -619,7 +643,7 @@
 
 (nvmap :prefix gbl/leader ; Eshell general.el keybindings
   "E h" '(counsel-esh-history :which-key "Eshell history")
-  "E s" '(eshell-h :which-key "Eshell"))
+  "E s" '(eshell-toggle :which-key "Eshell"))
 
 ;; Function to configure eshell when an instance of it is brought into existance
 (defun configure-eshell ()
@@ -630,12 +654,140 @@
   (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
   (evil-normalize-keymaps)
 
-  (setq eshell-history-size 5000
+  (setq eshellistory-size 5000
 		eshell-buffer-maxiumum-lines 5000
 		eshell-scrollto-bottom-on-input t))
 
 ; Eshell has a git prompt, showing git infomation when in a git initialized directory
+(defun read-file (file-path)
+  (with-temp-buffer
+    (insert-file-contents file-path)
+    (buffer-string)))
+
+(defun gbl/get-current-package-version ()
+  (interactive)
+  (let ((package-json-file (concat (eshell/pwd) "/package.json")))
+    (when (file-exists-p package-json-file)
+      (let* ((package-json-contents (read-file package-json-file))
+             (package-json (ignore-errors (json-parse-string package-json-contents))))
+        (when package-json
+          (ignore-errors (gethash "version" package-json)))))))
+
+(defun gbl/map-line-to-status-char (line)
+  (cond ((string-match "^?\\? " line) "?")))
+
+(defun gbl/get-git-status-prompt ()
+  (let ((status-lines (cdr (process-lines "git" "status" "--porcelain" "-b"))))
+    (seq-uniq (seq-filter 'identity (mapcar 'gbl/map-line-to-status-char status-lines)))))
+
+(defun gbl/get-prompt-path ()
+  (let* ((current-path (eshell/pwd))
+         (git-output (shell-command-to-string "git rev-parse --show-toplevel"))
+         (has-path (not (string-match "^fatal" git-output))))
+    (if (not has-path)
+      (abbreviate-file-name current-path)
+      (string-remove-prefix (file-name-directory git-output) current-path))))
+
+;; This prompt function mostly replicates my custom zsh prompt setup
+;; that is powered by github.com/denysdovhan/spaceship-prompt.
+(defun gbl/eshell-prompt ()
+  (let ((current-branch (magit-get-current-branch))
+        (package-version (gbl/get-current-package-version)))
+    (concat
+     "\n"
+     (propertize (system-name) 'face `(:foreground "#62aeed"))
+     (propertize " ॐ " 'face `(:foreground "white"))
+     (propertize (gbl/get-prompt-path) 'face `(:foreground "#82cfd3"))
+     (when current-branch
+       (concat
+        (propertize " • " 'face `(:foreground "white"))
+        (propertize (concat " " current-branch) 'face `(:foreground "#c475f0"))))
+     (when package-version
+       (concat
+        (propertize " @ " 'face `(:foreground "white"))
+        (propertize package-version 'face `(:foreground "#e8a206"))))
+     (propertize " • " 'face `(:foreground "white"))
+     (propertize (format-time-string "%I:%M:%S %p") 'face `(:foreground "#5a5b7f"))
+     (if (= (user-uid) 0)
+         (propertize "\n#" 'face `(:foreground "red2"))
+       (propertize "\nλ" 'face `(:foreground "#aece4a")))
+     (propertize " " 'face `(:foreground "white")))))
+
+;; (unless gbl/is-termux
+;;   (add-hook 'eshell-banner-load-hook
+;;             (lambda ()
+;;                (setq eshell-banner-message
+;;                      (concat "\n" (propertize " " 'display (create-image "~/.dotfiles/.emacs.d/images/flux_banner.png" 'png nil :scale 0.2 :align-to "center")) "\n\n")))))
+
+
+(defun gbl/eshell-configure ()
+  ;; Make sure magit is loaded
+  (require 'magit)
+
+  (require 'evil-collection-eshell)
+  (evil-collection-eshell-setup)
+
+  (use-package xterm-color)
+
+  ;; (push 'eshell-tramp eshell-modules-list)
+  ;; (push 'xterm-color-filter eshell-preoutput-filter-functions)
+  ;; (delq 'eshell-handle-ansi-color eshell-output-filter-functions)
+  
+  ;; Save command history when commands are entered
+  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+  (add-hook 'eshell-before-prompt-hook
+            (lambda ()
+              (setq xterm-color-preserve-properties t)))
+
+  ;; Truncate buffer for performance
+  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+  ;; We want to use xterm-256color when running interactive commands
+  ;; in eshell but not during other times when we might be launching
+  ;; a shell command to gather its output.
+  (add-hook 'eshell-pre-command-hook
+            (lambda () (setenv "TERM" "xterm-256color")))
+  (add-hook 'eshell-post-command-hook
+            (lambda () (setenv "TERM" "dumb")))
+
+  ;; Use completion-at-point to provide completions in eshell
+  (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+
+  ;; Initialize the shell history
+  (eshell-hist-initialize)
+
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'consult-history)
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-bol)
+  (evil-normalize-keymaps)
+
+  (setenv "PAGER" "cat")
+
+  (setq eshell-prompt-function      'gbl/eshell-prompt
+        eshell-prompt-regexp        "^λ "
+        eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredups t
+        eshell-highlight-prompt t
+        eshell-scroll-to-bottom-on-input t
+        eshell-prefer-lisp-functions nil))
+
+(setup eshell
+  (add-hook 'eshell-first-time-mode-hook #'gbl/eshell-configure)
+  (setq eshell-directory-name "~/.dotfiles/.emacs.d/eshell/"
+        eshell-aliases-file (expand-file-name "~/.dotfiles/.emacs.d/eshell/alias")))
+
+(use-package eshell-z
+  :hook ((eshell-mode . (lambda () (require 'eshell-z)))
+		 (eshell-z-change-dir-hook . (lambda () (eshell/pushd (eshell/pwd))))))
+
+;; (setup (:pkg exec-path-from-shell)
+;;   (setq exec-path-from-shell-check-startup-files nil)
+;;   (when (memq window-system '(mac ns x))
+;;     (exec-path-from-shell-initialize)))
+
 (use-package eshell-git-prompt)
+(use-package eshell-toggle)
 (use-package eshell
   :hook (eshell-first-time-mode . configure-eshell)
   :config
@@ -693,7 +845,7 @@
 (nvmap :prefix gbl/leader
   "o e" '(elfeed :which-key "Open elfeed")
   "o v" '(vterm :which-key "Open vterm")
-  "o s" '(eshell-h :which-key "Open eshell")
+  "o s" '(eshell-toggle :which-key "Open eshell")
   "o t" '(term :which-key "Open term")
   "o d" '(dired-jump :which-key "Open dired")
   "o a" '(org-agenda :which-key "Open org-agenda")
@@ -719,7 +871,19 @@
     :init
     (yas-global-mode 1))
 
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package consult-yasnippet
+  :after yasnippet)
+
 ;; Better completions with company-mode
+(use-package flycheck
+  :init
+  (global-flycheck-mode))
+
+(use-package consult-flycheck)
+
 (use-package company
   :after lsp-mode
   :hook (prog-mode . company-mode)
@@ -732,7 +896,8 @@
   ;; 		("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (company-idle-delay 0.0)
+  (company-show-quick-access t))
 
 ;; Cleaner Aesthetic with Company-box
 (use-package company-box
@@ -746,14 +911,11 @@
 (add-hook 'html-mode-hook 'eglot-ensure)
 (add-hook 'css-mode-hook 'eglot-ensure)
 
-(use-package emmet-mode
-  :hook ((sgml-mode-hook . emmet-mode)
-		 (css-mode-hook  . emmet-mode)
-		 (web-mode-hook  . emmet-mode)))
+(require 'emmet-mode)
 
-(add-hook 'sgml-mode-hook 'eglot-ensure)
-(add-hook 'css-mode-hook 'eglot-ensure)
-(add-hook 'web-mode-hook 'eglot-ensure)
+(add-hook 'sgml-mode-hook 'emmet-mode)
+(add-hook 'css-mode-hook 'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
 
 (use-package web-mode
   :mode (("\\.html\\'" . web-mode)
@@ -944,25 +1106,33 @@
   (kill-buffer)
   (delete-window))
 
+(global-set-key (kbd "TAB") 'my-insert-tab-char)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
+;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
 
+(global-set-key (kbd "M-:") 'evil-ex)
 (global-set-key (kbd "M-q") 'kill-buffer-slip-window)
 (global-set-key (kbd "M-Q") 'delete-window)
 
-
 (global-set-key (kbd "M-h") 'evil-window-left)
 (global-set-key (kbd "M-l") 'evil-window-right)
-(global-set-key (kbd "M-j") 'evil-window-up)
-(global-set-key (kbd "M-k") 'evil-window-down)
+(global-set-key (kbd "M-k") 'evil-window-up)
+(global-set-key (kbd "M-j") 'evil-window-down)
 
 (global-set-key (kbd "M-J") 'windmove-swap-states-up)
 (global-set-key (kbd "M-K") 'windmove-swap-states-down)
 (global-set-key (kbd "M-L") 'windmove-swap-states-right)
 (global-set-key (kbd "M-H") 'windmove-swap-states-left)
 
-(global-set-key (kbd "s-b") 'switch-to-buffer)
 (global-set-key (kbd "s-k") 'switch-to-prev-buffer)
 (global-set-key (kbd "s-j") 'switch-to-next-buffer)
 (global-set-key (kbd "s-h") 'find-file)
+
+(global-set-key (kbd "s-q") '(lambda () (interactive) (launcher "qutebrowser")))
+(global-set-key (kbd "s-b") '(lambda () (interactive) (launcher "qutebrowser")))
+(global-set-key (kbd "s-t") '(lambda () (interactive) (launcher "alacritty")))
+(global-set-key (kbd "s-m") '(lambda () (interactive) (launcher "mpv")))
+(global-set-key (kbd "s-p") 'package-install)
 
 
 (global-set-key (kbd"C-M-j") 'evil-collection-unimpaired-move-text-down)
@@ -1003,6 +1173,7 @@
 ;; Keybindings for deskop-environment.el
 (nvmap :prefix gbl/leader
   "SPC v" '(hydra-volume-up/body :which-key "Change volume")
+  "SPC t" '(load-theme :which-key "Load theme")
   "SPC b" '(hydra-brightness-up/body :which-key "Change brightness")
   "SPC m" '(desktop-environment-toggle-mute :which-key "Toggle mute")
   "SPC M" '(desktop-environment-toggle-microphone-mute :which-key "Toggle microphone")
@@ -1081,7 +1252,7 @@
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
     ("Alacritty" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
-    ("vlc" (exwm-workspace-rename-buffer (format "VLC: %s" exwm-title)))))
+    ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
 
 (defun gbl/position-window ()
   (let* ((pos (frame-position))
@@ -1095,7 +1266,8 @@
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-move-window 2))
     ("Alacritty" (exwm-workspace-move-window 0))
-    ("vlc" (exwm-workspace-move-window 4))))
+    ("TelegramDesktop" (exwm-workspace-move-window 9))
+    ("mpv" (exwm-workspace-move-window 4))))
 
 ;; Update panel indicator when workspace changes
 
@@ -1119,25 +1291,38 @@
   (setq exwm-input-prefix-keys
     '(?\C-x
       ?\C-h
+
       ?\M-&
+      ?\M-x
       ?\M-:
+
       ?\M-h
       ?\M-l
       ?\M-k
       ?\M-j
+
       ?\M-J
       ?\M-K
       ?\M-H
       ?\M-L
+
+      ?\M-q
+      ?\M-Q
+
       ?\s-p
       ?\s-h
       ?\s-j
       ?\s-k
       ?\s-b
+
+      ?\C--
+      ?\C-=
+
       ?\C-\M-h
       ?\C-\M-l
       ?\C-\M-k
       ?\C-\M-j
+
       ?\C-\ ))     ;; Ctrl+Spacev
 
   ;; Ctrl+Q will enable the next key to be sent directly
@@ -1148,47 +1333,56 @@
   (setq exwm-input-global-keys
         `(
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\s-r] . exwm-window-resize/body)
+          ([?\M-r] . exwm-window-resize/body)
 
 		  ;; Toggle floating windows
-		  ([?\s-t] . exwm-floating-toggle-floating)
+		  ([?\M-t] . exwm-floating-toggle-floating)
 
 		  ;; Toggle fullscreen
-		  ([?\s-f] . exwm-layout-toggle-fullscreen)
+		  ([?\M-f] . exwm-layout-toggle-fullscreen)
 
 		  ;; Toggle modeline
-		  ([?\s-m] . exwm-layout-toggle-mode-line)
+		  ;; ([?\s-m] . exwm-layout-toggle-mode-line)
 
           ;; Launch applications via shell command
-		  ([?\s-d] . counsel-linux-app)
-          ([?\s-a] . (lambda (command)
+		  ([?\M-d] . counsel-linux-app)
+
+          ([?\M-a] . (lambda (command)
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\s-w] . exwm-workspace-switch)
-          ([?\s-²] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+          ([?\M-w] . exwm-workspace-move-window)
+
+		  ;; Move the current window to the i (1-9) workspace
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-move-window ,i))))
+                    (number-sequence 1 9))
+
+          ([?\M-²] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
 		  
           ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
           ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
+                      `(,(kbd (format "M-%d" i)) .
                         (lambda ()
                           (interactive)
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 9))))
 
-  (exwm-input-set-key (kbd "<M-tab>") 'evil-window-next)
-  (exwm-input-set-key (kbd "M-SPC") 'evil-window-vsplit)
-  (exwm-input-set-key (kbd "<M-return>") 'evil-window-split)
+  (exwm-input-set-key (kbd "<s-tab>") 'evil-window-next)
+  (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)
+  (exwm-input-set-key (kbd "<s-return>") 'evil-window-split)
 
   (gbl/start-panel)
-
+  
   (gbl/run-in-bg "dunst")
   (gbl/run-in-bg "nm-applet")
   (gbl/run-in-bg "pasystray")
   (gbl/run-in-bg "blueman-applet")
-  (gbl/run-in-bg "qutebrowser")
-  (gbl/run-in-bg "vlc")
-  (gbl/run-in-bg "alacritty")
+  ;;(gbl/run-in-bg "qutebrowser")
+  ;;(gbl/run-in-bg "mpv")
+  ;;(gbl/run-in-bg "alacritty")
 
   (exwm-enable))
-
