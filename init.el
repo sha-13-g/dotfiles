@@ -222,8 +222,8 @@
   "SPC d" '(maxm/load-dark-theme :which-key "Dark theme"))
 
 ;; Setting Transparency
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(70 . 90))
+(add-to-list 'default-frame-alist '(alpha . (70 . 90)))
 
 ;; Diming unused windows
 (use-package dimmer
@@ -238,7 +238,8 @@
 ;; Adding upport for emojis and icons
 (use-package all-the-icons)
 (use-package emojify)
-
+(use-package afternoon-theme)
+(use-package flatui-theme)
 ;;;; Completion
 
 ;; Installing vertico
@@ -353,17 +354,34 @@
 (use-package winum
   :config (winum-mode))
 
-(use-package telephone-line
-  :config
-  (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-      telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-      telephone-line-primary-right-separator 'telephone-line-cubed-right
-      telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-  (setq telephone-line-height 24
-      telephone-line-evil-use-short-tag t))
+;; (use-package telephone-line
+;;   :config
+;;   (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+;;       telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+;;       telephone-line-primary-right-separator 'telephone-line-cubed-right
+;;       telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+;;   (setq telephone-line-height 24
+;; 		telephone-line-evil-use-short-tag t)
+;;   :init
+;;  (telephone-line-mode 1))
 
-;; (display-time-mode 1) ; Display time on n the modeline
-(telephone-line-mode 1)
+(use-package diminish)
+
+(use-package minions
+  :after doom-modeline)
+
+(use-package doom-modeline
+  :hook (after-init-hook . doom-modeline-mode)
+  :custom ((doom-modeline-height 25)
+           (doom-modeline-bar-width 6)
+           (doom-modeline-lsp t)
+           (doom-modeline-github nil)
+           (doom-modeline-mu4e nil)
+           (doom-modeline-irc t)
+           (doom-modeline-minor-modes t)
+           (doom-modeline-persp-name nil)
+           (doom-modeline-buffer-file-name-style 'truncate-except-project)
+           (doom-modeline-major-mode-icon nil)))
 
 ;; Use syntax highlighting to match pairs of delimiters ({} or [] or ()).
 (use-package rainbow-delimiters
@@ -1197,7 +1215,7 @@
 ;; Keybindings for deskop-environment.el
 (nvmap :prefix gbl/leader
   "SPC v" '(hydra-volume-up/body :which-key "Change volume")
-  "SPC t" '(load-theme :which-key "Load theme")
+  "SPC t" '(consult-theme :which-key "Load theme")
   "SPC b" '(hydra-brightness-up/body :which-key "Change brightness")
   "SPC m" '(desktop-environment-toggle-mute :which-key "Toggle mute")
   "SPC M" '(desktop-environment-toggle-microphone-mute :which-key "Toggle microphone")
