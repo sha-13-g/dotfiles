@@ -1170,7 +1170,7 @@
 
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
-(global-set-key (kbd "C-U") 'universal-argument)
+(global-set-key (kbd "C-a") 'universal-argument)
 
 ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
 
