@@ -549,7 +549,7 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-collection ; Evil collection adds support for non-text edditing applications of EVIL
+(use-package evil-collection ; Evil collection adds support for non-text edditing applications of EVIL
   :after evil
   :config
   (evil-collection-init))
@@ -1170,6 +1170,8 @@
 
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
+(global-set-key (kbd "C-U") 'universal-argument)
+
 ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
 
 (global-set-key (kbd "C-c & l") 'consult-yasnippet)
