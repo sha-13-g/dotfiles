@@ -237,9 +237,18 @@
 
 ;; Adding upport for emojis and icons
 (use-package all-the-icons)
+
 (use-package emojify)
+
 (use-package afternoon-theme)
+
 (use-package flatui-theme)
+
+(use-package vampyricdark-theme)
+
+(use-package catppuccin-theme
+ :config
+ (setq catppuccin-height-title1 1.5))
 ;;;; Completion
 
 ;; Installing vertico
@@ -685,7 +694,7 @@
 
 (nvmap :prefix gbl/leader ; Eshell general.el keybindings
   "E h" '(counsel-esh-history :which-key "Eshell history")
-  "E s" '(eshell-toggle :which-key "Eshell"))
+  "E s" '(eshell :which-key "Eshell"))
 
 ;; Function to configure eshell when an instance of it is brought into existance
 (defun configure-eshell ()
@@ -1274,7 +1283,7 @@
 (defun gbl/start-panel ()
   (interactive)
   (gbl/kill-panel)
-  (setq gbl/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+  (setq gbl/polybar-process (start-process-shell-command "~/.config/polybar/launch.sh" nil "~/.config/polybar/launch.sh")))
 
 (defun gbl/run-in-bg (command)
   (let ((command-parts (split-string command "[ ]+")))

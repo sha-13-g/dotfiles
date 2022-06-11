@@ -22,6 +22,7 @@ picom &
 
 nitrogen --restore
 
+
 # pa-applet &
 # nm-applet &
 
