@@ -115,7 +115,7 @@
 ;; Removing useless GUI elements
 (scroll-bar-mode -1)
 (tooltip-mode -1)
-(set-fringe-mode -1)
+(set-fringe-mode 7)
 (setq inhibit-startup-message t)
 (menu-bar--display-line-numbers-mode-relative)
 (tool-bar-mode -1)
@@ -222,9 +222,10 @@
   "SPC d" '(maxm/load-dark-theme :which-key "Dark theme"))
 
 ;; Setting Transparency
-(set-frame-parameter (selected-frame) 'alpha '(70 . 90))
-(add-to-list 'default-frame-alist '(alpha . (70 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
+(defun set-transparency())
 ;; Diming unused windows
 (use-package dimmer
   :config (dimmer-mode))
@@ -376,11 +377,16 @@
 
 (use-package diminish)
 
+(dolist (minor-mode minor-mode-list)
+  (diminish minor-mode))
+
 (use-package minions
   :after doom-modeline)
 
+(use-package rich-minority)
+
 (use-package doom-modeline
-  :hook (after-init-hook . doom-modeline-mode)
+  :hook (after-init . doom-modeline-mode)
   :custom ((doom-modeline-height 25)
            (doom-modeline-bar-width 6)
            (doom-modeline-lsp t)
@@ -407,6 +413,7 @@
 
 ;; Enabling which-key to help with long key strings.
 (use-package which-key
+  :diminish
   :init
   (setq which-key-sort-order #'which-key-key-order-alpha ; order alphabetically
 		which-key-sort-uppercase-first nil
@@ -491,7 +498,7 @@
 	   ;; Window movement
 	   "w r" '(gbl/hydra-window-resizer/body :which-key "Resize window")
 	   ;; Custom window layout functions
-	   "w t" '(maxm/window-split-toggle :which-key "Window split toggle"))
+	   "w t" '(maxm/window-plit-toggle :which-key "Window split toggle"))
 
 ;; Custom window functions
 (defun maxm/window-split-toggle ()
@@ -919,8 +926,8 @@
 
 ;;snippets
 (use-package yasnippet
-    :init
-    (yas-global-mode 1))
+  :init
+  (yas-global-mode 1))
 
 (use-package yasnippet-snippets
   :after yasnippet)
@@ -954,8 +961,12 @@
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
-(use-package eglot)
+(require 'eglot)
 
+(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 (add-hook 'typescript-mode-hook 'eglot-ensure)
 (add-hook 'js-mode-hook 'eglot-ensure)
 (add-hook 'python-mode-hook 'eglot-ensure)
@@ -1160,6 +1171,8 @@
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
 ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
+
+(global-set-key (kbd "C-c & l") 'consult-yasnippet)
 
 (global-set-key (kbd "M-:") 'evil-ex)
 (global-set-key (kbd "M-q") 'kill-buffer-slip-window)
