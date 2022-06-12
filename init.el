@@ -27,12 +27,10 @@
 
 ;;Variable definition
 (defvar gbl/leader "C-SPC")
+(defvar gbl/frame-transparency-v '(70 . 70))
 
-
-;; Functions definition
-(defun launcher (prog)
-  (interactive)
-  (start-process-shell-command prog nil prog))
+;;;; load function file
+(load-file (concat user-emacs-directory "functions.el"))
 
 ;; System packages
 (use-package system-packages)
@@ -115,11 +113,15 @@
 ;; Removing useless GUI elements
 (scroll-bar-mode -1)
 (tooltip-mode -1)
-(set-fringe-mode 7)
+(set-fringe-mode 8)
 (setq inhibit-startup-message t)
 (menu-bar--display-line-numbers-mode-relative)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+
+;; Setting Transparency
+(set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency-v)
+(add-to-list 'default-frame-alist `(alpha . ,gbl/frame-transparency-v))
 
 ;; Enabling usefull modes
 (delete-selection-mode 1) ; Delete existing text when inserting text
@@ -221,9 +223,6 @@
   "SPC l" '(maxm/load-light-theme :which-key "Light theme")
   "SPC d" '(maxm/load-dark-theme :which-key "Dark theme"))
 
-;; Setting Transparency
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
 (defun set-transparency())
 ;; Diming unused windows
@@ -377,8 +376,7 @@
 
 (use-package diminish)
 
-(dolist (minor-mode minor-mode-list)
-  (diminish minor-mode))
+
 
 (use-package minions
   :after doom-modeline)
@@ -1194,10 +1192,10 @@
 (global-set-key (kbd "s-j") 'switch-to-next-buffer)
 (global-set-key (kbd "s-h") 'find-file)
 
-(global-set-key (kbd "s-q") '(lambda () (interactive) (launcher "qutebrowser")))
-(global-set-key (kbd "s-b") '(lambda () (interactive) (launcher "qutebrowser")))
-(global-set-key (kbd "s-t") '(lambda () (interactive) (launcher "alacritty")))
-(global-set-key (kbd "s-m") '(lambda () (interactive) (launcher "mpv")))
+(global-set-key (kbd "s-q") '(lambda () (interactive) (gbl/launcher "qutebrowser")))
+(global-set-key (kbd "s-b") '(lambda () (interactive) (gbl/launcher "qutebrowser")))
+(global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty")))
+(global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv")))
 (global-set-key (kbd "s-p") 'package-install)
 
 
