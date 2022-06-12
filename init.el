@@ -30,7 +30,7 @@
 (defvar gbl/frame-transparency-v '(70 . 70))
 
 ;;;; load function file
-(load-file (concat user-emacs-directory "functions.el"))
+(load-file (concat user-emacs-directory "modules/functions.el"))
 
 ;; System packages
 (use-package system-packages)
@@ -258,6 +258,7 @@
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)
               ("C-l" . vertico-exit)
+              ("<backspace>" . gbl/minibuffer-backward-kill)
               :map minibuffer-local-map
               ("M-h" . vertico-next))
   :custom
@@ -1127,6 +1128,9 @@
 
 ;; 'Latex' from Org-mode
 (use-package biblio) ; Quick BibTex refrences, sometimes.
+(use-package pdf-tools
+  :init
+  (pdf-loader-install)) ; Quick BibTex refrences, sometimes.
 
 (setq org-latex-listings 'minted
 	  org-latex-packages-alist '(("" "minted")))
@@ -1151,14 +1155,6 @@
 
 (defun max/exwm-init-hook ()
   (exwm-workspace-switch-create 1)) ; Start on workspace 1, not 0
-
-(defhydra exwm-window-resize (:timeout 4)
-  ("h" (exwm-layout-shrink-window-horizontally 10) "shrink h")
-  ("l" (exwm-layout-enlarge-window-horizontally 10) "enlarge h")
-  ("k" (exwm-layout-shrink-window 10) "shrink v")
-  ("j" (exwm-layout-enlarge-window 10) "enlarge v")
-  ("q" nil "quit" :exit t))
-
 
 (defun kill-buffer-slip-window ()
   "a function for delete slip window and kill the buffer."
@@ -1397,7 +1393,7 @@
   (setq exwm-input-global-keys
         `(
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\M-r] . exwm-window-resize/body)
+          ([?\M-r] . exwm-reset)
 
 		  ;; Toggle floating windows
 		  ([?\M-t] . exwm-floating-toggle-floating)
@@ -1415,7 +1411,7 @@
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\M-w] . exwm-workspace-move-window)
+          ([?\M-R] . exwm-inp)
 
 		  ;; Move the current window to the i (1-9) workspace
           ,@(mapcar (lambda (i)
@@ -1439,14 +1435,11 @@
   (exwm-input-set-key (kbd "M-SPC") 'evil-window-vsplit)
   (exwm-input-set-key (kbd "<M-return>") 'evil-window-split)
 
-  (gbl/start-panel)
+  ;; (gbl/start-panel)
   
   (gbl/run-in-bg "dunst")
   (gbl/run-in-bg "nm-applet")
   (gbl/run-in-bg "pasystray")
   (gbl/run-in-bg "blueman-applet")
-  ;;(gbl/run-in-bg "qutebrowser")
-  ;;(gbl/run-in-bg "mpv")
-  ;;(gbl/run-in-bg "alacritty")
 
   (exwm-enable))
