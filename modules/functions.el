@@ -39,11 +39,11 @@ folder, otherwise delete a character backward"
 
 (defun gbl/shutdown ()
   (interactive)
-  (start-process-shell-command shutdown nil "shutdown now"))
+  (start-process-shell-command "shutdown" nil "shutdown now"))
 
 (defun gbl/restart ()
   (interactive)
-  (start-process-shell-command shutdown nil "shutdown -r now"))
+  (start-process-shell-command "shutdown" nil "shutdown -r now"))
 
 (provide 'functions)
 
