@@ -1411,7 +1411,7 @@
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\M-R] . exwm-inp)
+          ([?\M-R] . exwm-input-release-keyboard)
 
 		  ;; Move the current window to the i (1-9) workspace
           ,@(mapcar (lambda (i)
