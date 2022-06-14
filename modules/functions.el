@@ -37,5 +37,13 @@ folder, otherwise delete a character backward"
         (delete-minibuffer-contents))
       (delete-backward-char arg)))
 
+(defun gbl/shutdown ()
+  (interactive)
+  (start-process-shell-command shutdown nil "shutdown now"))
+
+(defun gbl/restart ()
+  (interactive)
+  (start-process-shell-command shutdown nil "shutdown -r now"))
+
 (provide 'functions)
 
