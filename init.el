@@ -1,4 +1,4 @@
- ;; Max Masterton's Configuration for the GNU/Emacs elisp interpreter
+;; maxMax Masterton's Configuration for the GNU/Emacs elisp interpreter
 ;;                       __                            
 ;;   __ _ _ __  _   _   / /__ _ __ ___   __ _  ___ ___ 
 ;;  / _` | '_ \| | | | / / _ \ '_ ` _ \ / _` |/ __/ __|
@@ -23,14 +23,18 @@
   (package-install 'use-package))
 
 (require 'use-package)
+
 (setq use-package-always-ensure t) ; all use-package statements will include :ensure t by default
 
 ;;Variable definition
 (defvar gbl/leader "C-SPC")
 (defvar gbl/frame-transparency-v '(70 . 70))
 
+;;;; Hooks
+
 ;;;; load function file
 (load-file (concat user-emacs-directory "modules/functions.el"))
+(load-file (concat user-emacs-directory "modules/epubmode.el"))
 
 ;; System packages
 (use-package system-packages)
@@ -54,6 +58,41 @@
 ;; Startup Performace:
 ;; Garbage Collection
 ;; Using garbage collection magic hack (gcmh)
+(use-package nov
+  :config (setq nov-unzip-program (executable-find "bsdtar")
+      nov-unzip-args '("-xC" directory "-f" filename)))
+
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
+;; (require 'justify-kp)
+
+(setq nov-text-width t)
+
+(defun my-nov-window-configuration-change-hook ()
+  (my-nov-post-html-render-hook)
+  (remove-hook 'window-configuration-change-hook
+               'my-nov-window-configuration-change-hook
+               t))
+
+(defun my-nov-post-html-render-hook ()
+  (if (get-buffer-window)
+      (let ((max-width (pj-line-width))
+            buffer-read-only)
+        (save-excursion
+          (goto-char (point-min))
+          (while (not (eobp))
+            (when (not (looking-at "^[[:space:]]*$"))
+              (goto-char (line-end-position))
+              (when (> (shr-pixel-column) max-width)
+                (goto-char (line-beginning-position))
+                (pj-justify)))
+            (forward-line 1))))
+    (add-hook 'window-configuration-change-hook
+              'my-nov-window-configuration-change-hook
+              nil t)))
+
+;; (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
+
 (use-package gcmh
   :config
   (gcmh-mode 1))
@@ -146,10 +185,7 @@
 (smooth-scrolling-mode 1)
 
 ;; Defining a function to insert a tab char when tab is pressed
-(defun my-insert-tab-char ()
-  "Insert a tab char. (ASCII 9, \t)"
-  (interactive)
-  (insert "\t"))
+
 
 ;; Put numbers on every buffer, unless specified otherwise in the dolist.
 (column-number-mode)
@@ -203,28 +239,26 @@
 		doom-themes-enable-italic nil)
 
   ;; Function for switching to light theme:
-  (defun maxm/load-dark-theme ()
+  (defun gbl/load-dark-theme ()
 	(interactive)
 	
 	(disable-theme 'doom-solarized-light)
 	(load-theme 'doom-dracula t))
 
   ;; Function for switching to light theme
-  (defun maxm/load-light-theme ()
+  (defun gbl/load-light-theme ()
 	(interactive)
 
 	(disable-theme 'doom-dracula)
 	(load-theme 'doom-solarized-light t)
 	(setq-default input-block "#F9F2D9")))
 
-(maxm/load-dark-theme) ; Load dark theme by default
+(gbl/load-dark-theme) ; Load dark theme by default
 
 (nvmap :prefix gbl/leader
-  "SPC l" '(maxm/load-light-theme :which-key "Light theme")
-  "SPC d" '(maxm/load-dark-theme :which-key "Dark theme"))
+  "SPC l" '(gbl/load-light-theme :which-key "Light theme")
+  "SPC d" '(gbl/load-dark-theme :which-key "Dark theme"))
 
-
-(defun set-transparency())
 ;; Diming unused windows
 (use-package dimmer
   :config (dimmer-mode))
@@ -238,7 +272,8 @@
 ;; Adding upport for emojis and icons
 (use-package all-the-icons)
 
-(use-package emojify)
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
 
 (use-package afternoon-theme)
 
@@ -258,7 +293,6 @@
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)
               ("C-l" . vertico-exit)
-              ("<backspace>" . gbl/minibuffer-backward-kill)
               :map minibuffer-local-map
               ("M-h" . vertico-next))
   :custom
@@ -316,19 +350,14 @@
 
 (use-package embark
   :ensure t
-
   :bind
   (("C-:" . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
   :init
-  
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
-
   :config
-
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -443,6 +472,11 @@
 	   "e d" '(eval-expression :which-key "Evaliate elisp expression")
 	   "e r" '(eval-region :which-key "Evaluate highlighted reigon"))
 
+(nvmap :prefix gbl/leader
+  	   "P" 	'(:ignore t :which-key "System Power")
+	   "P s" '((lambda () (interactive) (gbl/shutdown)) :which-key "Shutdown")
+	   "P r" '((lambda () (interactive) (gbl/restart)) :which-key "Restart"))
+
 ; Dependencies for file keybindings:
 (use-package recentf
   :config
@@ -479,6 +513,11 @@
   ("j" (enlarge-window 2) "Enlarge window vertically")
   ("h" (shrink-window-horizontally 2) "Shrink window horizontally")
   ("l" (enlarge-window-horizontally 2) "Enlarge window horizontally")
+
+  ("K" (exwm-layout-shrink-window 10) "Shrink window vertically")
+  ("J" (exwm-layout-enlarge-window 10) "Enlarge window vertically")
+  ("H" (exwm-layout-shrink-window-horizontally 10) "Shrink window horizontally")
+  ("L" (exwm-layout-enlarge-window-horizontally 10) "Enlarge window horizontally")
   ("q" nil "Quit" :exit t))
 
 ;; Window control keybindings:
@@ -492,27 +531,29 @@
 	   ;; Window selection
 	   "w h" '(evil-window-left :which-key "Window left")
 	   "w j" '(evil-window-down :which-key "Window down")
-	   "w k" '(evil-window-up :which-key "Window up")
+	   "w k" '(evil-window-up :which-key "Window up")
 	   "w l" '(evil-window-right :which-key "Window right")
 	   ;; Window movement
 	   "w r" '(gbl/hydra-window-resizer/body :which-key "Resize window")
 	   ;; Custom window layout functions
-	   "w t" '(maxm/window-plit-toggle :which-key "Window split toggle"))
+	   "w t" '(gbl/window-plit-toggle :which-key "Window split toggle"))
 
-;; Custom window functions
-(defun maxm/window-split-toggle ()
-  "Toggle between horizontal and vertical split with two windows."
-  (interactive)
-  (if (> (length (window-list)) 2)
-	  (error "Can't toggle with more than 2 windows!")
-	(let ((func (if (window-full-height-p)
-					#'split-window-vertically
-				  #'split-window-horizontally)))
-	  (delete-other-windows)
-	  (funcall func)
-	  (save-selected-window
-		(other-window 1)
-		(switch-to-buffer (other-buffer))))))
+;;;; Application launcher
+
+(nvmap :prefix gbl/leader
+  "a"   '(:ignore t :which-key "Applications")
+
+  "a b" '(:ignore t :which-key "Browser")
+  "a b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+  "a b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
+  "a b g" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
+
+  "a p" '((lambda () (interactive) (gbl/run-in-bg "polybar-launcher")) :which-key "Polybar")
+
+  "a l" '(:ignore t :which-key "Launcher")
+  "a l w" '((lambda () (interactive) (gbl/launcher "wifi-manager" "")) :which-key "Wifi Manager")
+  "a l l" '((lambda () (interactive) (gbl/run-in-bg "launcher")) :which-key "App Launcher")
+  "a l e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
 
 ;; (defun eshell ()
 ;;   "Une function qui lance eshell hortizontallement."
@@ -526,6 +567,9 @@
 (use-package undo-tree
   :init
   (global-undo-tree-mode))
+
+(use-package evil-easymotion
+  :config (evilem-default-keybindings ":"))
 
 (use-package evil
   :init
@@ -548,7 +592,7 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-collection ; Evil collection adds support for non-text edditing applications of EVIL
+(use-package evil-collection ; Evil collection adds support for non-text edditing applications of EVIL
   :after evil
   :config
   (evil-collection-init))
@@ -776,7 +820,6 @@
 ;;                (setq eshell-banner-message
 ;;                      (concat "\n" (propertize " " 'display (create-image "~/.dotfiles/.emacs.d/images/flux_banner.png" 'png nil :scale 0.2 :align-to "center")) "\n\n")))))
 
-
 (defun gbl/eshell-configure ()
   ;; Make sure magit is loaded
   (require 'magit)
@@ -912,13 +955,13 @@
 ;;; LSP-Mode
 ;; Initial Configuration
 ;; (use-package lsp-mode
-;;   :hook (lsp-mode . maxm/lsp-mode-setup)
+;;   :hook (lsp-mode . gbl/lsp-mode-setup)
 ;;   :commands (lsp lsp-deferred)
 ;;   :init
 ;;   (setq lsp-keymap-prefix "C-c l"))
 
 ;; Breader Headcrumb
-(defun maxm/lsp-mode-setup ()
+(defun gbl/lsp-mode-setup ()
   (setq lsp-headline-breadcrumb-segmments '(path-up-to-project file symbols))
   (lsp-headline-breadcrumb-mode))
 
@@ -935,13 +978,13 @@
   :after yasnippet)
 
 ;; Better completions with company-mode
-(use-package flycheck
-  :init
-  (global-flycheck-mode))
-
-(use-package consult-flycheck)
+;; (use-package flymake
+;;   :hook (prog-mode . flymake-mode)
+;;   :init
+;;   (flymake-mode))
 
 (use-package company
+
   :after lsp-mode
   :hook (prog-mode . company-mode)
   :bind
@@ -960,17 +1003,30 @@
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
-(require 'eglot)
 
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+;;;; Languages Servers
 
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
-(add-hook 'typescript-mode-hook 'eglot-ensure)
-(add-hook 'js-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'eglot-ensure)
-(add-hook 'html-mode-hook 'eglot-ensure)
-(add-hook 'css-mode-hook 'eglot-ensure)
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (prog-mode . lsp-deferred)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred))
+
+;; (require 'eglot)
+
+;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+
+;; (add-hook 'c-mode-hook 'eglot-ensure)
+;; (add-hook 'c++-mode-hook 'eglot-ensure)
+;; (add-hook 'typescript-mode-hook 'eglot-ensure)
+;; (add-hook 'js-mode-hook 'eglot-ensure)
+;; (add-hook 'python-mode-hook 'eglot-ensure)
+;; (add-hook 'html-mode-hook 'eglot-ensure)
+;; (add-hook 'css-mode-hook 'eglot-ensure)
 
 (require 'emmet-mode)
 
@@ -1150,23 +1206,33 @@
   "m w" '(org-todo-list :which-key "Org todo list"))
 
 ;; EXWM Functions:
-(defun max/exwm-update-class ()
+(defun gbl/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
 
-(defun max/exwm-init-hook ()
+(defun gbl/exwm-init-hook ()
   (exwm-workspace-switch-create 1)) ; Start on workspace 1, not 0
-
-(defun kill-buffer-slip-window ()
-  "a function for delete slip window and kill the buffer."
-  (interactive)
-  (kill-buffer)
-  (delete-window))
 
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
-(global-set-key (kbd "C-a") 'universal-argument)
+(global-set-key (kbd "C-&") 'universal-argument)
 
 ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
+
+(defhydra gbl/hydra-window-move (:timeout 5)
+  "Hydra for window deplacement"
+  ("h" (exwm-floating-move -50 0) "Move back")
+  ("l" (exwm-floating-move +50 0) "Move forward")
+  ("j" (exwm-floating-move 0 +50) "Move down")
+  ("k" (exwm-floating-move 0 -50) "Move up")
+
+  ("H" (exwm-floating-move -200 0) "Move back")
+  ("L" (exwm-floating-move +200 0) "Move forward")
+  ("J" (exwm-floating-move 0 +200) "Move down")
+  ("K" (exwm-floating-move 0 -200) "Move up")
+  ("q" nil "Quit" :exit t))
+
+(nvmap :prefix gbl/leader
+  "w m" '(gbl/hydra-window-move/body :wich-key "Move window"))
 
 (global-set-key (kbd "C-c & l") 'consult-yasnippet)
 
@@ -1179,8 +1245,8 @@
 (global-set-key (kbd "M-k") 'evil-window-up)
 (global-set-key (kbd "M-j") 'evil-window-down)
 
-(global-set-key (kbd "M-J") 'windmove-swap-states-up)
-(global-set-key (kbd "M-K") 'windmove-swap-states-down)
+(global-set-key (kbd "M-K") 'windmove-swap-states-up)
+(global-set-key (kbd "M-J") 'windmove-swap-states-down)
 (global-set-key (kbd "M-L") 'windmove-swap-states-right)
 (global-set-key (kbd "M-H") 'windmove-swap-states-left)
 
@@ -1188,10 +1254,9 @@
 (global-set-key (kbd "s-j") 'switch-to-next-buffer)
 (global-set-key (kbd "s-h") 'find-file)
 
-(global-set-key (kbd "s-q") '(lambda () (interactive) (gbl/launcher "qutebrowser")))
-(global-set-key (kbd "s-b") '(lambda () (interactive) (gbl/launcher "qutebrowser")))
-(global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty")))
-(global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv")))
+(global-set-key (kbd "s-b") '(lambda () (interactive) (gbl/launcher "qutebrowser" "")))
+(global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
+(global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
 (global-set-key (kbd "s-p") 'package-install)
 
 
@@ -1311,15 +1376,9 @@
 (defun gbl/exwm-update-title ()
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
-    ("Alacritty" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
+    ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
     ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
 
-(defun gbl/position-window ()
-  (let* ((pos (frame-position))
-         (pos-x (car pos))
-          (pos-y (cdr pos)))
-
-    (exwm-floating-move (- pos-x) (- pos-y))))
 
 (defun gbl/configure-window-by-class ()
   (interactive)
@@ -1327,25 +1386,30 @@
     ("qutebrowser" (exwm-workspace-move-window 2))
     ("Alacritty" (exwm-workspace-move-window 0))
     ("TelegramDesktop" (exwm-workspace-move-window 9))
-    ("mpv" (exwm-workspace-move-window 4))))
+    ("Gimp-2.10" (exwm-workspace-move-window 3))
+    ("-2.10" (exwm-workspace-move-window 3))
+    ("mpv" (exwm-workspace-move-window 4))
+    ("qBittorrent" (exwm-workspace-move-window 5))
+    ("VirtualBox Manager" (exwm-workspace-move-window 5))
+    ("vlc" (exwm-workspace-move-window 4))))
 
 ;; Update panel indicator when workspace changes
 
 (use-package exwm
   :config
   ;; Set the default number of workspaces
-  (setq exwm-workspace-number 10)
+  (setq exwm-workspace-number 7)
 
   ;; When window "class" updates, use it to set the buffer name
-  (add-hook 'exwm-update-class-hook #'max/exwm-update-class)
+  (add-hook 'exwm-update-class-hook #'gbl/exwm-update-class)
 
   (add-hook 'exwm-update-title-hook #'gbl/exwm-update-title)
 
   (add-hook 'exwm-manage-finish-hook #'gbl/configure-window-by-class)
 
-  (add-hook 'exwm-workspace-switch-hook #'gbl/send-polybar-exwm-workspace)
+  ;; (add-hook 'exwm-workspace-switch-hook #'gbl/send-polybar-exwm-workspace)
   ;; When EXWM finishes initialization, do some extra setup:
-  (add-hook 'exwm-init-hook #'max/exwm-init-hook)
+  (add-hook 'exwm-init-hook #'gbl/exwm-init-hook)
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
@@ -1405,7 +1469,7 @@
 		  ;; ([?\s-m] . exwm-layout-toggle-mode-line)
 
           ;; Launch applications via shell command
-		  ([?\M-d] . counsel-linux-app)
+		  ([?\M-d] . (lambda () (interactive) (gbl/run-in-bg "launcher")))
 
           ([?\M-a] . (lambda (command)
                        (interactive (list (read-shell-command "$ ")))
@@ -1419,7 +1483,7 @@
                         (lambda ()
                           (interactive)
                           (exwm-workspace-move-window ,i))))
-                    (number-sequence 1 9))
+                    (number-sequence 0 6))
 
           ([?\M-²] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
 		  
@@ -1429,17 +1493,18 @@
                         (lambda ()
                           (interactive)
                           (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))))
+                    (number-sequence 0 6))))
 
   (exwm-input-set-key (kbd "<M-tab>") 'evil-window-next)
   (exwm-input-set-key (kbd "M-SPC") 'evil-window-vsplit)
   (exwm-input-set-key (kbd "<M-return>") 'evil-window-split)
 
-  ;; (gbl/start-panel)
-  
-  (gbl/run-in-bg "dunst")
-  (gbl/run-in-bg "nm-applet")
-  (gbl/run-in-bg "pasystray")
-  (gbl/run-in-bg "blueman-applet")
-
+  (gbl/launcher "polybar" "")
+  (gbl/launcher "qutebrowser" "")
+  (gbl/launcher "alacritty" "")
+  ;; (gbl/run-in-bg "dunst")
+  ;; (gbl/run-in-bg "nm-applet")
+  ;; (gbl/run-in-bg "pasystray")
+  ;; (gbl/run-in-bg "blueman-applet")
+  ;; (gbl/launcher "mpv")
   (exwm-enable))
