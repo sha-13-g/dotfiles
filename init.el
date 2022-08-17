@@ -30,11 +30,12 @@
 (defvar gbl/leader "C-SPC")
 (defvar gbl/frame-transparency-v '(70 . 70))
 
-;;;; Hooks
+;; Hydra allows for good keybindings for repetitive tasks
+(use-package hydra)
 
 ;;;; load function file
 (load-file (concat user-emacs-directory "modules/functions.el"))
-(load-file (concat user-emacs-directory "modules/epubmode.el"))
+;;(load-file (concat user-emacs-directory "modules/epubmode.el"))
 
 ;; System packages
 (use-package system-packages)
@@ -568,8 +569,6 @@
   :init
   (global-undo-tree-mode))
 
-(use-package evil-easymotion
-  :config (evilem-default-keybindings ":"))
 
 (use-package evil
   :init
@@ -597,8 +596,10 @@
   :config
   (evil-collection-init))
 
-;; Hydra allows for good keybindings for repetitive tasks
-(use-package hydra)
+(use-package evil-easymotion
+  :config (evilem-default-keybindings "SPC"))
+
+
 
 (defhydra hydra-text-scale (:timeout 4) ; Change the size of text
   "scale text"
@@ -872,10 +873,10 @@
         eshell-scroll-to-bottom-on-input t
         eshell-prefer-lisp-functions nil))
 
-(setup eshell
-  (add-hook 'eshell-first-time-mode-hook #'gbl/eshell-configure)
-  (setq eshell-directory-name "~/.dotfiles/.emacs.d/eshell/"
-        eshell-aliases-file (expand-file-name "~/.dotfiles/.emacs.d/eshell/alias")))
+;(setup eshell
+  ;(add-hook 'eshell-first-time-mode-hook #'gbl/eshell-configure)
+  ;(setq eshell-directory-name "~/.dotfiles/.emacs.d/eshell/"
+        ;eshell-aliases-file (expand-file-name "~/.dotfiles/.emacs.d/eshell/alias")))
 
 (use-package eshell-z
   :hook ((eshell-mode . (lambda () (require 'eshell-z)))
@@ -1011,7 +1012,8 @@
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (prog-mode . lsp-deferred)
+         (js-mode . lsp-deferred)
+         (python-mode . lsp-deferred)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred))
@@ -1028,7 +1030,7 @@
 ;; (add-hook 'html-mode-hook 'eglot-ensure)
 ;; (add-hook 'css-mode-hook 'eglot-ensure)
 
-(require 'emmet-mode)
+(use-package emmet-mode)
 
 (add-hook 'sgml-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook 'emmet-mode)
@@ -1084,9 +1086,9 @@
   (setq org-ellipsis " ▼ " 
 		org-hide-emphasis-markers t))
 
-(setq org-directory "~/org/"
-	  org-agenda-files '("~/org/agenda.org") ; NOTE: This is a list, more files can be added later
-	  org-default-notes-file (expand-file-name "notes.org" org-directory))
+(setq org-directory "~/Documents/Org/"
+	  org-agenda-files '("~/Documents/Org/") ; NOTE: This is a list, more files can be added later
+	  org-default-notes-file (expand-file-name "Notes.org" org-directory))
 
 ;; This overides GNU default
 (setq org-link-abbrev-alist
@@ -1150,8 +1152,8 @@
 
 ;; Configuration of Font faces and sizes within org documents
 (with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
-  ;; Diffrenciate headers based on size
-  (dolist (face '((org-level-1 . 1.2)
+ ;; Diffrenciate headers based on size
+ (dolist (face '((org-level-1 . 1.2)
 				  (org-level-2 . 1.1)
 				  (org-level-3 . 1.05)
 				  (org-level-4 . 1.0)
@@ -1161,15 +1163,15 @@
 				  (org-level-8 . 1.1)))
 	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
-  ;; Needs fixing:
-  ;; Choosing what elements of an org-document should be represented in what font face.
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+ ;; Needs fixing:
+ ;; Choosing what elements of an org-document should be represented in what font face.
+ (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+ (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+ ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
+ (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+ (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+ (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+ (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 ;; Center org-mode documents in the center of the screen
 (defun org-mode-visual-fill ()
@@ -1237,27 +1239,30 @@
 (global-set-key (kbd "C-c & l") 'consult-yasnippet)
 
 (global-set-key (kbd "M-:") 'evil-ex)
-(global-set-key (kbd "M-q") 'kill-buffer-slip-window)
-(global-set-key (kbd "M-Q") 'delete-window)
 
-(global-set-key (kbd "M-h") 'evil-window-left)
-(global-set-key (kbd "M-l") 'evil-window-right)
-(global-set-key (kbd "M-k") 'evil-window-up)
-(global-set-key (kbd "M-j") 'evil-window-down)
+(global-set-key (kbd "s-q") 'kill-buffer-slip-window)
+(global-set-key (kbd "s-Q") 'delete-window)
 
-(global-set-key (kbd "M-K") 'windmove-swap-states-up)
-(global-set-key (kbd "M-J") 'windmove-swap-states-down)
-(global-set-key (kbd "M-L") 'windmove-swap-states-right)
-(global-set-key (kbd "M-H") 'windmove-swap-states-left)
+(global-set-key (kbd "s-h") 'evil-window-left)
+(global-set-key (kbd "s-l") 'evil-window-right)
+(global-set-key (kbd "s-k") 'evil-window-up)
+(global-set-key (kbd "s-j") 'evil-window-down)
 
-(global-set-key (kbd "s-k") 'switch-to-prev-buffer)
-(global-set-key (kbd "s-j") 'switch-to-next-buffer)
-(global-set-key (kbd "s-h") 'find-file)
+(global-set-key (kbd "s-K") 'windmove-swap-states-up)
+(global-set-key (kbd "s-J") 'windmove-swap-states-down)
+(global-set-key (kbd "s-L") 'windmove-swap-states-right)
+(global-set-key (kbd "s-H") 'windmove-swap-states-left)
 
-(global-set-key (kbd "s-b") '(lambda () (interactive) (gbl/launcher "qutebrowser" "")))
+(global-set-key (kbd "s-p") 'switch-to-prev-buffer)
+(global-set-key (kbd "s-n") 'switch-to-next-buffer)
+
+(global-set-key (kbd "s-e") 'dired-jump)
+
+(global-set-key (kbd "s-f") 'find-file)
+(global-set-key (kbd "s-b") 'switch-to-buffer)
+
 (global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
 (global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
-(global-set-key (kbd "s-p") 'package-install)
 
 
 (global-set-key (kbd"C-M-j") 'evil-collection-unimpaired-move-text-down)
@@ -1460,18 +1465,20 @@
           ([?\M-r] . exwm-reset)
 
 		  ;; Toggle floating windows
-		  ([?\M-t] . exwm-floating-toggle-floating)
+		  ([?\s-t] . exwm-floating-toggle-floating)
 
 		  ;; Toggle fullscreen
-		  ([?\M-f] . exwm-layout-toggle-fullscreen)
+		  ([?\s-F] . exwm-layout-toggle-fullscreen)
+
+		  ([?\s-w] . exwm-workspace-switch)
 
 		  ;; Toggle modeline
 		  ;; ([?\s-m] . exwm-layout-toggle-mode-line)
 
           ;; Launch applications via shell command
-		  ([?\M-d] . (lambda () (interactive) (gbl/run-in-bg "launcher")))
+		  ([?\s-d] . (lambda () (interactive) (gbl/run-in-bg "launcher")))
 
-          ([?\M-a] . (lambda (command)
+          ([?\s-a] . (lambda (command)
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
@@ -1479,7 +1486,7 @@
 
 		  ;; Move the current window to the i (1-9) workspace
           ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
+                      `(,(kbd (format "M-%d" i)) .
                         (lambda ()
                           (interactive)
                           (exwm-workspace-move-window ,i))))
@@ -1489,17 +1496,16 @@
 		  
           ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
           ,@(mapcar (lambda (i)
-                      `(,(kbd (format "M-%d" i)) .
+                      `(,(kbd (format "s-%d" i)) .
                         (lambda ()
                           (interactive)
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 6))))
 
-  (exwm-input-set-key (kbd "<M-tab>") 'evil-window-next)
-  (exwm-input-set-key (kbd "M-SPC") 'evil-window-vsplit)
-  (exwm-input-set-key (kbd "<M-return>") 'evil-window-split)
+  (exwm-input-set-key (kbd "<s-tab>") 'evil-window-next)
+  (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)
+  (exwm-input-set-key (kbd "<s-return>") 'evil-window-split)
 
-  (gbl/launcher "polybar" "")
   (gbl/launcher "qutebrowser" "")
   (gbl/launcher "alacritty" "")
   ;; (gbl/run-in-bg "dunst")
