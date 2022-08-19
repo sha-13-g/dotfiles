@@ -40,6 +40,18 @@
 ;; System packages
 (use-package system-packages)
 
+(use-package desktop-environment
+  :after exwm
+  :bind (("s-=" . desktop-environment-lock-screen)
+		 ("s-l" . nil)
+		 ("s-l" . windmove-right))
+  :config (desktop-environment-mode)
+  :custom
+  (desktop-environment-brightness-small-increment "2%+")
+  (desktop-environment-brightness-small-decrement "2%-")
+
+  (desktop-environment-brightness-normal-increment "5%+")
+  (desktop-environment-brightness-normal-decrement "5%-"))
 ;; Setting up auto-package update so that packages are updated automatically
 ;; (use-package auto-package-update
 ;;   :custom
@@ -205,19 +217,19 @@
 (global-visual-line-mode t)
 
 ;; Defining some fonts
-;; (set-face-attribute 'default nil
-;; 					:font "JetBrains Mono 10" ; Monospaced coding font
-;; 					:weight 'medium)
-;; (set-face-attribute 'variable-pitch nil ; Non tech font
-;; 					:font "Cantarell"
-;; 					:height 110)
-;; (set-face-attribute 'fixed-pitch nil
-;; 					:font "JetBrains Mono 10"
-;; 					:weight 'medium)
+(set-face-attribute 'default nil
+					:font "JetBrains Mono 10" ; Monospaced coding font
+					:weight 'medium)
+(set-face-attribute 'variable-pitch nil ; Non tech font
+					:font "Cantarell"
+					:height 110)
+(set-face-attribute 'fixed-pitch nil
+					:font "JetBrains Mono 10"
+					:weight 'medium)
 
 ;; Extra font settings
 (setq-default line-spacing 0.03)
-;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
 (setq global-prettify-symbols-mode t) ; Glyph support
 
 ;; Keybindings for scaling text (although hydra function exists)
@@ -1192,27 +1204,27 @@
   :hook (org-mode . org-bullets-mode))
 
 ;; Configuration of Font faces and sizes within org documents
-;; (with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
-;;  ;; Diffrenciate headers based on size
-;;  (dolist (face '((org-level-1 . 1.2)
-;; 				  (org-level-2 . 1.1)
-;; 				  (org-level-3 . 1.05)
-;; 				  (org-level-4 . 1.0)
-;; 				  (org-level-5 . 1.1) ; Back to normal
-;; 				  (org-level-6 . 1.1)
-;; 				  (org-level-7 . 1.1)
-;; 				  (org-level-8 . 1.1)))
-;; 	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+(with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
+ ;; Diffrenciate headers based on size
+ (dolist (face '((org-level-1 . 1.2)
+				  (org-level-2 . 1.1)
+				  (org-level-3 . 1.05)
+				  (org-level-4 . 1.0)
+				  (org-level-5 . 1.1) ; Back to normal
+				  (org-level-6 . 1.1)
+				  (org-level-7 . 1.1)
+				  (org-level-8 . 1.1)))
+	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
-;;  ;; Needs fixing:
-;;  ;; Choosing what elements of an org-document should be represented in what font face.
-;;  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-;;  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-;;  ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
-;;  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;;  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;;  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-;;  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+ ;; Needs fixing:
+ ;; Choosing what elements of an org-document should be represented in what font face.
+ (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+ (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+ ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
+ (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+ (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+ (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+ (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 ;; Center org-mode documents in the center of the screen
 (defun org-mode-visual-fill ()
@@ -1284,10 +1296,10 @@
 (global-set-key (kbd "s-q") 'kill-buffer-slip-window)
 (global-set-key (kbd "s-Q") 'delete-window)
 
-(global-set-key (kbd "s-h") 'evil-window-left)
-(global-set-key (kbd "s-l") 'evil-window-right)
-(global-set-key (kbd "s-k") 'evil-window-up)
-(global-set-key (kbd "s-j") 'evil-window-down)
+(global-set-key (kbd "s-h") 'windmove-left)
+(global-set-key (kbd "s-l") 'windmove-right)
+(global-set-key (kbd "s-k") 'windmove-up)
+(global-set-key (kbd "s-j") 'windmove-down)
 
 (global-set-key (kbd "s-K") 'windmove-swap-states-up)
 (global-set-key (kbd "s-J") 'windmove-swap-states-down)
@@ -1316,16 +1328,9 @@
 (global-set-key (kbd"C-=") 'desktop-environment-volume-increment)
 
 ;; The desktop environment package allows for control of brightness and volume
-(use-package desktop-environment
-  :after exwm
-  :bind ("s-=" . desktop-environment-lock-screen)
-  :config (desktop-environment-mode)
-  :custom
-  (desktop-environment-brightness-small-increment "2%+")
-  (desktop-environment-brightness-small-decrement "2%-")
 
-  (desktop-environment-brightness-normal-increment "5%+")
-  (desktop-environment-brightness-normal-decrement "5%-"))
+(with-eval-after-load 'desktop-environment
+  (global-set-key (kbd "s-l") #'windmove-right))
 
 ;; This hydra function allows for control of volume
 (defhydra hydra-volume-up (:timeout 4)
@@ -1461,28 +1466,31 @@
   (setq exwm-input-prefix-keys
     '(?\C-x
       ?\C-h
+      ?\C-c
 
       ?\M-&
       ?\M-x
       ?\M-:
 
-      ?\M-h
-      ?\M-l
-      ?\M-k
-      ?\M-j
+      ?\s-h
+      ?\s-l
+      ?\s-k
+      ?\s-j
 
-      ?\M-J
-      ?\M-K
-      ?\M-H
-      ?\M-L
+      ?\s-J
+      ?\s-K
+      ?\s-H
+      ?\s-L
 
-      ?\M-q
-      ?\M-Q
+      ?\s-q
+      ?\s-Q
 
       ?\s-p
-      ?\s-h
-      ?\s-j
-      ?\s-k
+      ?\s-n
+
+      ?\s-e
+	  
+      ?\s-f
       ?\s-b
 
       ?\C--
