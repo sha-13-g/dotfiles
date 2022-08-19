@@ -205,19 +205,19 @@
 (global-visual-line-mode t)
 
 ;; Defining some fonts
-(set-face-attribute 'default nil
-					:font "JetBrains Mono 10" ; Monospaced coding font
-					:weight 'medium)
-(set-face-attribute 'variable-pitch nil ; Non tech font
-					:font "Cantarell"
-					:height 110)
-(set-face-attribute 'fixed-pitch nil
-					:font "JetBrains Mono 10"
-					:weight 'medium)
+;; (set-face-attribute 'default nil
+;; 					:font "JetBrains Mono 10" ; Monospaced coding font
+;; 					:weight 'medium)
+;; (set-face-attribute 'variable-pitch nil ; Non tech font
+;; 					:font "Cantarell"
+;; 					:height 110)
+;; (set-face-attribute 'fixed-pitch nil
+;; 					:font "JetBrains Mono 10"
+;; 					:weight 'medium)
 
 ;; Extra font settings
 (setq-default line-spacing 0.03)
-(add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
+;; (add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
 (setq global-prettify-symbols-mode t) ; Glyph support
 
 ;; Keybindings for scaling text (although hydra function exists)
@@ -320,7 +320,7 @@
          ("C-c M" . consult-minor-mode-menu)
          ("C-c o" . consult-outline)
          ("C-c i" . consult-imenu)
-         ("C-c f" . consult-flycheck)
+         ("C-c f" . consult-flymake)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
@@ -940,7 +940,7 @@
  shr-use-colors nil
  shr-indentation 2
  shr-width 70
- eww-search-prefix "https://wiby.me/?q=") ; Wiby.me as the default search engine
+ eww-search-prefix "https://duckduckgo.com/html/?q=") ; Wiby.me as the default search engine
 
 ;; General.el keybindings for opening applications
 (nvmap :prefix gbl/leader
@@ -985,8 +985,6 @@
 ;;   (flymake-mode))
 
 (use-package company
-
-  :after lsp-mode
   :hook (prog-mode . company-mode)
   :bind
   (:map company-active-map
@@ -1007,17 +1005,60 @@
 
 ;;;; Languages Servers
 
+;; (use-package blacken)
+;; (use-package py-autopep8)
+;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+;; (use-package eglot)
+;; (add-to-list 'eglot-server-programs
+;;              `(python-mode . ("pyls" "-v" "--tcp" "--host"
+;;                               "localhost" "--port" :autoport)))
+
+;; (add-hook 'python-mode-hook 'eglot-ensure)
+;; (use-package elpy
+;;   :config
+;;   (elpy-enable))
+;; (use-package lsp-mode
+;;   :init
+;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+;;          (js-mode . lsp-deferred)
+;;          (python-mode . lsp-deferred)
+;;          ;; if you want which-key integration
+;;          (lsp-mode . lsp-enable-which-key-integration))
+;;   :commands (lsp lsp-deferred))
+
 (use-package lsp-mode
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (js-mode . lsp-deferred)
-         (python-mode . lsp-deferred)
+         (python-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred))
+  :commands lsp)
 
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+
+;; (use-package lsp-jedi
+;;   :ensure t
+;;   :config
+;;   (with-eval-after-load "lsp-mode"
+;;     (add-to-list 'lsp-disabled-clients 'pyls)
+;;     (add-to-list 'lsp-enabled-clients 'jedi)))
+
+;; (use-package lsp-ui
+;;    :ensure t
+;;    :config
+;;    (setq lsp-ui-sideline-ignore-duplicate t)
+;;    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+;; (use-package lsp-pyright
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-pyright)
+;;                           (lsp))))
 ;; (require 'eglot)
 
 ;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
@@ -1151,27 +1192,27 @@
   :hook (org-mode . org-bullets-mode))
 
 ;; Configuration of Font faces and sizes within org documents
-(with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
- ;; Diffrenciate headers based on size
- (dolist (face '((org-level-1 . 1.2)
-				  (org-level-2 . 1.1)
-				  (org-level-3 . 1.05)
-				  (org-level-4 . 1.0)
-				  (org-level-5 . 1.1) ; Back to normal
-				  (org-level-6 . 1.1)
-				  (org-level-7 . 1.1)
-				  (org-level-8 . 1.1)))
-	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+;; (with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
+;;  ;; Diffrenciate headers based on size
+;;  (dolist (face '((org-level-1 . 1.2)
+;; 				  (org-level-2 . 1.1)
+;; 				  (org-level-3 . 1.05)
+;; 				  (org-level-4 . 1.0)
+;; 				  (org-level-5 . 1.1) ; Back to normal
+;; 				  (org-level-6 . 1.1)
+;; 				  (org-level-7 . 1.1)
+;; 				  (org-level-8 . 1.1)))
+;; 	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
- ;; Needs fixing:
- ;; Choosing what elements of an org-document should be represented in what font face.
- (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
- (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
- ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
- (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
- (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
- (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
- (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+;;  ;; Needs fixing:
+;;  ;; Choosing what elements of an org-document should be represented in what font face.
+;;  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+;;  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+;;  ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
+;;  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;;  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;;  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;;  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
 ;; Center org-mode documents in the center of the screen
 (defun org-mode-visual-fill ()
@@ -1482,7 +1523,7 @@
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\M-R] . exwm-input-release-keyboard)
+          ([?\s-r] . exwm-input-release-keyboard)
 
 		  ;; Move the current window to the i (1-9) workspace
           ,@(mapcar (lambda (i)
