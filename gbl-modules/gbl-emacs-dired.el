@@ -63,7 +63,7 @@
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (let ((map dired-mode-map))
-    (define-key map (kbd "i") #'prot-dired-insert-subdir) ; override `dired-maybe-insert-subdir'
+    (define-key map (kbd "I") #'prot-dired-insert-subdir) ; override `dired-maybe-insert-subdir'
     (define-key map (kbd "/") #'prot-dired-limit-regexp)
     (define-key map (kbd "C-c C-l") #'prot-dired-limit-regexp)
     (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)

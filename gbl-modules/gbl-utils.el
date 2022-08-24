@@ -2,6 +2,12 @@
 
 ;;; code:
 
+(defun gbl/maximaze-other-window()
+  "Command that maximaze other window"
+  (interactive)
+  (maximize-window (next-window))
+  (other-window 1))
+
 (defun gbl/initial-position-window ()
   "Move Exwm window by {x,y}"
   (interactive)

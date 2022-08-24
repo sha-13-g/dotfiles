@@ -12,8 +12,17 @@
 (server-start)
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+		 				 ("elpa-devel" . "https://elpa.gnu.org/devel/")
+						 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
 						 ("org" . "https://orgmode.org/elpa/")
 						 ("gnu" . "https://elpa.gnu.org/packages/")))
+
+(setq use-short-answers t)
+(display-time-mode)
+
+(dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
+  (put c 'disabled nil))
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -33,9 +42,20 @@
 ;; Hydra allows for good keybindings for repetitive tasks
 (use-package hydra)
 
+(use-package exwm-edit)
+
+(use-package winner
+  :ensure nil 
+  :config
+  (add-hook 'after-init-hook  #'winner-mode))
+
 ;;;; load function file
-(load-file (concat user-emacs-directory "modules/functions.el"))
-;;(load-file (concat user-emacs-directory "modules/epubmode.el"))
+
+(dolist (path '("gbl-lisp" "gbl-modules"))
+  (add-to-list 'load-path (locate-user-emacs-file path)));;(load-file (concat user-emacs-directory "modules/epubmode.el"))
+
+(require 'gbl-utils)
+(require 'gbl-emacs-window)
 
 ;; System packages
 (use-package system-packages)
@@ -71,6 +91,13 @@
 ;; Startup Performace:
 ;; Garbage Collection
 ;; Using garbage collection magic hack (gcmh)
+
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+		 ("C->" . mc/mark-next-like-this)
+		 ("C-<" . mc/mark-previous-like-this)
+		 ("C-c C-<" . mc/mark-all-like-this)))
+
 (use-package nov
   :config (setq nov-unzip-program (executable-find "bsdtar")
       nov-unzip-args '("-xC" directory "-f" filename)))
@@ -199,7 +226,6 @@
 
 ;; Defining a function to insert a tab char when tab is pressed
 
-
 ;; Put numbers on every buffer, unless specified otherwise in the dolist.
 (column-number-mode)
 (global-display-line-numbers-mode 1)
@@ -241,8 +267,6 @@
 ;;   :config (defun dad-joke ()
 ;; 			(interactive)
 ;; 			(insert (dad-joke-get))))
-
-
 
 ;; Using 'doom-themes' as a theme repository
 (use-package doom-themes
@@ -420,24 +444,23 @@
 (use-package diminish)
 
 
-
 (use-package minions
   :after doom-modeline)
 
 (use-package rich-minority)
 
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :custom ((doom-modeline-height 25)
-           (doom-modeline-bar-width 6)
-           (doom-modeline-lsp t)
-           (doom-modeline-github nil)
-           (doom-modeline-mu4e nil)
-           (doom-modeline-irc t)
-           (doom-modeline-minor-modes t)
-           (doom-modeline-persp-name nil)
-           (doom-modeline-buffer-file-name-style 'truncate-except-project)
-           (doom-modeline-major-mode-icon nil)))
+;; (use-package doom-modeline
+;;   :hook (after-init . doom-modeline-mode)
+;;   :custom ((doom-modeline-height 25)
+;;            (doom-modeline-bar-width 6)
+;;            (doom-modeline-lsp t)
+;;            (doom-modeline-github nil)
+;;            (doom-modeline-mu4e nil)
+;;            (doom-modeline-irc t)
+;;            (doom-modeline-minor-modes t)
+;;            (doom-modeline-persp-name nil)
+;;            (doom-modeline-buffer-file-name-style 'truncate-except-project)
+;;            (doom-modeline-major-mode-icon nil)))
 
 ;; Use syntax highlighting to match pairs of delimiters ({} or [] or ()).
 (use-package rainbow-delimiters
@@ -519,6 +542,7 @@
 (use-package writeroom-mode)
 
 
+
 ;;Hydea for window resize
 (defhydra gbl/hydra-window-resizer(:timeout 4)
   "This hydra define a set on function that resize a window"
@@ -582,6 +606,7 @@
   (global-undo-tree-mode))
 
 
+
 (use-package evil
   :init
   (setq evil-want-integration t)
@@ -610,6 +635,7 @@
 
 (use-package evil-easymotion
   :config (evilem-default-keybindings "SPC"))
+
 
 
 
@@ -696,16 +722,29 @@
 ;; File manager for emacs, incuded package within emacs 27
 (use-package dired
   :ensure nil
+  :hook ((dired-mode . dired-hide-details-mode)
+		 (dired-mode . hl-line-mode))
   :commands (dired dired-jumo)
   :bind (("C-x C-j" . dired-jump))
   :custom
-  ((dired-listing-switched "=-agho --group-directories-first"))
+  ((dired-listing-switched "-AGFhlv --group-directories-first --time-style=long-iso")
+  (dired-recursive-copies 'always)
+  (dired-recursive-deletes 'always)
+  (delete-by-moving-to-trash t)
+  (dired-dwim-target t)
+  (dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
+  (dired-make-directory-clickable t) ; Emacs 29.1
+  (dired-free-space nil) ; Emacs 29.1
+  (dired-mouse-drag-files t))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map ; VIM keybindings for navigating directories
 	"h" 'dired-up-directory
 	"l" 'dired-find-file))
 
 ;; Dired Extentions: (dired plus is no longer maintained)
+(use-package dired-sidebar
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar))
 (use-package dired-single
   :commands (dired dired-jump))
 
@@ -979,6 +1018,7 @@
   (lsp-headline-breadcrumb-mode))
 
 
+
 ;;snippets
 (use-package yasnippet
   :init
@@ -1015,6 +1055,7 @@
   :hook (company-mode . company-box-mode))
 
 
+
 ;;;; Languages Servers
 
 ;; (use-package blacken)
@@ -1040,6 +1081,10 @@
 ;;          ;; if you want which-key integration
 ;;          (lsp-mode . lsp-enable-which-key-integration))
 ;;   :commands (lsp lsp-deferred))
+
+(use-package python-pytest
+ :custom
+ (python-pytest-confirm t))
 
 (use-package lsp-mode
   :init
@@ -1116,6 +1161,7 @@
   :init (setq markdown-command "multimarkdown"))
 
 
+
 ;; Debugging with Dap-Mode
 (use-package dap-mode)
 
@@ -1139,8 +1185,8 @@
   (setq org-ellipsis " ▼ " 
 		org-hide-emphasis-markers t))
 
-(setq org-directory "~/Documents/Org/"
-	  org-agenda-files '("~/Documents/Org/") ; NOTE: This is a list, more files can be added later
+(setq org-directory "~/documents/org/"
+	  org-agenda-files '("~/documents/org/") ; NOTE: This is a list, more files can be added later
 	  org-default-notes-file (expand-file-name "Notes.org" org-directory))
 
 ;; This overides GNU default
@@ -1312,16 +1358,18 @@
 (global-set-key (kbd "s-e") 'dired-jump)
 
 (global-set-key (kbd "s-f") 'find-file)
-(global-set-key (kbd "s-b") 'switch-to-buffer)
+(global-set-key (kbd "s-b") 'consult-buffer)
 
 (global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
 (global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
+
 
 
 (global-set-key (kbd"C-M-j") 'evil-collection-unimpaired-move-text-down)
 (global-set-key (kbd"C-M-k") 'evil-collection-unimpaired-move-text-up)
 (global-set-key (kbd"C-M-h") 'scroll-other-window-down)
 (global-set-key (kbd"C-M-l") 'scroll-other-window)
+
 
 
 (global-set-key (kbd"C--") 'desktop-environment-volume-decrement)
@@ -1391,6 +1439,7 @@
 ;  (mu4e t))
 
 
+
 ;; EXWM: Emacs Xorg Window Manager
 ;; (defun gbl/polybar-exwm-workspace
 ;; 	)
@@ -1415,6 +1464,7 @@
     (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
 
 
+
 (defun gbl/send-polybar-hook (module-name hook-index)
   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
@@ -1426,6 +1476,7 @@
 
 (defun gbl/exwm-update-title ()
   (pcase exwm-class-name
+    ("firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
     ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
     ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
     ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
