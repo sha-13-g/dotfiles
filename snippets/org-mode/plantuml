@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:Plantuml
+# key: plan_
+# --
+
+#+begin_src $1 plantuml file: $2
+  $0
+#+end_src
