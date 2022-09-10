@@ -285,6 +285,8 @@
   :config
   (global-origami-mode))
 
+(use-package harpoon)
+
 (use-package gcmh
   :config
   (gcmh-mode 1)
