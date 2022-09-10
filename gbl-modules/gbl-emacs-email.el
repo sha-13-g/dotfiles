@@ -1,20 +1,28 @@
 ;;; Client-agnostic email settings (and prot-mail.el)
-(prot-emacs-builtin-package 'auth-source
+(use-package auth-source
+  :ensure nil
+  :config
   (setq auth-sources '("~/.authinfo.gpg"))
   (setq user-full-name "Protesilaos Stavrou")
   (setq user-mail-address "public@protesilaos.com"))
 
-(prot-emacs-builtin-package 'mm-encode
+(use-package mm-encode
+  :ensure nil
+  :config
   (setq mm-encrypt-option nil) ; use 'guided if you need more control
   (setq mm-sign-option nil))   ; same
 
-(prot-emacs-builtin-package 'mml-sec
+(use-package mml-sec
+  :ensure nil
+  :config
   (setq mml-secure-openpgp-encrypt-to-self t)
   (setq mml-secure-openpgp-sign-with-sender t)
   (setq mml-secure-smime-encrypt-to-self t)
   (setq mml-secure-smime-sign-with-sender t))
 
-(prot-emacs-builtin-package 'message
+(use-package message
+  :ensure nil
+  :config
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
   (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
@@ -48,10 +56,14 @@
 
   (add-hook 'message-setup-hook #'message-sort-headers))
 
-(prot-emacs-builtin-package 'gnus-dired ; does not require `gnus'
+(use-package gnus-dired ; does not require `gnus'
+  :ensure nil
+  :config
   (add-hook 'dired-mode-hook #'gnus-dired-mode))
 
-(prot-emacs-builtin-package 'prot-mail
+(use-package prot-mail
+  :ensure nil
+  :config
   ;; NOTE 2021-05-14: This is a generic indicator for new mail in the
   ;; maildir.  As I now use notmuch (see relevant section in this
   ;; document) I have an alternative approach in prot-notmuch.el.
@@ -66,7 +78,9 @@
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
-(prot-emacs-builtin-package 'notmuch
+(use-package notmuch
+  :ensure nil
+  :config
 
 ;;; Account settings
   (let ((prv (prot-mail-auth-get-field "prv" :user))
@@ -238,7 +252,9 @@
     (define-key map (kbd "R") #'notmuch-show-reply-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
-(prot-emacs-builtin-package 'prot-notmuch
+(use-package prot-notmuch
+  :ensure nil
+  :config
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
@@ -300,21 +316,26 @@
   ;; Like C-c M-h for `message-insert-headers'
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 
-(prot-emacs-elpa-package 'ol-notmuch)
+(use-package ol-notmuch)
 
 ;;; Sending email (SMTP)
-(prot-emacs-builtin-package 'smtpmail
+(use-package smtpmail
+  :ensure nil
+  :config
   (setq smtpmail-default-smtp-server "mail.gandi.net")
   (setq smtpmail-smtp-server "mail.gandi.net")
   (setq smtpmail-stream-type 'ssl)
   (setq smtpmail-smtp-service 465)
   (setq smtpmail-queue-mail nil))
 
-(prot-emacs-builtin-package 'sendmail
+(use-package sendmail
+  :ensure nil
+  :config
   (setq send-mail-function 'smtpmail-send-it))
 
 ;;; EBDB (mail contacts)
-(prot-emacs-elpa-package 'ebdb
+(use-package ebdb
+  :config
   (require 'ebdb-message)
   (require 'ebdb-notmuch) ; FIXME 2021-05-13: does not activate the corfu-mode UI
   (setq ebdb-sources (locate-user-emacs-file "ebdb"))

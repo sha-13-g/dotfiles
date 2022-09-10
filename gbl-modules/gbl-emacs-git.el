@@ -1,5 +1,7 @@
 ;;; Diff-mode (and prot-diff.el extensions)
-(prot-emacs-builtin-package 'diff-mode
+(use-package diff-mode
+  :ensure nil
+  :config
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
@@ -10,7 +12,9 @@
   ;; `prot-diff-modus-themes-diffs'
   (setq diff-font-lock-syntax 'hunk-also))
 
-(prot-emacs-builtin-package 'prot-diff
+(use-package prot-diff
+  :ensure nil
+  :config
   (prot-diff-modus-themes-diffs)
   (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
 
@@ -24,7 +28,9 @@
     (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
 
 ;;; Version control framework (vc.el and prot-vc.el)
-(prot-emacs-builtin-package 'vc
+(use-package vc
+  :ensure nil
+  :config
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
   ;; files.
@@ -122,7 +128,9 @@
     (define-key map (kbd "F") #'vc-update)
     (define-key map (kbd "P") #'vc-push)))
 
-(prot-emacs-builtin-package 'prot-vc
+(use-package prot-vc
+  :ensure nil
+  :config
   (setq prot-vc-log-limit 100)
   (setq prot-vc-log-bulk-action-limit 50)
   (setq prot-vc-git-log-edit-show-commits t)
@@ -170,9 +178,11 @@
 ;; There is no need to install the package, as transient.el is built
 ;; into Emacs.  By requiring it, I prevent the installation of the
 ;; package, which would be done by Magit.
-(prot-emacs-builtin-package 'transient)
+(use-package transient)
+:ensure nil
+:config
 
-(prot-emacs-elpa-package 'magit
+(use-package magit
   (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
 
@@ -199,9 +209,13 @@
         '(("~/Git/Projects" . 1))))
 
 ;;; Smerge and Ediff
-(prot-emacs-builtin-package 'smerge-mode)
+(use-package smerge-mode)
+:ensure nil
+:config
 
-(prot-emacs-builtin-package 'ediff
+(use-package ediff
+  :ensure nil
+  :config
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)

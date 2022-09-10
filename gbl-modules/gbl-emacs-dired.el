@@ -1,47 +1,39 @@
 ;;; Dired file manager and prot-dired.el extras
-(prot-emacs-builtin-package 'dired
-  (setq dired-recursive-copies 'always)
-  (setq dired-recursive-deletes 'always)
-  (setq delete-by-moving-to-trash t)
-  (setq dired-listing-switches
-        "-AGFhlv --group-directories-first --time-style=long-iso")
-  (setq dired-dwim-target t)
-  (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
-  (setq dired-make-directory-clickable t) ; Emacs 29.1
-  (setq dired-free-space nil) ; Emacs 29.1
-  (setq dired-mouse-drag-files t) ; Emacs 29.1
 
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'hl-line-mode))
 
-  ;; In Emacs 29 there is a binding for `repeat-mode' which let you
-  ;; repeat C-x C-j just by following it up with j.  For me, this is a
-  ;; problem as j calls `dired-goto-file', which I often use.
-  ;;(define-key dired-jump-map (kbd "j") nil))
+(use-package dired
+  :ensure nil
+  :hook ((dired-mode . dired-hide-details-mode)
+		 (dired-mode . hl-line-mode))
+  :custom ((dired-recursive-copies 'always)
+		   (dired-recursive-deletes 'always)
+		   (delete-by-moving-to-trash t)
+		   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
+		   (dired-dwim-target t)
+		   (dired-auto-revert-buffer #'dired-directory-changed-p)
+		   (dired-mouse-drag-files t))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map ; VIM keybindings for navigating directories
+	"h" 'dired-up-directory
+	"l" 'dired-find-file)) ; Emacs 29.1
 
-(prot-emacs-builtin-package 'dired-aux
+(use-package peep-dired
+  :diminish t)
+
+
+(use-package dired-aux
+  :ensure nil
+  :config
   (setq dired-isearch-filenames 'dwim)
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
   ;; And this is for Emacs 28
-  (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
+  (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))) ; Emacs 28
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "C-+") #'dired-create-empty-file)
-    (define-key map (kbd "M-s f") #'nil)
-    (define-key map (kbd "C-x v v") #'dired-vc-next-action))) ; Emacs 28
-
-;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
-;; ;; because there are other tools that offer a better interface, such
-;; ;; as `consult-find', `consult-grep', `project-find-file',
-;; ;; `project-find-regexp', `prot-vc-git-grep'.
-;; (prot-emacs-builtin-package 'find-dired
-;;   (setq find-ls-option
-;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
-;;   (setq find-name-arg "-iname"))
-
-(prot-emacs-builtin-package 'dired-x
+(use-package dired-x
+  :ensure nil
+  :config
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
@@ -49,7 +41,9 @@
   (setq dired-bind-info nil)
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
-(prot-emacs-builtin-package 'prot-dired
+(use-package prot-dired
+  :ensure nil
+  :config
   (setq prot-dired-image-viewers '("feh" "sxiv"))
   (setq prot-dired-media-players '("mpv" "vlc"))
   (setq prot-dired-media-extensions
@@ -60,29 +54,24 @@
         `((,prot-dired-image-extensions (prot-dired-image-viewer))
           (,prot-dired-media-extensions (prot-dired-media-player))))
 
-  (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
+  (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)) ; M-s g is `prot-search-grep'
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "I") #'prot-dired-insert-subdir) ; override `dired-maybe-insert-subdir'
-    (define-key map (kbd "/") #'prot-dired-limit-regexp)
-    (define-key map (kbd "C-c C-l") #'prot-dired-limit-regexp)
-    (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
-    (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
-    (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "M-s G") #'prot-dired-grep-marked-files))) ; M-s g is `prot-search-grep'
-
-(prot-emacs-elpa-package 'dired-subtree
+(use-package dired-subtree
+  :config
   (setq dired-subtree-use-backgrounds nil)
   (let ((map dired-mode-map))
     (define-key map (kbd "<tab>") #'dired-subtree-toggle)
     (define-key map (kbd "<backtab>") #'dired-subtree-remove))) ; S-TAB
 
-(prot-emacs-builtin-package 'wdired
+(use-package wdired
+  :ensure nil
+  :config
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
 
-(prot-emacs-builtin-package 'image-dired
+(use-package image-dired
+  :ensure nil
+  :config
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
   (setq image-dired-thumb-margin 2)
@@ -92,14 +81,17 @@
     (kbd "<return>") #'image-dired-thumbnail-display-external))
 
 ;;; dired-like mode for the trash (trashed.el)
-(prot-emacs-elpa-package 'trashed
+(use-package trashed
+  :config
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
 ;;; Ibuffer (dired-like buffer list manager)
-(prot-emacs-builtin-package 'ibuffer
+(use-package ibuffer
+  :ensure nil
+  :config
   (setq ibuffer-expert t)
   (setq ibuffer-display-summary nil)
   (setq ibuffer-use-other-window nil)
@@ -129,5 +121,26 @@
     (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
     (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
+
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "H" 'dired-hide-dotfiles-mode))
+
+(with-eval-after-load 'dired
+  (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+  (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
+
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps) ; Evil normalize keymap
+(setq dired-open-extentions '(("gif" . "sxiv") ;; When a gif is selected, it must be opened within sxiv.
+							  ("jpg" . "sxiv")
+							  ("png" . "sxiv")
+							  ("mkv" . "mpv")
+							  ("mp4" . "mpv")))
+
+;; Dired will have all-the-icons, same as in treemacs
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
 
 (provide 'gbl-emacs-dired)

@@ -1,3 +1,57 @@
+
+(defvar gbl/polybar-process nil
+  "Holds the process of the running Polybar instance, if any")
+
+(defun gbl/kill-panel ()
+  (interactive)
+  (when gbl/polybar-process
+    (ignore-errors
+      (kill-process gbl/polybar-process)))
+  (setq gbl/polybar-process nil))
+
+(defun gbl/start-panel ()
+  (interactive)
+  (gbl/kill-panel)
+  (setq gbl/polybar-process (start-process-shell-command "~/.config/polybar/launch.sh" nil "~/.config/polybar/launch.sh")))
+
+(defun gbl/run-in-bg (command)
+  (let ((command-parts (split-string command "[ ]+")))
+    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+(defun gbl/send-polybar-hook (module-name hook-index)
+  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+(defun gbl/send-polybar-exwm-workspace ()
+  (gbl/send-polybar-hook "exwm-workspace" 1))
+
+(defun gbl/exwm-update-class ()
+  (exwm-workspace-rename-buffer exwm-class-name))
+
+(defun gbl/exwm-update-title ()
+  (pcase exwm-class-name
+    ("firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
+    ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
+    ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
+    ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
+
+
+(defun gbl/configure-window-by-class ()
+  (interactive)
+  (pcase exwm-class-name
+    ("qutebrowser" (exwm-workspace-move-window 2))
+    ("Alacritty" (exwm-workspace-move-window 0))
+    ("TelegramDesktop" (exwm-workspace-move-window 9))
+    ("Gimp-2.10" (exwm-workspace-move-window 3))
+    ("Main" (exwm-floating-toggle-floating))
+    ("-2.10" (exwm-workspace-move-window 3))
+    ("mpv" (exwm-workspace-move-window 4))
+    ("qBittorrent" (exwm-workspace-move-window 5))
+    ("VirtualBox Manager" (exwm-workspace-move-window 5))
+    ("vlc" (exwm-workspace-move-window 4))))
+
+;; Update panel indicator when workspace changes
+
+
 (defvar gbl/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
@@ -47,6 +101,19 @@
     ("VirtualBox Manager" (exwm-workspace-move-window 5))
     ("vlc" (exwm-workspace-move-window 4))))
 
+(use-package desktop-environment
+  :after exwm
+  :bind (:map desktop-environment-mode-map
+			  ("s-l" . nil)
+			  ("s-l" . windmove-right))
+  :config (desktop-environment-mode)
+  :custom
+  (desktop-environment-brightness-small-increment "2%+")
+  (desktop-environment-brightness-small-decrement "2%-")
+
+  (desktop-environment-brightness-normal-increment "5%+")
+  (desktop-environment-brightness-normal-decrement "5%-"))
+
 (use-package exwm
   :config
   ;; Set the default number of workspaces
@@ -67,28 +134,31 @@
   (setq exwm-input-prefix-keys
     '(?\C-x
       ?\C-h
+      ?\C-c
 
       ?\M-&
       ?\M-x
       ?\M-:
 
-      ?\M-h
-      ?\M-l
-      ?\M-k
-      ?\M-j
+      ?\s-h
+      ?\s-l
+      ?\s-k
+      ?\s-j
 
-      ?\M-J
-      ?\M-K
-      ?\M-H
-      ?\M-L
+      ?\s-J
+      ?\s-K
+      ?\s-H
+      ?\s-L
 
-      ?\M-q
-      ?\M-Q
+      ?\s-q
+      ?\s-Q
 
       ?\s-p
-      ?\s-h
-      ?\s-j
-      ?\s-k
+      ?\s-n
+
+      ?\s-e
+	  
+      ?\s-f
       ?\s-b
 
       ?\C--
@@ -129,7 +199,7 @@
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\M-R] . exwm-input-release-keyboard)
+          ([?\s-r] . exwm-input-release-keyboard)
 
 		  ;; Move the current window to the i (1-9) workspace
           ,@(mapcar (lambda (i)
@@ -153,8 +223,8 @@
   (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)
   (exwm-input-set-key (kbd "<s-return>") 'evil-window-split)
 
-  ;;(gbl/launcher "qutebrowser" "")
-  ;;(gbl/launcher "alacritty" "")      ;
+  (gbl/launcher "qutebrowser" "")
+  (gbl/launcher "alacritty" "")
   ;; (gbl/run-in-bg "dunst")
   ;; (gbl/run-in-bg "nm-applet")
   ;; (gbl/run-in-bg "pasystray")
@@ -162,4 +232,4 @@
   ;; (gbl/launcher "mpv")
   (exwm-enable))
 
-(provide 'gbl-desktop)
+(provide 'gbl-emacs-desktop)

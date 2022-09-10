@@ -1,32 +1,126 @@
 ;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-elpa-package 'orderless
-  (setq orderless-component-separator " +")
-  ;; NOTE 2022-02-06: I made some major changes and this list may need
-  ;; to be refined further.  Remember to check my `completion-styles'
-  ;; and the `completion-category-overrides'.
-  (setq orderless-matching-styles
-        '( orderless-prefixes orderless-strict-leading-initialism
-           orderless-flex orderless-regexp))
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal-dispatcher
-          prot-orderless-initialism-dispatcher
-          prot-orderless-flex-dispatcher))
+(use-package company
+  :hook (prog-mode . company-mode)
+  :bind
+  (:map company-active-map
+		("<tab>" . company-complete-selection)
+		("C-j" . company-select-next-or-abort)
+		("C-k" . company-select-previous-or-abort))
+  ;; (:map lsp-mode-map
+  ;; 		("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0)
+  (company-show-quick-access t))
 
-  ;; SPC should never complete: use it for `orderless' groups.
-  ;; The `?' is a regexp construct.
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil)))
+;; Cleaner Aesthetic with Company-box
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
-(prot-emacs-builtin-package 'prot-orderless)
+(use-package vertico
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-l" . vertico-exit)
+              :map minibuffer-local-map
+              ("M-h" . vertico-next))
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
 
-;;; Completion annotations (marginalia)
-(prot-emacs-elpa-package 'marginalia
-  (setq marginalia-max-relative-age 0)  ; time is absolute here!
-  (marginalia-mode 1))
+(use-package orderless
+  :after vertico
+  :init
+  ;; configure a custom style dispatcher (see the consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))
+		orderless-component-separator "[ &]"))
+
+(use-package consult
+  :after vertico
+  :bind (;; C-c bindings (mode-specifiC-map)
+         ("C-c h" . consult-history)
+         ("C-c m" . consult-mode-command)
+         ("C-c M" . consult-minor-mode-menu)
+         ("C-c o" . consult-outline)
+         ("C-c i" . consult-imenu)
+         ("C-c f" . consult-flymake)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ("C-s" . consult-line)
+         ("C-\\" . consult-line-multi)
+
+         :map isearch-mode-map
+         ("C-s" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s l" . consult-line-multi)            ;; needed by consult-line to detect isearch
+
+         :map minibuffer-local-map
+         ("s-s" . consult-history))                ;; orig. previous-matching-history-element
+
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  (setq register-preview-delay 0.1
+        register-preview-function #'consult-register-format)
+  (advice-add #'register-preview :override #'consult-register-window)
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-:" . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (describe-function-function #'helpful-callable)
+  (describe-variable-function #'helpful-variable)
+  :bind
+  ;; ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ;; ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+
+;;(use-package prot-orderless
+;;:ensure nil)
+;;  (marginalia-mode 1))
 
 ;;; Minibuffer configurations and Vertico
-(prot-emacs-builtin-package 'minibuffer
+(use-package minibuffer
+  :ensure nil
+  :config
   (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
 
@@ -122,194 +216,63 @@
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1))
 
-(prot-emacs-builtin-package 'savehist
+(use-package savehist
+  :ensure nil
+  :config
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 10000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (add-hook 'after-init-hook #'savehist-mode))
 
-(prot-emacs-elpa-package 'vertico
-  ;; Those are the default values, but check the user option
-  ;; `vertico-multiform-categories' for per-category tweaks.
-  (setq vertico-scroll-margin 0)
-  (setq vertico-count 10)
-  (setq vertico-resize nil)
-  (setq vertico-cycle t)
-
-  (vertico-mode 1)
-
-  (let ((map vertico-map))
-    (define-key map (kbd "M-,") #'vertico-quick-insert)
-    (define-key map (kbd "M-.") #'vertico-quick-exit))
-
-  ;; This works with `file-name-shadow-mode'.  When you are in a
-  ;; sub-directory and use, say, `find-file' to go to your home '~/' or
-  ;; root '/' directory, Vertico will clear the old path to keep only
-  ;; your current input.
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
-
-;;; Enhanced minibuffer commands (consult.el)
-(prot-emacs-elpa-package 'consult
-  (setq consult-line-numbers-widen t)
-  ;; (setq completion-in-region-function #'consult-completion-in-region)
-  (setq consult-async-min-input 3)
-  (setq consult-async-input-debounce 0.5)
-  (setq consult-async-input-throttle 0.8)
-  (setq consult-narrow-key ">")
-  (setq consult-imenu-config
-        '((emacs-lisp-mode :toplevel "Functions"
-                           :types ((?f "Functions" font-lock-function-name-face)
-                                   (?m "Macros"    font-lock-keyword-face)
-                                   (?p "Packages"  font-lock-constant-face)
-                                   (?t "Types"     font-lock-type-face)
-                                   (?v "Variables" font-lock-variable-name-face)))))
-  ;; Search C-h f for more "bookmark jump" handlers.
-  (setq consult-bookmark-narrow
-        `((?d "Docview" ,#'doc-view-bookmark-jump)
-          (?e "Eshell" ,#'eshell-bookmark-jump)
-          (?f "File" ,#'bookmark-default-handler)
-          (?h "Help" ,#'help-bookmark-jump)
-          (?i "Info" ,#'Info-bookmark-jump)
-          (?m "Man" ,#'Man-bookmark-jump)
-          ;; (?p "PDF" ,#'pdf-view-bookmark-jump)
-          (?v "VC Dir" ,#'vc-dir-bookmark-jump)
-          (?w "EWW" ,#'prot-eww-bookmark-jump)))
-  (setq register-preview-delay 0.8
-        register-preview-function #'consult-register-format)
-  (setq consult-find-args "find . -not ( -wholename */.* -prune )")
-  (setq consult-preview-key 'any)
-
-  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
-  (require 'consult-imenu) ; the `imenu' extension is in its own file
-
-  (let ((map global-map))
-    (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
-    (define-key map (kbd "C-x M-:") #'consult-complex-command)
-    (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
-    (define-key map (kbd "C-x M-k") #'consult-kmacro)
-    (define-key map [remap goto-line] #'consult-goto-line)
-    (define-key map (kbd "M-K") #'consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
-    (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
-    (define-key map (kbd "M-s M-b") #'consult-buffer)
-    (define-key map (kbd "M-s M-f") #'consult-find)
-    (define-key map (kbd "M-s M-g") #'consult-grep)
-    (define-key map (kbd "M-s M-h") #'consult-history)
-    (define-key map (kbd "M-s M-i") #'consult-imenu)
-    (define-key map (kbd "M-s M-l") #'consult-line)
-    (define-key map (kbd "M-s M-m") #'consult-mark)
-    (define-key map (kbd "M-s M-s") #'consult-outline)
-    (define-key map (kbd "M-s M-y") #'consult-yank-pop)
-    (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
-  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
-
-  ;; see my `pulsar' package, which is declared further above:
-  ;; <https://protesilaos.com/emacs/pulsar>
-  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
-  (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
-    (add-hook 'consult-after-jump-hook fn)))
-
-;;; Switch to directories (consult-dir.el)
-(prot-emacs-elpa-package 'consult-dir
-  (setq consult-dir-shadow-filenames nil)
-  (setq consult-dir-sources '( consult-dir--source-bookmark
-                               consult-dir--source-default
-                               consult-dir--source-project
-                               consult-dir--source-recentf))
-
-  ;; Overrides `list-directory' in the `global-map', though I never used
-  ;; that anyway.
-  (dolist (map (list global-map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "C-x C-d") #'consult-dir)))
-
-;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
-(prot-emacs-elpa-package 'embark
-  (setq prefix-help-command #'embark-prefix-help-command)
-  ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-  (setq embark-quit-after-action t)     ; XXX: Read the doc string!
-  (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
-  (setq embark-confirm-act-all nil)
-  (setq embark-indicators
-        '(embark-mixed-indicator
-          embark-highlight-indicator))
-  ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
-  ;; and then pops up the verbose buffer, so those variables matter.
-  (setq embark-verbose-indicator-excluded-actions
-        '("\\`customize-" "\\(local\\|global\\)-set-key"
-          set-variable embark-cycle embark-keymap-help embark-isearch))
-  (setq embark-verbose-indicator-buffer-sections
-        `(target "\n" shadowed-targets " " cycle "\n" bindings))
-  (setq embark-mixed-indicator-both nil)
-  (setq embark-mixed-indicator-delay 1.2)
-  ;;  NOTE 2021-07-28: This is used when `embark-indicator' is set to
-  ;;  `embark-mixed-indicator' or `embark-verbose-indicator'.  We can
-  ;;  specify the window parameters here, but I prefer to do that in my
-  ;;  `display-buffer-alist' (search this document) because it is easier
-  ;;  to keep track of all my rules in one place.
-  (setq embark-verbose-indicator-display-action nil)
-
-  (define-key global-map (kbd "C-,") #'embark-act)
-  (define-key embark-collect-mode-map (kbd "C-,") #'embark-act)
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "C->") #'embark-become))
-  (let ((map embark-region-map))
-    (define-key map (kbd "a") #'align-regexp)
-    (define-key map (kbd "i") #'epa-import-keys-region)
-    (define-key map (kbd "r") #'repunctuate-sentences) ; overrides `rot13-region'
-    (define-key map (kbd "s") #'sort-lines)
-    (define-key map (kbd "u") #'untabify))
-  (let ((map embark-symbol-map))
-    (define-key map (kbd ".") #'embark-find-definition)
-    (define-key map (kbd "k") #'describe-keymap)))
-
 ;; Needed for correct exporting while using Embark with Consult
 ;; commands.
-(prot-emacs-elpa-package 'embark-consult)
-
-(prot-emacs-builtin-package 'prot-embark
-  (prot-embark-keymaps 1)
-  (prot-embark-setup-packages 1))
-
+(use-package embark-consult)
 
 ;;; Completion for recent files and directories (prot-recentf.el)
-(prot-emacs-builtin-package 'recentf
+(use-package recentf
+  :ensure nil
+  :config
   (setq recentf-save-file (locate-user-emacs-file "recentf"))
   (setq recentf-max-saved-items 200)
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
   (add-hook 'after-init-hook #'recentf-mode))
 
-(prot-emacs-builtin-package 'prot-recentf
+(use-package prot-recentf
+  :ensure nil
+  :config
   (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
   (let ((map global-map))
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 
 ;;; Corfu (in-buffer completion popup)
-(prot-emacs-elpa-package 'corfu
-  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-  ;;                  shell-mode-hook eshell-mode-hook))
-  ;;   (add-hook mode #'corfu-mode))
-  (global-corfu-mode 1)
-  (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+;; (use-package corfu
+;;   :config
+;;   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+;;   ;;                  shell-mode-hook eshell-mode-hook))
+;;   ;;   (add-hook mode #'corfu-mode))
+;;   (global-corfu-mode 1)
+;;   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
-  ;; Adapted from Corfu's manual.
-  (defun contrib/corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if Vertico is not active.
-Useful for prompts such as `eval-expression' and `shell-command'."
-    (unless (bound-and-true-p vertico--input)
-      (corfu-mode 1)))
+;;   ;; Adapted from Corfu's manual.
+;;   (defun contrib/corfu-enable-always-in-minibuffer ()
+;;     "Enable Corfu in the minibuffer if Vertico is not active.
+;; Useful for prompts such as `eval-expression' and `shell-command'."
+;;     (unless (bound-and-true-p vertico--input)
+;;       (corfu-mode 1)))
 
-  (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
+;;   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
 
 ;;; CAPE (extra completion-at-point backends)
-(prot-emacs-elpa-package 'cape
+(use-package cape
+  :config
   (setq cape-dabbrev-min-length 3)
   (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Template-based in-buffer completion (tempel.el)
-(prot-emacs-elpa-package 'tempel
+(use-package tempel
+  :config
 
   ;; Setup completion at point
   (defun contrib/tempel-setup-capf ()
@@ -336,10 +299,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-n") #'tempel-next)))
 
 ;;; Enhance command-line completion (pcmpl-args)
-(prot-emacs-elpa-package 'pcmpl-args)
+(use-package pcmpl-args)
 
 ;;; Dabbrev (dynamic word completion)
-(prot-emacs-builtin-package 'dabbrev
+(use-package dabbrev
+  :ensure nil
+  :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
@@ -354,7 +319,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 
 ;;; Abbreviations or Abbrevs
-(prot-emacs-builtin-package 'abbrev
+(use-package abbrev
+  :ensure nil
+  :config
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 

@@ -31,7 +31,7 @@
 				   (display-buffer-no-window))
 				  ;; top side window
 
-				  ((derived-mode . dired-mode)
+				  ((equal major-mode 'dired-mode)
 				   (display-buffer-in-side-window)
 				   (window-height . 0.30)
 				   (side . left)
@@ -45,13 +45,19 @@
 
 				  ("\\*Help*"
 				   (display-buffer-in-side-window)
-				   (window-width . 0.35)
+				   (window-width . 0.25)
 				   (side . right)
 				   (slot . 1))
 
+				  ("\\*eshell*"
+				   (display-buffer-in-side-window)
+				   (window-height . 0.35)
+				   (side . bottom)
+				   (slot . 0))
+
 				  ("\\*terminal*"
 				   (display-buffer-in-side-window)
-				   (window-height . 0.25)
+				   (window-height . 0.35)
 				   (side . bottom)
 				   (slot . 0))
 
@@ -59,7 +65,7 @@
 				   (display-buffer-in-side-window)
 				   (window-height . 0.25)
 				   (side . bottom)
-				   (slot . 0))
+				   (slot . -1))
 
 				  ("\\*world-clock.*"
 				   (display-buffer-in-side-window)
@@ -71,7 +77,11 @@
 				   (window-height . 0.16)
 				   (side . top)
 				   (slot . 0))
-
+				  ((derived-mode . eshell-mode)
+				   (display-buffer-in-side-window)
+				   (window-height . 0.25)
+				   (side . bottom)
+				   (slot . -1))
           ((derived-mode . messages-buffer-mode)
            (display-buffer-in-side-window)
            (window-height . 0.16)
@@ -84,6 +94,12 @@
            (side . top)
            (slot . 2))
 
+		  ("\\*compilation\\*"
+           (display-buffer-in-side-window)
+           (window-width . 0.25)
+           (side . right)
+           (slot . -1)
+           (window-parameters . ((mode-line-format . none))))
           ;; right side window
           ("\\*keycast\\*"
            (display-buffer-in-side-window)

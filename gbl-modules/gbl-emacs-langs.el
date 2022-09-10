@@ -1,35 +1,54 @@
 ;;; Plain text (text-mode with prot-text.el)
-(prot-emacs-builtin-package 'text-mode)
 
-(prot-emacs-builtin-package 'prot-text
+;;(use-package text-mode)
+
+(use-package prot-text
+  :ensure nil
+  :config
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
 
 ;;; Markdown (markdown-mode)
-(prot-emacs-elpa-package 'markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-  (setq markdown-fontify-code-blocks-natively t))
+;; (use-package markdown-mode
+;;   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+;;   (setq markdown-fontify-code-blocks-natively t))
 
-(prot-emacs-elpa-package 'systemd)
+(use-package systemd)
+
+(use-package yasnippet
+  :init
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
+(use-package consult-yasnippet
+  :after yasnippet)
 
 ;;; YAML (yaml-mode)
-(prot-emacs-elpa-package 'yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
+;; (use-package yaml-mode
+;;   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
 
 ;;; CSS (css-mode)
-(prot-emacs-builtin-package 'css-mode
+(use-package css-mode
+  :ensure nil
+  :config
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   (setq css-fontify-colors nil))
 
 ;;; Shell scripts (sh-mode)
-(prot-emacs-builtin-package 'sh-script
+(use-package sh-script
+  :ensure nil
+  :config
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
 ;;; Paragraphs and fill-mode (prot-fill.el)
-(prot-emacs-builtin-package 'prot-fill
+(use-package prot-fill
+  :ensure nil
+  :config
   (setq prot-fill-default-column 72)
   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
   ;; Those variables come from various sources, though they feel part of the
@@ -43,16 +62,20 @@
   (add-hook 'after-init-hook #'column-number-mode))
 
 ;;; Comments (newcomment.el and prot-comment.el)
-(prot-emacs-builtin-package 'newcomment
-  (setq comment-empty-lines t)
-  (setq comment-fill-column nil)
-  (setq comment-multi-line t)
-  (setq comment-style 'multi-line)
-  (let ((map global-map))
-    (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
-    (define-key map (kbd "M-;") #'comment-indent)))
+;; (use-package newcomment                 ;
+;;   :ensure nil
+;;   :config
+;;   (setq comment-empty-lines t)
+;;   (setq comment-fill-column nil)
+;;   (setq comment-multi-line t)
+;;   (setq comment-style 'multi-line)
+;;   (let ((map global-map))
+;;     (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
+    ;; (define-key map (kbd "M-;") #'comment-indent)))
 
-(prot-emacs-builtin-package 'prot-comment
+(use-package prot-comment
+  :ensure nil
+  :config
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
   (setq prot-comment-timestamp-format-concise "%F")
@@ -62,7 +85,9 @@
     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 
 ;;; Configure 'electric' behaviour
-(prot-emacs-builtin-package 'electric
+(use-package electric
+  :ensure nil
+  :config
   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
@@ -82,9 +107,10 @@
   ;; programming.
   (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
-
 ;;; Parentheses (show-paren-mode)
-(prot-emacs-builtin-package 'paren
+(use-package paren
+  :ensure nil
+  :config
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
@@ -98,14 +124,18 @@
 (setq-default indent-tabs-mode nil)
 
 ;;; Flyspell and prot-spell.el (spell check)
-(prot-emacs-builtin-package 'flyspell
+(use-package flyspell
+  :ensure nil
+  :config
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
   (define-key flyspell-mode-map (kbd "C-;") nil))
 
-(prot-emacs-builtin-package 'prot-spell
+(use-package prot-spell
+  :ensure nil
+  :config
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
           ("EL Ελληνικά" . "el")
@@ -116,7 +146,9 @@
     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 
 ;;; Flymake
-(prot-emacs-builtin-package 'flymake
+(use-package flymake
+  :ensure nil
+  :config
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
   (setq flymake-start-on-flymake-mode t)
@@ -138,23 +170,87 @@
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
 ;;; Flymake + Shellcheck
-(prot-emacs-elpa-package 'flymake-shellcheck
-  (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
-
+;;(use-package flymake-shellcheck                      ;;
+;;  (add-hook 'sh-mode-hook 'flymake-shellcheck-load)) ;;
+                                        ;
 ;;; Flymake + Proselint
-(prot-emacs-elpa-package 'flymake-proselint
-  (add-hook 'text-mode-hook #'flymake-proselint-setup))
+;; (use-package flymake-proselint
+  ;; (add-hook 'text-mode-hook #'flymake-proselint-setup))
 
 ;;; Elisp packaging requirements
-(prot-emacs-elpa-package 'package-lint-flymake
-  (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
+;; (use-package package-lint-flymake
+  ;; (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 
 ;;; Eldoc (elisp live documentation feedback)
-(prot-emacs-builtin-package 'eldoc
+(use-package eldoc
+  :ensure nil
+  :config
   (global-eldoc-mode 1))
 
 ;;; Handle performance for very long lines (so-long.el)
-(prot-emacs-builtin-package 'so-long
+(use-package so-long
+  :ensure nil
+  :config
   (global-so-long-mode 1))
+
+(use-package python-pytest
+  :bind (:map python-mode-map
+			  ("C-c C-y" . python-pytest))
+  :custom
+  (python-pytest-confirm t))
+
+(use-package emmet-mode
+  :diminish)
+
+(add-hook 'sgml-mode-hook 'emmet-mode)
+(add-hook 'css-mode-hook 'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
+
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+		 ("\\.phtml\\'" . web-mode)
+		 ("\\.tpl\\.php\\'" . web-mode)
+		 ("\\.ejs?\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-engines-alist
+		'(("django" . "focus/.*\\.html\\'")
+		  ("ejs" . "\\.ejs\\."))))
+
+(use-package web-beautify
+  :bind
+  (:map web-mode-map
+		("C-c-b" . web-beautify-html))
+  (:map js2-mode-map
+		("C-c b" . web-beautify-js)))
+
+;; Markdown
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md'" . gfm-mode)
+		 ("\\.md\\'" . markdown-mode)
+		 ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+
+
+
+;; Debugging with Dap-Mode
+(use-package dap-mode
+  :diminish)
+
+
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode
+  :diminish)
 
 (provide 'gbl-emacs-langs)

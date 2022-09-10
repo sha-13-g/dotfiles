@@ -35,7 +35,9 @@
                 mode-line-end-spaces))
 
 ;;; Hide modeline "lighters" (minions.el)
-(prot-emacs-elpa-package 'minions
+(use-package minions
+  :ensure nil
+  :config
   (setq minions-mode-line-lighter ";")
   ;; NOTE: This will be expanded whenever I find a mode that should not
   ;; be hidden
@@ -46,13 +48,15 @@
   (minions-mode 1))
 
 ;;; Mode line recursion indicators
-(prot-emacs-elpa-package 'recursion-indicator
+(use-package recursion-indicator
+  :config
   (setq recursion-indicator-general "&")
   (setq recursion-indicator-minibuffer "@")
   (recursion-indicator-mode 1))
 
 ;;; Display current time
-(prot-emacs-builtin-package 'time
+(use-package time
+  :config
   (setq display-time-format "%a %e %b, %H:%M")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -99,7 +103,9 @@
   )
 
 ;;; Keycast mode
-(prot-emacs-elpa-package 'keycast
+(use-package keycast
+  :ensure nil
+  :config
   ;; Those are for `keycast-mode'
   (setq keycast-mode-line-window-predicate 'moody-window-active-p) ; assumes `moody.el'
   (setq keycast-separator-width 1)

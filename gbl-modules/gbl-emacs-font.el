@@ -1,5 +1,5 @@
 ;; Read the manual: <https://protesilaos.com/emacs/fontaine>
-(prot-emacs-elpa-package 'fontaine
+(use-package fontaine
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line t)
 

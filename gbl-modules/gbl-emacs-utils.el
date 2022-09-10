@@ -97,5 +97,13 @@ folder, otherwise delete a character backward"
   (interactive)
   (start-process-shell-command "shutdown" nil "shutdown -r now"))
 
-(provide 'gbl-utils)
+(defun gbl/increase-transparency ()
+  "Increase transparency by (1 . 1)"
+  (interactive)
+  (cdr (car (cdr default-frame-alist)))
+  
+  (setcar '(1 . 1))
+)
 
+
+(provide 'gbl-emacs-utils)

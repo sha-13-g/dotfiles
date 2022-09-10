@@ -1,5 +1,7 @@
 ;;; Eshell and prot-eshell.el
-(prot-emacs-builtin-package 'eshell
+(use-package eshell
+  :ensure nil
+  :config
   (require 'esh-mode)
   (require 'esh-module)
   (setq eshell-modules-list             ; It works but may need review
@@ -29,7 +31,9 @@
   (setq eshell-hist-ignoredups t)
   (setq eshell-save-history-on-exit t))
 
-(prot-emacs-builtin-package 'prot-eshell
+(use-package prot-eshell
+  :ensure nil
+  :config
   (setq prot-eshell-output-buffer "*Exported Eshell output*")
   (setq prot-eshell-output-delimiter "* * *")
   (let ((map eshell-mode-map))
@@ -50,33 +54,42 @@
     (define-key map (kbd "C-c C-s") #'prot-eshell-find-subdirectory-recursive)))
 
 ;;; Shell (M-x shell)
-(prot-emacs-builtin-package 'shell
+(use-package shell
+  :ensure nil
+  :config
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t))
 
 ;;; Tools for manual pages (manpages)
-(prot-emacs-builtin-package 'man
+(use-package man
+  :ensure nil
+  :config
   (let ((map Man-mode-map))
     (define-key map (kbd "i") #'Man-goto-section)
     (define-key map (kbd "g") #'Man-update-manpage)))
 
 ;;; Proced (process monitor, similar to `top')
-(prot-emacs-builtin-package 'proced
+(use-package proced
+  :ensure nil
+  :config
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
   (setq proced-filter 'user))
 
-(prot-emacs-builtin-package 'prot-proced
+(use-package prot-proced
+  :ensure nil
+  :config
   (prot-proced-extra-keywords 1))
 
 ;;; Pass interface (password-store)
-(prot-emacs-elpa-package 'password-store
+(use-package password-store
+  :config
   (setq password-store-time-before-clipboard-restore 30)
   ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
   ;; the password to the kill-ring.  Other options are already taken.
   (define-key global-map (kbd "C-c k") #'password-store-copy))
 
-(prot-emacs-elpa-package 'pass)
+(use-package pass)
 
 (provide 'gbl-emacs-shell)

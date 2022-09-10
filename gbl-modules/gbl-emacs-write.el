@@ -1,5 +1,7 @@
 ;;; Outline mode and outline-minor-mode
-(prot-emacs-builtin-package 'outline
+(use-package outline
+  :ensure nil
+  :config
   (setq outline-minor-mode-highlight 'override) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
   (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
@@ -22,7 +24,8 @@
 
 ;;; Denote (simple note-taking)
 ;; Read the manual: <https://protesilaos.com/emacs/denote>.
-(prot-emacs-elpa-package 'denote
+(use-package denote
+  :config
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
@@ -109,12 +112,14 @@
 
 ;;; Custom extensions for "focus mode" (logos.el)
 ;; Read the manual: <https://protesilaos.com/emacs/logos>.
-(prot-emacs-elpa-package 'olivetti
+(use-package olivetti
+  :config
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-(prot-emacs-elpa-package 'logos
+(use-package logos
+  :config
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
@@ -156,7 +161,9 @@
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
 
 ;;; Emoji input
-;; (prot-emacs-builtin-package 'emoji
+;; (use-package emoji
+;; :ensure nil
+;; :config
 ;;   (defun prot/emoji-insert (&optional transient)
 ;;     "Thin wrapper for `emoji-insert' and `emoji-search'.
 ;; When called with optional TRANSIENT as a prefix argument, use the

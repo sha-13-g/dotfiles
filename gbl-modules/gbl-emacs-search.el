@@ -1,5 +1,7 @@
 ;;; Isearch, occur, grep, and extras (prot-search.el)
-(prot-emacs-builtin-package 'isearch
+(use-package isearch
+  :ensure nil
+  :config
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -22,15 +24,19 @@
     (define-key map (kbd "C-g") #'isearch-cancel) ; instead of `isearch-abort'
     (define-key map (kbd "M-/") #'isearch-complete)))
 
-(prot-emacs-builtin-package 'replace
+(use-package replace
+  :ensure nil
+  :config
   (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(prot-emacs-builtin-package 'grep)
+(use-package grep)
 
-(prot-emacs-builtin-package 'prot-search
+(use-package prot-search
+  :ensure nil
+  :config
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
@@ -58,11 +64,14 @@
     (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
 
 ;;; Test regular expressions (re-builder)
-(prot-emacs-builtin-package 're-builder
+(use-package re-builder
+  :ensure nil
+  :config
   (setq reb-re-syntax 'read))
 
 ;;; wgrep (writable grep)
-(prot-emacs-elpa-package 'wgrep
+(use-package wgrep
+  :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
   (let ((map grep-mode-map))
@@ -71,7 +80,9 @@
     (define-key map (kbd "C-c C-c") #'wgrep-finish-edit)))
 
 ;;; Cross-references (xref.el)
-(prot-emacs-builtin-package 'xref
+(use-package xref
+  :ensure nil
+  :config
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
@@ -79,14 +90,18 @@
   (setq xref-search-program 'grep))
 
 ;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
-(prot-emacs-builtin-package 'bookmark
+(use-package bookmark
+  :ensure nil
+  :config
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
   (setq bookmark-set-fringe-mark t) ; Emacs28
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
-(prot-emacs-builtin-package 'prot-bookmark
+(use-package prot-bookmark
+  :ensure nil
+  :config
   (prot-bookmark-extra-keywords 1))
 
 (provide 'gbl-emacs-search)

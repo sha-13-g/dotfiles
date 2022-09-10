@@ -1,8 +1,12 @@
 ;;; Emacs server and desktop
-(prot-emacs-builtin-package 'server
+(use-package server
+  :ensure nil
+  :config
   (add-hook 'after-init-hook #'server-start))
 
-(prot-emacs-builtin-package 'desktop
+(use-package desktop
+  :ensure nil
+  :config
   (setq desktop-auto-save-timeout 300)
   (setq desktop-path `(,user-emacs-directory))
   (setq desktop-base-file-name "desktop")
@@ -20,7 +24,9 @@
   (desktop-save-mode 1))
 
 ;;; Record cursor position
-(prot-emacs-builtin-package 'saveplace
+(use-package saveplace
+  :ensure nil
+  :config
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
