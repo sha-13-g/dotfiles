@@ -55,20 +55,24 @@
 ;; Allow loading from the package cache
 (setq package-quickstart t)
 
+;; Init hooks
+
 ;; Disable GUI elements
 (display-time-mode 1)
-(display-line-numbers-mode)
 (scroll-bar-mode -1)
 (tooltip-mode -1)
 (set-fringe-mode 8)
-(menu-bar--display-line-numbers-mode-relative)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(column-number-mode)
+
 (global-visual-line-mode t)
 
+(global-display-line-numbers-mode 1)
+
+(column-number-mode)
+(menu-bar--display-line-numbers-mode-relative)
 (setq global-prettify-symbols-mode t) ; Glyph support
 
 (setq-default

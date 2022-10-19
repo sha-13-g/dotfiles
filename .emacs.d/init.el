@@ -1,5 +1,4 @@
 ;; Setting up Package.el to work with MELP
-
 (server-start)
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -64,11 +63,10 @@
 (setq-default line-spacing 0.03)
 (add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
 
-(electric-pair-mode 1)
+(add-hook 'prog-mode-hook #'electric-pair-mode)
 (setq electric-pair-preserve-balance nil)
 
 ;; Setting Transparency
-
 ;; Enabling usefull modes
 (delete-selection-mode 1) ; Delete existing text when inserting text
 (global-subword-mode 1)
@@ -120,6 +118,8 @@
 (dolist (path '("gbl-lisp" "gbl-modules"))
   (add-to-list 'load-path (locate-user-emacs-file path)));;(load-file (concat user-emacs-directory "modules/epubmode.el"))
 
+(require 'jsshell-bundle)
+(require 'js-comint)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-utils)
 (require 'gbl-emacs-conveniences)
@@ -130,16 +130,16 @@
 (require 'gbl-emacs-dired)
 (require 'gbl-emacs-langs)
 (require 'gbl-emacs-magit)
-(require 'gbl-emacs-desktop)
+;; (require 'gbl-emacs-desktop)
 
 ;; Setting up auto-package update so that packages are updated automatically
 (use-package auto-package-update
+  :hook ((exwm-init . auto-package-update-maybe))
   :custom
   (auto-package-update-interval 7) ; Every seven days
   (auto-package-update-prompt-before-update t) ; Ask permission first
   (auto-package-update-hide-results t)
   :config
-  (auto-package-update-maybe)
   (auto-package-update-at-time "09:00")) ; At 9:00AM
 
 ;; Real auto-save feature
@@ -472,13 +472,6 @@
 ;; :diminish t)
 ;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
-;; (use-package eglot
-;; :diminish t)
-;; (add-to-list 'eglot-server-programs
-;;              `(python-mode . ("pyls" "-v" "--tcp" "--host"
-;;                               "localhost" "--port" :autoport)))
-
-;; (add-hook 'python-mode-hook 'eglot-ensure)
 ;; (use-package elpy
 ;;   :config
 ;;   (elpy-enable))
@@ -494,12 +487,6 @@
 ;;   :commands (lsp lsp-deferred))
 
 
-;; (use-package lsp-jedi
-;;   :ensure t
-;;   :config
-;;   (with-eval-after-load "lsp-mode"
-;;     (add-to-list 'lsp-disabled-clients 'pyls)
-;;     (add-to-list 'lsp-enabled-clients 'jedi)))
 
 ;; (use-package lsp-ui
 ;;    :ensure t
@@ -692,3 +679,4 @@
 ;		  (:name "Messages with images" :query "mime:image/*" :key ?p)))
 ;
 ;  (mu4e t))
+(put 'dired-find-alternate-file 'disabled nil)

@@ -39,12 +39,14 @@
   (interactive)
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-move-window 2))
+    ("firefox" (exwm-workspace-move-window 2))
     ("Alacritty" (exwm-workspace-move-window 0))
     ("TelegramDesktop" (exwm-workspace-move-window 9))
     ("Gimp-2.10" (exwm-workspace-move-window 3))
     ("Main" (exwm-floating-toggle-floating))
     ("-2.10" (exwm-workspace-move-window 3))
     ("mpv" (exwm-workspace-move-window 4))
+    ("ktouch" (exwm-workspace-move-window 5))
     ("qBittorrent" (exwm-workspace-move-window 5))
     ("VirtualBox Manager" (exwm-workspace-move-window 5))
     ("vlc" (exwm-workspace-move-window 4))))
@@ -121,6 +123,7 @@
     '(?\C-x
       ?\C-h
       ?\C-c
+      ?\C-&
 
       ?\M-&
       ?\M-x
