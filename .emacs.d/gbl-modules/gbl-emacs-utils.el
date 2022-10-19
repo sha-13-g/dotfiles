@@ -2,6 +2,35 @@
 
 ;;; code:
 
+;; (defub gbl/sudo-edit ()
+;;   "Commands that "
+;;   (interactive))
+
+(defun gbl/maximize-window ()
+  "This Command maximize the curent windowk. It is bound to C-s-f"
+  (interactive)
+  (maximize-window))
+
+(defun gbl/balance-window ()
+  (interactive)
+  (balance-windows))
+
+(defun gbl/next-buffer-other-window()
+  "Commands that split the current window & select the next buffer"
+  (interactive)
+  (evil-window-vsplit)
+  (next-buffer))
+
+(defun gbl/dired-mode (arg)
+  (interactive)
+  (if ))
+
+(defun gbl/prev-buffer-other-window()
+  "Commands that split the current window & select the next buffer"
+  (interactive)
+  (evil-window-vsplit)
+  (previous-buffer))
+
 (defun gbl/maximaze-other-window()
   "Command that maximaze other window"
   (interactive)
@@ -100,10 +129,8 @@ folder, otherwise delete a character backward"
 (defun gbl/increase-transparency ()
   "Increase transparency by (1 . 1)"
   (interactive)
-  (cdr (car (cdr default-frame-alist)))
-  
-  (setcar '(1 . 1))
-)
+  (cdr (car (cdr (cdr default-frame-alist))))
+  (setcar '(1 . 1)))
 
 
 (provide 'gbl-emacs-utils)

@@ -1,6 +1,4 @@
 ;;; Dired file manager and prot-dired.el extras
-
-
 (use-package dired
   :ensure nil
   :hook ((dired-mode . dired-hide-details-mode)
@@ -14,8 +12,8 @@
 		   (dired-mouse-drag-files t))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map ; VIM keybindings for navigating directories
-	"h" 'dired-up-directory
-	"l" 'dired-find-file)) ; Emacs 29.1
+	"h" 'dired-single-up-directory
+	"l" 'dired-find-alternate-file)) ; Emacs 29.1
 
 (use-package peep-dired
   :diminish t)
@@ -142,5 +140,7 @@
 ;; Dired will have all-the-icons, same as in treemacs
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
+
+(use-package dired-single)
 
 (provide 'gbl-emacs-dired)

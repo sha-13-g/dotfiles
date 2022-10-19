@@ -2,20 +2,20 @@
 
 ;;(use-package text-mode)
 
-(use-package prot-text
-  :ensure nil
-  :config
-  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
-  (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
-  (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
-  (define-key org-mode-map (kbd "M-;") nil))
+;; (use-package prot-text
+;;   :ensure nil
+;;   :config
+;;   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
+;;   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
+;;   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
+;;   (define-key org-mode-map (kbd "M-;") nil))
 
 ;;; Markdown (markdown-mode)
 ;; (use-package markdown-mode
 ;;   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 ;;   (setq markdown-fontify-code-blocks-natively t))
 
-(use-package systemd)
+;; (use-package systemd)
 
 (use-package yasnippet
   :init
@@ -46,20 +46,20 @@
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
 ;;; Paragraphs and fill-mode (prot-fill.el)
-(use-package prot-fill
-  :ensure nil
-  :config
-  (setq prot-fill-default-column 72)
-  (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
-  ;; Those variables come from various sources, though they feel part of the
-  ;; same conceptual framework.
-  (setq sentence-end-double-space t)
-  (setq sentence-end-without-period nil)
-  (setq colon-double-space nil)
-  (setq use-hard-newlines nil)
-  (setq adaptive-fill-mode t)
-  (prot-fill-fill-mode 1)
-  (add-hook 'after-init-hook #'column-number-mode))
+;; (use-package prot-fill
+;;   :ensure nil
+;;   :config
+;;   (setq prot-fill-default-column 72)
+;;   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
+;;   ;; Those variables come from various sources, though they feel part of the
+;;   ;; same conceptual framework.
+;;   (setq sentence-end-double-space t)
+;;   (setq sentence-end-without-period nil)
+;;   (setq colon-double-space nil)
+;;   (setq use-hard-newlines nil)
+;;   (setq adaptive-fill-mode t)
+;;   (prot-fill-fill-mode 1)
+;;   (add-hook 'after-init-hook #'column-number-mode))
 
 ;;; Comments (newcomment.el and prot-comment.el)
 ;; (use-package newcomment                 ;
@@ -73,16 +73,16 @@
 ;;     (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
     ;; (define-key map (kbd "M-;") #'comment-indent)))
 
-(use-package prot-comment
-  :ensure nil
-  :config
-  (setq prot-comment-comment-keywords
-        '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-  (setq prot-comment-timestamp-format-concise "%F")
-  (setq prot-comment-timestamp-format-verbose "%F %T %z")
-  (let ((map global-map))
-    (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
-    (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
+;; (use-package prot-comment
+;;   :ensure nil
+;;   :config
+;;   (setq prot-comment-comment-keywords
+;;         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+;;   (setq prot-comment-timestamp-format-concise "%F")
+;;   (setq prot-comment-timestamp-format-verbose "%F %T %z")
+;;   (let ((map global-map))
+;;     (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
+;;     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 
 ;;; Configure 'electric' behaviour
 (use-package electric
@@ -220,7 +220,7 @@
 (use-package web-beautify
   :bind
   (:map web-mode-map
-		("C-c-b" . web-beautify-html))
+		("C-c b" . web-beautify-html))
   (:map js2-mode-map
 		("C-c b" . web-beautify-js)))
 
@@ -232,25 +232,38 @@
 		 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-
-
 ;; Debugging with Dap-Mode
 (use-package dap-mode
   :diminish)
 
+(use-package js2-mode
+  :hook ((js2-mode . js2-imenu-extras-mode))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js[ms]\\'" . js2-mode)))
 
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (python-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+(use-package eglot
+  :hook ((python-mode . eglot-ensure)
+         (js2-mode . eglot-ensure)))
 
+
+;; (use-package lsp-mode
+;;   :init
+;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+;;          (python-mode . lsp)
+;;          ;; if you want which-key integration
+;;          (lsp-mode . lsp-enable-which-key-integration))
+;;   :commands lsp)
+
+
+;; (use-package lsp-jedi
+;;   :config
+;;   (with-eval-after-load "lsp-mode"
+;;     (add-to-list 'lsp-disabled-clients 'pyls)
+;;     (add-to-list 'lsp-enabled-clients 'jedi)))
 ;; optionally
-(use-package lsp-ui :commands lsp-ui-mode
-  :diminish)
+;; (use-package lsp-ui :commands lsp-ui-mode
+;;   :diminish)
 
 (provide 'gbl-emacs-langs)

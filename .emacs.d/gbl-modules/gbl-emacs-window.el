@@ -46,8 +46,8 @@
 				  ("\\*Help*"
 				   (display-buffer-in-side-window)
 				   (window-width . 0.25)
-				   (side . right)
-				   (slot . 1))
+				   (side . bottom)
+				   (slot . -1))
 
 				  ("\\*eshell*"
 				   (display-buffer-in-side-window)
@@ -55,7 +55,7 @@
 				   (side . bottom)
 				   (slot . 0))
 
-				  ("\\*terminal*"
+				  ("\\*terminal\\*"
 				   (display-buffer-in-side-window)
 				   (window-height . 0.35)
 				   (side . bottom)

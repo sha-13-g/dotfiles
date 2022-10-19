@@ -8,6 +8,10 @@
 
 (global-set-key (kbd "M-:") 'evil-ex)
 
+(global-set-key (kbd "C-s-f") 'gbl/maximize-window)
+(global-set-key (kbd "C-s-b") 'gbl/balance-window)
+(global-set-key (kbd "C-s-t") '(lambda () (interactive) (gbl/toggle-transparency)))
+
 (global-set-key (kbd "s-q") 'kill-buffer-slip-window)
 (global-set-key (kbd "s-Q") 'delete-window)
 
@@ -25,13 +29,17 @@
 (global-set-key (kbd "s-c") 'compile)
 (global-set-key (kbd "s-n") 'switch-to-next-buffer)
 
+
+(global-set-key (kbd "s-N") 'gbl/next-buffer-other-window)
+(global-set-key (kbd "s-P") 'gbl/prev-buffer-other-window)
+
 (global-set-key (kbd "s-e") 'dired-jump)
 
 (global-set-key (kbd "s-f") 'find-file)
 (global-set-key (kbd "s-b") 'consult-buffer)
 (global-set-key (kbd "s-B") '(lambda () (interactive) (kill-buffer)))
 
-(global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
+;; (global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
 (global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
 
 (global-set-key (kbd "C-M-j") 'evil-collection-unimpaired-move-text-down)
@@ -60,9 +68,9 @@
 	   ";"	'(find-file :which-key "Find file"))
 
 (nvmap :prefix gbl/leader
-  "g" 	'(:ignore t :which-key "Grep command")
-  "g g" '(consult-grep :which-key "Grep across project")
-  "g r" '(consult-ripgrep :which-key "Ripgrep across project"))
+  "g" 	'(:ignore t :which-key "Magit")
+  "g c" '(magit-clone :which-key "Magit Clone")
+  "g s" '(magit-status :which-key "Magit Status"))
 
 (nvmap :prefix gbl/leader
 	   ;; Window Splits
@@ -79,7 +87,7 @@
 	   ;; Window movement
 	   "w r" '(gbl/hydra-window-resizer/body :which-key "Resize window")
 	   ;; Custom window layout functions
-	   "w t" '(gbl/window-plit-toggle :which-key "Window split toggle"))
+	   "w t" '(gbl/window-split-toggle :which-key "Window split toggle"))
 
 (nvmap :prefix gbl/leader
   "a"   '(:ignore t :which-key "Applications")
@@ -109,7 +117,7 @@
 (nvmap :prefix gbl/leader
   "o e" '(elfeed :which-key "Open elfeed")
   "o v" '(vterm :which-key "Open vterm")
-  "o s" '(eshell-toggle :which-key "Open eshell")
+  "o s" '(eshell :which-key "Open eshell")
   "o t" '(term :which-key "Open term")
   "o d" '(dired-jump :which-key "Open dired")
   "o a" '(org-agenda :which-key "Open org-agenda")
@@ -141,17 +149,18 @@
   "SPC M" '(desktop-environment-toggle-microphone-mute :which-key "Toggle microphone")
   "SPC s" '(desktop-environment-screenshot :which-key "Take screenshot"))
 
-(nvmap :prefix gbl/leader
-	   "c"	'(:ignore t :which-key "Configs")
-	   "c e"	'((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Reload config")
-	   "c q"	'((lambda () (interactive) (find-file "~/.config/qutebrowser/config.py")) :which-key "Reload config")
-	   "c v"	'((lambda () (interactive) (find-file "~/.config/nvim/init.lua")) :which-key "Reload config"))
-
 
 (nvmap :prefix gbl/leader
-  "f" '(:ignore t :which-key "Frame")
-  "f s" '(gbl/set-transparency)
-  "f t" '(gbl/toggle-transparency))
+  "f" '(:ignore t :which-key "Files")
+  "f d" '((lambda () (interactive) (dired "~/git-repos/dotfiles/")) :which-key "Dotfiles")
+  "f q" '((lambda () (interactive) (dired "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
+  "f f" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Emacs init.el")
+  "f g" '((lambda () (interactive) (find-file "~/git-repos/")) :which-key "Git repos")
+  "f m" '((lambda () (interactive) (find-file "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
+  "f F" '((lambda () (interactive) (dired "~/documents/files/")) :which-key "Personal Files")
+  "f o" '((lambda () (interactive) (dired "~/documents/org/")) :which-key "Org Files")
+  "f e" '((lambda () (interactive) (dired "~/.emacs.d/")) :which-key "Emacs Directory")
+  "f p" '((lambda () (interactive) (dired "~/documents/personal/")) :which-key "Personal Directory"))
 
 (defhydra gbl/hydra-window-resizer(:timeout 4)
   "This hydra define a set on function that resize a window"
