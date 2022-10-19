@@ -1,0 +1,38 @@
+;;-*-coding: utf-8;-*-
+(define-abbrev-table 'global-abbrev-table
+  '(
+    ("megit" "https://git.sr.ht/~protesilaos" nil :count 0)
+    ("meweb" "https://protesilaos.com" nil :count 0)
+    ("βθφφερ" "αποσβεστήρας" nil :count 0)
+    ("εμαψσ" "Emacs" nil :count 0)
+    ("μινιβθφφερ" "μικροαποσβεστήρας" nil :count 0)
+   ))
+
+(define-abbrev-table 'message-mode-abbrev-table
+  '(
+    ("abest" "All the best,
+Prot" nil :count 0)
+    ("allthebest" "All the best,
+Protesilaos (or simply \"Prot\")" nil :count 0)
+    ("bestregards" "Best regards,
+Protesilaos (or simply \"Prot\")" nil :count 0)
+    ("bregards" "Best regards,
+Prot" nil :count 0)
+   ))
+
+(define-abbrev-table 'text-mode-abbrev-table
+  '(
+    ("Emacs27" "Emacs 27" nil :count 0)
+    ("Emacs28" "Emacs 28" nil :count 0)
+    ("Emacs29" "Emacs 29" nil :count 0)
+    ("asciidoc" "AsciiDoc" nil :count 0)
+    ("auctex" "AUCTeX" nil :count 0)
+    ("emacsconf" "EmacsConf" nil :count 0)
+    ("github" "GitHub" nil :count 0)
+    ("gitlab" "GitLab" nil :count 0)
+    ("javascript" "JavaScript" nil :count 0)
+    ("latex" "LaTeX" nil :count 0)
+    ("libreplanet" "LibrePlanet" nil :count 0)
+    ("sourcehut" "SourceHut" nil :count 0)
+   ))
+
