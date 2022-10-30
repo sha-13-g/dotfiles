@@ -1,3 +1,4 @@
+(forward-char (/ (buffer-size) 2))
 ;; Setting up Package.el to work with MELP
 (server-start)
 (require 'package)
@@ -7,8 +8,22 @@
 						 ("org" . "https://orgmode.org/elpa/")
 						 ("gnu" . "https://elpa.gnu.org/packages/")))
 
+;; (defvar bootstrap-version)
+;; (let ((bootstrap-file
+;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+;;       (bootstrap-version 6))
+;;   (unless (file-exists-p bootstrap-file)
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;;          "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+;;          'silent 'inhibit-cookies)
+;;       (goto-char (point-max))
+;;       (eval-print-last-sexp)))
+;;   (load bootstrap-file nil 'nomessage))
+
 ;;Variable definition
 (defvar gbl/leader "C-SPC")
+(defvar gbl/super-leader "s-a")
 (defvar gbl/frame-transparency-v '(70 . 70))
 
 
@@ -132,15 +147,14 @@
 (require 'gbl-emacs-magit)
 ;; (require 'gbl-emacs-desktop)
 
-;; Setting up auto-package update so that packages are updated automatically
-(use-package auto-package-update
-  :hook ((exwm-init . auto-package-update-maybe))
-  :custom
-  (auto-package-update-interval 7) ; Every seven days
-  (auto-package-update-prompt-before-update t) ; Ask permission first
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-at-time "09:00")) ; At 9:00AM
+;; setting up auto-package update so that packages are updated automatically
+;; (use-package auto-package-update
+;;   :custom
+;;   (auto-package-update-interval 7) ; Every seven days
+;;   (auto-package-update-prompt-before-update t) ; Ask permission first
+;;   (auto-package-update-hide-results t)
+;;   :config
+;;   (auto-package-update-at-time "09:00")) ; At 9:00AM
 
 ;; Real auto-save feature
 
@@ -371,6 +385,7 @@
   ;(add-hook 'eshell-first-time-mode-hook #'gbl/eshell-configure)
   ;(setq eshell-directory-name "~/.dotfiles/.emacs.d/eshell/"
         ;eshell-aliases-file (expand-file-name "~/.dotfiles/.emacs.d/eshell/alias")))
+
 
 (use-package eshell-z
   :hook ((eshell-mode . (lambda () (require 'eshell-z)))
