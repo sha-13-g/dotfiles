@@ -46,8 +46,8 @@
   :config
   (window-divider-mode))
 
-(use-package exwm-edit
-  :diminish t)
+;; (use-package exwm-edit
+;;   :diminish t)
 
 (use-package winner
   :ensure nil 

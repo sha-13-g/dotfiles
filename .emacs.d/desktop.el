@@ -85,6 +85,11 @@
       ?\C-c
       ?\C-&
 
+      ?\C--
+      ?\C-=
+
+      ?\C-w
+
       ?\M-&
       ?\M-x
       ?\M-:
@@ -118,8 +123,6 @@
       ?\s-b
       ?\s-B
 
-      ?\C--
-      ?\C-=
 
       ?\C-\M-h
       ?\C-\M-l
@@ -150,11 +153,11 @@
 		  ;; ([?\s-m] . exwm-layout-toggle-mode-line)
 
           ;; Launch applications via shell command
-		  ([?\s-d] . (lambda () (interactive) (gbl/run-in-bg "launcher")))
+		  ([?\s-d] . (lambda () (interactive) (gbl/launcher "launcher" "")))
 
-          ;; ([?\s-a] . (lambda (command)
-          ;;              (interactive (list (read-shell-command "$ ")))
-          ;;              (start-process-shell-command command nil command)))
+          ([?\s-~] . (lambda (command)
+                       (interactive (list (read-shell-command "$ ")))
+                       (start-process-shell-command command nil command)))
           ;; Switch workspace
           ([?\M-R] . exwm-input-release-keyboard)
 
@@ -175,7 +178,7 @@
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 9))
 
-          ([?\s-~] . (lambda () (interactive) (exwm-workspace-switch-create 0)))))
+          ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))))
 
   (exwm-input-set-key (kbd "<s-tab>") 'evil-window-next)
   (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)

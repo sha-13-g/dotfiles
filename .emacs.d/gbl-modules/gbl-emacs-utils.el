@@ -11,6 +11,16 @@
   (interactive)
   (maximize-window))
 
+
+;; (defun gbl/get-token ()
+;;   (interactive)
+;;  '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)
+
+(defun gbl/scratch-buffer ()
+  (interactive)
+  (get-buffer-create "*scratch*")
+  (switch-to-buffer "*scratch*"))
+
 (defun gbl/balance-window ()
   (interactive)
   (balance-windows))

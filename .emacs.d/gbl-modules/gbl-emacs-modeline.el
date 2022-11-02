@@ -104,7 +104,6 @@
 
 ;;; Keycast mode
 (use-package keycast
-  :ensure nil
   :config
   ;; Those are for `keycast-mode'
   (setq keycast-mode-line-window-predicate 'moody-window-active-p) ; assumes `moody.el'

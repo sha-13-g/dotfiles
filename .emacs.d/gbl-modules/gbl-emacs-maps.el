@@ -34,6 +34,8 @@
 (global-set-key (kbd "s-P") 'gbl/prev-buffer-other-window)
 
 (global-set-key (kbd "s-e") 'dired-jump)
+(global-set-key (kbd "s-s") 'gbl/scratch-buffer)
+(global-set-key (kbd "C-s-g") 'gbl/get-token)
 
 (global-set-key (kbd "s-f") 'find-file)
 (global-set-key (kbd "s-b") 'consult-buffer)
@@ -49,7 +51,6 @@
 
 (global-set-key (kbd "C--") 'desktop-environment-volume-decrement)
 (global-set-key (kbd "C-=") 'desktop-environment-volume-increment)
-(global-set-key (kbd "C-G") '(lambda () (interactive) (dired "~/git_repo/")))
 
 (with-eval-after-load 'desktop-environment
   (global-set-key (kbd "s-l") #'windmove-right))
@@ -70,6 +71,9 @@
 (nvmap :prefix gbl/leader
   "g" 	'(:ignore t :which-key "Magit")
   "g c" '(magit-clone :which-key "Magit Clone")
+  "g i" '(magit-init :which-key "Magit Init")
+  "g p" '(magit-push :which-key "Magit Push")
+  "g F" '(magit-pull :which-key "Magit Pull")
   "g s" '(magit-status :which-key "Magit Status"))
 
 (nvmap :prefix gbl/leader
@@ -89,20 +93,17 @@
 	   ;; Custom window layout functions
 	   "w t" '(gbl/window-split-toggle :which-key "Window split toggle"))
 
-(nvmap :prefix gbl/leader
-  "a"   '(:ignore t :which-key "Applications")
+(nvmap :prefix gbl/super-leader
+  "l"   '(:ignore t :which-key "Applications")
 
-  "a b" '(:ignore t :which-key "Browser")
-  "a b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
-  "a b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
-  "a b g" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
+  "l q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+  "l t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
 
-  "a p" '((lambda () (interactive) (gbl/run-in-bg "polybar-launcher")) :which-key "Polybar")
+  "l p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
+  "l k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
 
-  "a l" '(:ignore t :which-key "Launcher")
-  "a l w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
-  "a l l" '((lambda () (interactive) (gbl/run-in-bg "launcher")) :which-key "App Launcher")
-  "a l e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
+  "l w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
+  "l e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
 
 (nvmap :states '(normal visual) :keymaps 'override :prefix gbl/leader
   "d d" '(dired :which-key "Open dired")
@@ -155,7 +156,7 @@
   "f d" '((lambda () (interactive) (dired "~/git-repos/dotfiles/")) :which-key "Dotfiles")
   "f q" '((lambda () (interactive) (dired "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
   "f f" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Emacs init.el")
-  "f g" '((lambda () (interactive) (find-file "~/git-repos/")) :which-key "Git repos")
+  "f g" '((lambda () (interactive) (find-file "~/git_repos/")) :which-key "Git repos")
   "f m" '((lambda () (interactive) (find-file "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
   "f F" '((lambda () (interactive) (dired "~/documents/files/")) :which-key "Personal Files")
   "f o" '((lambda () (interactive) (dired "~/documents/org/")) :which-key "Org Files")

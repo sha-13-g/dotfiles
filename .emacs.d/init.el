@@ -1,4 +1,3 @@
-(forward-char (/ (buffer-size) 2))
 ;; Setting up Package.el to work with MELP
 (server-start)
 (require 'package)

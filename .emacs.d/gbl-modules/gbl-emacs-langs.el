@@ -237,9 +237,27 @@
   :diminish)
 
 (use-package js2-mode
-  :hook ((js2-mode . js2-imenu-extras-mode))
-  :config
-  (add-to-list 'auto-mode-alist '("\\.js[ms]\\'" . js2-mode)))
+  :hook ((js2-mode . js2-imenu-extras-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.js[ms]?\\'" . js2-mode))
+
+(add-hook 'js2-mode-hook
+       (lambda ()
+	 (unless (or (file-exists-p "makefile")
+		     (file-exists-p "Makefile"))
+           (setq-local compile-command
+		(concat "node "
+			(if buffer-file-name
+			  (shell-quote-argument (buffer-file-name))))))))
+
+(add-hook 'python-mode-hook
+       (lambda ()
+	 (unless (or (file-exists-p "makefile")
+		     (file-exists-p "Makefile"))
+           (setq-local compile-command
+		(concat "python "
+			(if buffer-file-name
+			  (shell-quote-argument (buffer-file-name))))))))
 
 (use-package eglot
   :hook ((python-mode . eglot-ensure)
