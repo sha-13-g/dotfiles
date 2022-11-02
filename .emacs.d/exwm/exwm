@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+exec picom &
+exec nitrogen --restore &
+
+xss-lock -- slock &
+
+setxkbmap -layout 'fr' -variant 'us-azerty' -option 'ctrl:swapcaps' 
+
+exec dbus-launch --exit-with-session emacs -mm --debug-init -l ~/.emacs.d/desktop.el
