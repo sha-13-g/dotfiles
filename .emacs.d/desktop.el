@@ -1,6 +1,12 @@
 (defvar gbl/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
+(defun gbl/exwm-update-class ()
+  (exwm-workspace-rename-buffer exwm-class-name))
+
+(defun gbl/exwm-init-hook ()
+  (exwm-workspace-switch-create 1))
+
 (defun gbl/kill-panel ()
   (interactive)
   (when gbl/polybar-process
@@ -23,13 +29,13 @@
 (defun gbl/send-polybar-exwm-workspace ()
   (gbl/send-polybar-hook "exwm-workspace" 1))
 
-(defun gbl/exwm-update-class ()
-  (exwm-workspace-rename-buffer exwm-class-name))
 
 (defun gbl/exwm-update-title ()
   (pcase exwm-class-name
     ("firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
     ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
+    ("Gimp" (exwm-workspace-rename-buffer (format "Gimp: %s" exwm-title)))
+    ("Spotify" (exwm-workspace-rename-buffer (format "Spotify: %s" exwm-title)))
     ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
     ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
 
@@ -37,12 +43,16 @@
   (interactive)
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-move-window 2))
+    ("discord" (exwm-workspace-move-window 6))
+    ("Spotify" (exwm-workspace-move-window 4))
+    ("spotify" (exwm-workspace-move-window 4))
     ("firefox" (exwm-workspace-move-window 2))
     ("Alacritty" (exwm-workspace-move-window 0))
-    ("TelegramDesktop" (exwm-workspace-move-window 9))
+    ("TelegramDesktop" (exwm-workspace-move-window 8))
     ("Gimp" (exwm-workspace-move-window 3))
     ("Designer" (exwm-workspace-move-window 3))
     ("Main" (exwm-floating-toggle-floating))
+    ("Pavucontrol" (exwm-floating-toggle-floating))
     ("mpv" (exwm-workspace-move-window 4))
     ("ktouch" (exwm-workspace-move-window 5))
     ("qBittorrent" (exwm-workspace-move-window 5))
@@ -65,7 +75,7 @@
 (use-package exwm
   :config
   ;; Set the default number of workspaces
-  (setq exwm-workspace-number 10)
+  (setq exwm-workspace-number 9)
 
   ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-class-hook #'gbl/exwm-update-class)
@@ -186,6 +196,7 @@
 
   (gbl/launcher "qutebrowser" "")
   (gbl/launcher "alacritty" "")
+  (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")
   ;; (gbl/run-in-bg "nm-applet")
   ;; (gbl/run-in-bg "pasystray")
