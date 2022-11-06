@@ -71,6 +71,12 @@
   (advice-add #'register-preview :override #'consult-register-window)
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
 
+(use-package vertico-posframe
+  :init (vertico-posframe-mode 1)
+  :config (setq vertico-posframe-parameters
+                '((left . 0))))
+
+
 (use-package marginalia
   :after vertico
   :custom
