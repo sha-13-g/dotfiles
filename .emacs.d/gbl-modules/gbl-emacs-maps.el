@@ -4,13 +4,15 @@
 
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
-(global-set-key (kbd "C-&") 'universal-argument)
+(global-set-key (kbd "s-u") 'universal-argument)
+
+
 
 (global-set-key (kbd "M-:") 'evil-ex)
 
 (global-set-key (kbd "C-s-f") 'gbl/maximize-window)
 (global-set-key (kbd "C-s-b") 'gbl/balance-window)
-(global-set-key (kbd "C-s-t") '(lambda () (interactive) (gbl/toggle-transparency)))
+(global-set-key (kbd "C-s-t") #'(lambda () (interactive) (gbl/toggle-transparency)))
 
 (global-set-key (kbd "s-q") 'kill-buffer-slip-window)
 (global-set-key (kbd "s-Q") 'delete-window)
@@ -34,15 +36,16 @@
 (global-set-key (kbd "s-P") 'gbl/prev-buffer-other-window)
 
 (global-set-key (kbd "s-e") 'dired-jump)
+(global-set-key (kbd "s-E") 'sudo-edit)
 (global-set-key (kbd "s-s") 'gbl/scratch-buffer)
 (global-set-key (kbd "C-s-g") 'gbl/get-token)
 
 (global-set-key (kbd "s-f") 'find-file)
 (global-set-key (kbd "s-b") 'consult-buffer)
-(global-set-key (kbd "s-B") '(lambda () (interactive) (kill-buffer)))
+(global-set-key (kbd "s-B") #'(lambda () (interactive) (kill-buffer)))
 
 ;; (global-set-key (kbd "s-t") '(lambda () (interactive) (gbl/launcher "alacritty" "")))
-(global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
+;; (global-set-key (kbd "s-m") '(lambda () (interactive) (gbl/launcher "mpv" "")))
 
 (global-set-key (kbd "C-M-j") 'evil-collection-unimpaired-move-text-down)
 (global-set-key (kbd "C-M-k") 'evil-collection-unimpaired-move-text-up)
@@ -97,7 +100,14 @@
   "l"   '(:ignore t :which-key "Applications")
 
   "l q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+  "l d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
+  "l T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
   "l t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
+  "l m" '((lambda () (interactive) (gbl/launcher "vlc" "")) :which-key "VLC")
+  "l s" '((lambda () (interactive) (gbl/launcher "spotify" "")) :which-key "Spotify")
+  "l f" '((lambda () (interactive) (gbl/launcher "figma-linux" "")) :which-key "Figma")
+  "l g" '((lambda () (interactive) (gbl/launcher "gimp" "")) :which-key "Gimp")
+  "l P" '((lambda () (interactive) (gbl/launcher "pavucontrol" "")) :which-key "Pavucontrol")
 
   "l p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
   "l k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
@@ -117,6 +127,8 @@
 
 (nvmap :prefix gbl/leader
   "o e" '(elfeed :which-key "Open elfeed")
+  "o c" '(org-capture :which-key "Org Capture")
+  "o l" '(org-store-link :which-key "Org Store Link")
   "o v" '(vterm :which-key "Open vterm")
   "o s" '(eshell :which-key "Open eshell")
   "o t" '(term :which-key "Open term")
@@ -153,10 +165,15 @@
 
 (nvmap :prefix gbl/leader
   "f" '(:ignore t :which-key "Files")
-  "f d" '((lambda () (interactive) (dired "~/git-repos/dotfiles/")) :which-key "Dotfiles")
+  "f d" '((lambda () (interactive) (dired "~/git_repos/dotfiles/")) :which-key "Dotfiles")
+  "f D" '((lambda () (interactive) (find-file "~/.emacs.d/desktop.el")) :which-key "Desktop")
+  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
+  "f c" '((lambda () (interactive) (dired "~/.config/")) :which-key "Configs")
+  "f b" '((lambda () (interactive) (dired "~/documents/books/")) :which-key "Books")
   "f q" '((lambda () (interactive) (dired "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
   "f f" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Emacs init.el")
   "f g" '((lambda () (interactive) (find-file "~/git_repos/")) :which-key "Git repos")
+  "f h" '((lambda () (interactive) (find-file "~/")) :which-key "Home")
   "f m" '((lambda () (interactive) (find-file "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
   "f F" '((lambda () (interactive) (dired "~/documents/files/")) :which-key "Personal Files")
   "f o" '((lambda () (interactive) (dired "~/documents/org/")) :which-key "Org Files")
