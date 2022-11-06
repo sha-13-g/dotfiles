@@ -15,8 +15,8 @@ sudo git clone https://aur.archlinux.com/yay
 
 yay -Sy ly
 
-(cd git_repos/ && git clone https://github.com/sha-13-g/dotfiles)
 (cd git_repos/ && git clone https://github.com/sha-13-g/org)
+(cd git_repos/ && git clone https://github.com/sha-13-g/dotfiles)
 
 systemctl start NetworkManager.service
 systemctl enable ly.service
