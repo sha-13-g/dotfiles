@@ -1,6 +1,9 @@
 ;; Setting up Package.el to work with MELP
 (server-start)
 (require 'package)
+
+
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 		 				 ("elpa-devel" . "https://elpa.gnu.org/devel/")
 						 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
@@ -21,9 +24,9 @@
 ;;   (load bootstrap-file nil 'nomessage))
 
 ;;Variable definition
-(defvar gbl/leader "C-SPC")
-(defvar gbl/super-leader "s-a")
-(defvar gbl/frame-transparency-v '(70 . 70))
+    (defvar gbl/leader "C-SPC")
+    (defvar gbl/super-leader "s-a")
+    (defvar gbl/frame-transparency-v '(70 . 70))
 
 
 (set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency-v)
@@ -45,8 +48,7 @@
 
 (setq use-package-always-ensure t) ; all use-package statements will include :ensure t by default
 
-(dolist (mode '(org-mode-hook
-				term-mode-hook
+(dolist (mode '(term-mode-hook
 				vterm-mode-hook
 				treemacs-mode-hook
 				;elfeed-search-mode-hook
@@ -132,14 +134,15 @@
 (dolist (path '("gbl-lisp" "gbl-modules"))
   (add-to-list 'load-path (locate-user-emacs-file path)));;(load-file (concat user-emacs-directory "modules/epubmode.el"))
 
-(require 'jsshell-bundle)
-(require 'js-comint)
+;; (require 'jsshell-bundle)
+;; (require 'js-comint)
+(require 'gbl-emacs-evil)
 (require 'gbl-emacs-modeline)
+(require 'gbl-emacs-org)
 (require 'gbl-emacs-utils)
 (require 'gbl-emacs-conveniences)
 (require 'gbl-emacs-completion)
 (require 'gbl-emacs-window)
-(require 'gbl-emacs-evil)
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-dired)
 (require 'gbl-emacs-langs)
@@ -525,139 +528,128 @@
 ;; (add-hook 'css-mode-hook 'eglot-ensure)
 
 ;;; Org Mode
-(defun org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (auto-fill-mode 0)
-  (visual-line-mode 1)
-  (setq evil-auto-indent nil))
+;; (defun org-mode-setup ()
+;;   (org-indent-mode)
+;;   (variable-pitch-mode 1)
+;;   (auto-fill-mode 0)
+;;   (visual-line-mode 1)
+;;   (setq evil-auto-indent nil))
 
-(use-package org
-  :hook (org-mode . org-mode-setup)
-  :config
-  (setq org-ellipsis " ▼ " 
-		org-hide-emphasis-markers t))
+;; (use-package org
+;;   :hook (org-mode . org-mode-setup)
+;;   :config
+;;   (setq org-ellipsis " ▼ " 
+;; 		org-hide-emphasis-markers t))
 
-(setq org-directory "~/documents/org/"
-	  org-agenda-files '("~/documents/org/") ; NOTE: This is a list, more files can be added later
-	  org-default-notes-file (expand-file-name "Notes.org" org-directory))
+;; (setq org-directory "~/documents/org/"
+;; 	  org-agenda-files '("~/documents/org/") ; NOTE: This is a list, more files can be added later
+;; 	  org-default-notes-file (expand-file-name "Notes.org" org-directory))
 
-;; This overides GNU default
-(setq org-link-abbrev-alist
-	  '(("google" . "https://www.google.com/search?q=")
-		("arch-wiki" . "https://wiki.archlinux.org/index.php")
-		("freebsd-forum" . "https://forums.freebsd.org") ; I don't know if this one works.
-		("duckduckgo" . "https://duckduckgo.com/?q=")
-		("wiby" . "https://wiby.me/?q=")
-		("wikipedia" . "https://en.wikipedia.org/wiki")
-		("reddit" . "https://old.reddit.com/r/")))
+;; ;; This overides GNU default
+;; (setq org-link-abbrev-alist
+;; 	  '(("google" . "https://www.google.com/search?q=")
+;; 		("arch-wiki" . "https://wiki.archlinux.org/index.php")
+;; 		("freebsd-forum" . "https://forums.freebsd.org") ; I don't know if this one works.
+;; 		("duckduckgo" . "https://duckduckgo.com/?q=")
+;; 		("wiby" . "https://wiby.me/?q=")
+;; 		("wikipedia" . "https://en.wikipedia.org/wiki")
+;; 		("reddit" . "https://old.reddit.com/r/")))
 
-(setq org-todo-keywords
-	  '((sequence
-		 "TODO(t)"
-		 "NEXT(n)"
-		 "PROJ(p)"
-		 "HOWEWORK(h)"
-		 "CHOICE(C)"
-		 "BOOK(b)"
-		 "WAIT(w)"
-		 "|"
-		 "DONE(d)"
-		 "CANCELLED(c)" )))
+;; (setq org-todo-keywords
+;; 	  '((sequence
+;; 		 "TODO(t)"
+;; 		 "NEXT(n)"
+;; 		 "PROJ(p)"
+;; 		 "HOWEWORK(h)"
+;; 		 "CHOICE(C)"
+;; 		 "BOOK(b)"
+;; 		 "WAIT(w)"
+;; 		 "|"
+;; 		 "DONE(d)"
+;; 		 "CANCELLED(c)" )))
 
-(setq org-tag-alist
-    '((:startgroup)
-       ; put mutually exclusive tags here
-       (:endgroup)
-       ("@errand" . ?e)
-       ("@home" . ?h)
-       ("@work" . ?w)
-       ("agenda" . ?a)
-       ("planning" . ?p)
-       ("publish" . ?p)
-       ("batch" . ?b)
-       ("note" . ?n)
-       ("idea" . ?i)))
+;; (setq org-tag-alist
+;;     '((:startgroup)
+;;        ; put mutually exclusive tags here
+;;        (:endgroup)
+;;        ("@errand" . ?e)
+;;        ("@home" . ?h)
+;;        ("@work" . ?w)
+;;        ("agenda" . ?a)
+;;        ("planning" . ?p)
+;;        ("publish" . ?p)
+;;        ("batch" . ?b)
+;;        ("note" . ?n)
+;;        ("idea" . ?i)))
 
-(use-package org-tempo
-  :ensure nil)
+;; (use-package org-tempo
+;;   :ensure nil)
 
-;; Make sure that babel code blocks evaluate code correctly
-(setq org-src-fontify-natively t
-	  org-src-tab-acts-natively t
-	  org-confirm-babel-evaluate nil
-	  org-edit-src-content-indentation 0)
+;; ;; Make sure that babel code blocks evaluate code correctly
+;; (setq org-src-fontify-natively t
+;; 	  org-src-tab-acts-natively t
+;; 	  org-confirm-babel-evaluate nil
+;; 	  org-edit-src-content-indentation 0)
 
-(setq org-blank-before-new-entry (quote ((heading . nil)
-										 (plain-list-item . nil))))
+;; (setq org-blank-before-new-entry (quote ((heading . nil)
+;; 										 (plain-list-item . nil))))
 
-;; Make sure that python code can be executed inside a babel code block
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)
-   (plantuml . t)))
+;; ;; Make sure that python code can be executed inside a babel code block
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((emacs-lisp . t)
+;;    (python . t)
+;;    (plantuml . t)))
 
-;; Use cooler and more diffrenciated bullets
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode))
+;; ;; Use cooler and more diffrenciated bullets
+;; (use-package org-bullets
+;;   :after org
+;;   :hook (org-mode . org-bullets-mode))
 
-;; Configuration of Font faces and sizes within org documents
-(with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
- ;; Diffrenciate headers based on size
- (dolist (face '((org-level-1 . 1.2)
-				  (org-level-2 . 1.1)
-				  (org-level-3 . 1.05)
-				  (org-level-4 . 1.0)
-				  (org-level-5 . 1.1) ; Back to normal
-				  (org-level-6 . 1.1)
-				  (org-level-7 . 1.1)
-				  (org-level-8 . 1.1)))
-	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+;; ;; Configuration of Font faces and sizes within org documents
+;; (with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
+;;  ;; Diffrenciate headers based on size
+;;  (dolist (face '((org-level-1 . 1.2)
+;; 				  (org-level-2 . 1.1)
+;; 				  (org-level-3 . 1.05)
+;; 				  (org-level-4 . 1.0)
+;; 				  (org-level-5 . 1.1) ; Back to normal
+;; 				  (org-level-6 . 1.1)
+;; 				  (org-level-7 . 1.1)
+;; 				  (org-level-8 . 1.1)))
+;; 	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
 
- ;; Needs fixing:
- ;; Choosing what elements of an org-document should be represented in what font face.
- (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
- (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
- ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
- (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
- (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
- (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
- (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+;;  ;; Needs fixing:
+;;  ;; Choosing what elements of an org-document should be represented in what font face.
+;;  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+;;  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+;;  ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
+;;  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;;  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;;  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;;  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 
-;; Center org-mode documents in the center of the screen
-(defun org-mode-visual-fill ()
-  ; Proportions:
-  (setq visual-fill-column-width 75
-		visual-fill-column-center-text t)
-  (visual-fill-column-mode 1)) ; Activate
+;; ;; Center org-mode documents in the center of the screen
+;; (defun org-mode-visual-fill ()
+;;   ; Proportions:
+;;   (setq visual-fill-column-width 75
+;; 		visual-fill-column-center-text t)
+;;   (visual-fill-column-mode 1)) ; Activate
 
-;; The centering of documents depends on the following package:
-(use-package visual-fill-column
-  :hook (org-mode . org-mode-visual-fill))
+;; ;; The centering of documents depends on the following package:
+;; (use-package visual-fill-column
+;;   :hook (org-mode . org-mode-visual-fill))
 
-;; 'Latex' from Org-mode
-(use-package biblio
-  :diminish) ; Quick BibTex refrences, sometimes.
- ; Quick BibTex refrences, sometimes.
+;; ;; 'Latex' from Org-mode
+;; (use-package biblio
+;;   :diminish) ; Quick BibTex refrences, sometimes.
+;;  ; Quick BibTex refrences, sometimes.
 
-(setq org-latex-listings 'minted
-	  org-latex-packages-alist '(("" "minted")))
+;; (setq org-latex-listings 'minted
+;; 	  org-latex-packages-alist '(("" "minted")))
 
-(setq org-latex-pdf-process
-	  '("pdflatex -interaction nonstopmode -output-directory %o %f"))
-
-;; Org keybindings
-
-;; EXWM Functions:
-(defun gbl/exwm-update-class ()
-  (exwm-workspace-rename-buffer exwm-class-name))
-
-(defun gbl/exwm-init-hook ()
-  (exwm-workspace-switch-create 1)) ; Start on workspace 1, not 0
-
-;; The desktop environment package allows for control of brightness and volume
+;; (setq org-latex-pdf-process
+;; 	  '("pdflatex -interaction nonstopmode -output-directory %o %f"))
 
 ;; Emacs Mail
 ;(use-package mu4e
@@ -694,3 +686,4 @@
 ;
 ;  (mu4e t))
 (put 'dired-find-alternate-file 'disabled nil)
+(put 'set-goal-column 'disabled nil)
