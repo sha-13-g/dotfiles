@@ -19,7 +19,9 @@
 
 (use-package yasnippet
   :init
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  :bind (:map yas-minor-mode-map
+              ("C-j" . yas-expand)))
 
 (use-package yasnippet-snippets
   :after yasnippet)
