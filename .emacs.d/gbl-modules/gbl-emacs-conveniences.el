@@ -2,6 +2,10 @@
 	(setq comp-deferred-complation nil
 		  native-comp-deferrede-complation nil))
 
+;; (setq debug-on-error t
+;;            debug-on-signal nil
+;;            debug-on-quit nil)
+
 (use-package general
   :diminish t
   :config (general-evil-setup t))

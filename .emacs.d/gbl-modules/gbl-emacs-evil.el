@@ -41,12 +41,13 @@
   :config
   (evil-collection-init))
 
-(use-package evil-easymotion
-  :config (evilem-default-keybindings "SPC"))
+;; (use-package evil-easymotion
+;;   :config (evilem-default-keybindings "SPC"))
 
 (use-package evil-surround
   :config
   (global-evil-surround-mode))
 
+(use-package evil-tutor)
 
 (provide 'gbl-emacs-evil)
