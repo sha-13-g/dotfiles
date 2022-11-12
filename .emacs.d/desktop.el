@@ -1,6 +1,12 @@
 (defvar gbl/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
+(defun gbl/exwm-logout ()
+  (interactive)
+  (recentf-save-list)
+  (save-some-buffers)
+  (start-process-shell-command "logout" nil "lxsession-logout"))
+
 (defun gbl/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
 
@@ -26,23 +32,28 @@
 (defun gbl/send-polybar-hook (module-name hook-index)
   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
-(defun gbl/send-polybar-exwm-workspace ()
-  (gbl/send-polybar-hook "exwm-workspace" 1))
-
+;; (defun gbl/send-polybar-exwm-workspace ()
+  ;; (gbl/send-polybar-hook "exwm-workspace" 1))
 
 (defun gbl/exwm-update-title ()
-  (pcase exwm-class-name
-    ("firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
-    ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
-    ("Gimp" (exwm-workspace-rename-buffer (format "Gimp: %s" exwm-title)))
-    ("Spotify" (exwm-workspace-rename-buffer (format "Spotify: %s" exwm-title)))
-    ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
-    ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
+  (exwm-workspace-rename-buffer (gbl/capitalize-first-char (format "%s: %s"  exwm-class-name exwm-title))))
+
+;; (defun gbl/exwm-update-title ()
+;;   (pcase exwm-class-name
+;;     ("firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
+;;     ("qutebrowser" (exwm-workspace-rename-buffer (format "QuteBrowser: %s" exwm-title)))
+;;     ("Google-chrome" (exwm-workspace-rename-buffer (format "Chrome: %s" exwm-title)))
+;;     ("Gimp" (exwm-workspace-rename-buffer (format "Gimp: %s" exwm-title)))
+;;     ("Spotify" (exwm-workspace-rename-buffer (format "Spotify: %s" exwm-title)))
+;;     ("Alacritty" (exwm-workspace-rename-buffer (format "Alacritty: %s" exwm-title)))
+;;     ("mpv" (exwm-workspace-rename-buffer (format "MPV: %s" exwm-title)))))
 
 (defun gbl/configure-window-by-class ()
   (interactive)
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-move-window 2))
+    ("Arandr" (exwm-floating-toggle-floating))
+    ("Google-chrome" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 6))
     ("Spotify" (exwm-workspace-move-window 4))
     ("spotify" (exwm-workspace-move-window 4))
@@ -50,8 +61,7 @@
     ("Alacritty" (exwm-workspace-move-window 0))
     ("TelegramDesktop" (exwm-workspace-move-window 8))
     ("Gimp" (exwm-workspace-move-window 3))
-    ("Designer" (exwm-workspace-move-window 3))
-    ("Main" (exwm-floating-toggle-floating))
+    ("figma-linux" (exwm-workspace-move-window 3))
     ("Pavucontrol" (exwm-floating-toggle-floating))
     ("mpv" (exwm-workspace-move-window 4))
     ("ktouch" (exwm-workspace-move-window 5))
@@ -196,7 +206,7 @@
 
   (gbl/launcher "qutebrowser" "")
   (gbl/launcher "alacritty" "")
-  (gbl/launcher "discord" "")
+  ;; (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")
   ;; (gbl/run-in-bg "nm-applet")
   ;; (gbl/run-in-bg "pasystray")
