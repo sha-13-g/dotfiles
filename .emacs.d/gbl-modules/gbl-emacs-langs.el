@@ -17,6 +17,10 @@
 
 ;; (use-package systemd)
 
+(use-package lorem-ipsum
+  :config
+  (lorem-ipsum-use-default-bindings))
+
 (use-package yasnippet
   :init
   (yas-global-mode 1)
@@ -87,29 +91,35 @@
 ;;     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 
 ;;; Configure 'electric' behaviour
-(use-package electric
-  :ensure nil
+
+(use-package plantuml-mode
   :config
-  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
-  (setq electric-pair-preserve-balance t)
-  (setq electric-pair-pairs
-        '((8216 . 8217)
-          (8220 . 8221)
-          (171 . 187)))
-  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-  (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars '(9 10 32))
-  (setq electric-quote-context-sensitive t)
-  (setq electric-quote-paragraph t)
-  (setq electric-quote-string nil)
-  (setq electric-quote-replace-double t)
-  (electric-pair-mode -1)
-  (electric-quote-mode -1)
-  ;; I don't like auto indents in Org and related.  They are okay for
-  ;; programming.
-  (electric-indent-mode -1)
-  (add-hook 'prog-mode-hook #'electric-indent-local-mode))
+  (setq org-plantuml-jar-path (expand-file-name "~/downloads/plantuml.jar")))
+
+;; (use-package electric
+;;   :ensure nil
+;;   :config
+;;   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+;;   (setq electric-pair-preserve-balance t)
+;;   (setq electric-pair-pairs
+;;         '((8216 . 8217)
+;;           (8220 . 8221)
+;;           (171 . 187)))
+;;   (setq electric-pair-skip-self 'electric-pair-default-skip-self)
+;;   (setq electric-pair-skip-whitespace nil)
+;;   (setq electric-pair-skip-whitespace-chars '(9 10 32))
+;;   (setq electric-quote-context-sensitive t)
+;;   (setq electric-quote-paragraph t)
+;;   (setq electric-quote-string nil)
+;;   (setq electric-quote-replace-double t)
+;;   (electric-pair-mode -1)
+;;   (electric-quote-mode -1)
+;;   ;; I don't like auto indents in Org and related.  They are okay for
+;;   ;; programming.
+;;   (electric-indent-mode -1)
+;;   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 ;;; Parentheses (show-paren-mode)
+
 (use-package paren
   :ensure nil
   :config
@@ -126,26 +136,26 @@
 (setq-default indent-tabs-mode nil)
 
 ;;; Flyspell and prot-spell.el (spell check)
-(use-package flyspell
-  :ensure nil
-  :config
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en_GB")
-  (define-key flyspell-mode-map (kbd "C-;") nil))
+;; (use-package flyspell
+;;   :ensure nil
+;;   :config
+;;   (setq flyspell-issue-message-flag nil)
+;;   (setq flyspell-issue-welcome-flag nil)
+;;   (setq ispell-program-name "aspell")
+;;   (setq ispell-dictionary "en_GB")
+;;   (define-key flyspell-mode-map (kbd "C-;") nil))
 
-(use-package prot-spell
-  :ensure nil
-  :config
-  (setq prot-spell-dictionaries
-        '(("EN English" . "en")
-          ("EL Ελληνικά" . "el")
-          ("FR Français" . "fr")
-          ("ES Espanõl" . "es")))
-  (let ((map global-map))
-    (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
-    (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
+;; (use-package prot-spell
+;;   :ensure nil
+;;   :config
+;;   (setq prot-spell-dictionaries
+;;         '(("EN English" . "en")
+;;           ("EL Ελληνικά" . "el")
+;;           ("FR Français" . "fr")
+;;           ("ES Espanõl" . "es")))
+;;   (let ((map global-map))
+;;     (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
+;;     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 
 ;;; Flymake
 (use-package flymake
@@ -202,7 +212,9 @@
   (python-pytest-confirm t))
 
 (use-package emmet-mode
-  :diminish)
+  :diminish
+  :bind (:map emmet-mode-keymap
+              ("C-," . emmet-expand-line)))
 
 (add-hook 'sgml-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook 'emmet-mode)

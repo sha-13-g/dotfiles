@@ -10,6 +10,42 @@
   :diminish t
   :config (general-evil-setup t))
 
+(use-package devdocs)
+
+(use-package go-translate
+  :config
+
+  (setq gts-translate-list
+        '(("en" "fr")))
+
+  ;; (setq gts-default-translator (gts-translator :engines (gts-bing-engine)))
+;; (setq gts-default-translator
+;;       (gts-translator
+;;        :picker
+;;        (lambda ()
+;;          (cond ((equal major-mode 'pdf-view-mode)
+;;                 (gts-noprompt-picker :texter (gts-current-or-selection-texter)))
+;;                (t (gts-prompt-picker))))
+;;        :engines
+;;        (lambda ()
+;;          (cond ((equal major-mode 'pdf-view-mode)
+;;                 (gts-bing-engine))
+;;                (t (list
+;;                    (gts-bing-engine)
+;;                    (gts-google-engine :parser (gts-google-summary-parser))
+;;                    (gts-google-rpc-engine)))))
+;;        :render
+;;        (lambda ()
+;;          (cond ((equal major-mode 'pdf-view-mode)
+;;                 (gts-posframe-pop-render))
+;;                (t (gts-buffer-render))))))
+
+  (setq gts-default-translator
+        (gts-translator
+         :picker (gts-prompt-picker)
+         :engines (list (gts-bing-engine) (gts-google-engine))
+         :render (gts-buffer-render))))
+
 (use-package which-key
   :diminish t
   :init
@@ -130,9 +166,40 @@
 
 (use-package nov
   :config (setq nov-unzip-program (executable-find "bsdtar")
-				nov-unzip-args '("-xC" directory "-f" filename))
+                nov-unzip-args '("-xC" directory "-f" filename))
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-  (setq nov-text-width t))
+  (setq nov-text-width t)
+  (setq nov-text-width 80)
+  (setq visual-fill-column-center-text t)
+  (add-hook 'nov-mode-hook 'visual-line-mode)
+  (add-hook 'nov-mode-hook 'visual-fill-column-mode))
+
+  ;; (use-package justify-kp
+  ;;   :config
+  ;;   (defun my-nov-window-configuration-change-hook ()
+  ;;     (my-nov-post-html-render-hook)
+  ;;     (remove-hook 'window-configuration-change-hook
+  ;;                  'my-nov-window-configuration-change-hook
+  ;;                  t))
+
+  ;;   (defun my-nov-post-html-render-hook ()
+  ;;     (if (get-buffer-window)
+  ;;         (let ((max-width (pj-line-width))
+  ;;               buffer-read-only)
+  ;;           (save-excursion
+  ;;             (goto-char (point-min))
+  ;;             (while (not (eobp))
+  ;;               (when (not (looking-at "^[[:space:]]*$"))
+  ;;                 (goto-char (line-end-position))
+  ;;                 (when (> (shr-pixel-column) max-width)
+  ;;                   (goto-char (line-beginning-position))
+  ;;                   (pj-justify)))
+  ;;               (forward-line 1))))
+  ;;       (add-hook 'window-configuration-change-hook
+  ;;                 'my-nov-window-configuration-change-hook
+  ;;                 nil t))))
+  ;; (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook))
+
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)

@@ -6,11 +6,21 @@
 ;;   "Commands that "
 ;;   (interactive))
 
+(defun gbl/capitalize-first-char (&optional string)
+  "Capitalize only the first character of the input STRING."
+  (when (and string (> (length string) 0))
+    (let ((first-char (substring string nil 1))
+          (rest-str   (substring string 1)))
+      (concat (capitalize first-char) rest-str))))
+
 (defun gbl/maximize-window ()
   "This Command maximize the curent windowk. It is bound to C-s-f"
   (interactive)
   (maximize-window))
 
+(defun gbl/dotfile-push ()
+  (interactive)
+  (dired-do-copy "~/.emacs.d/init.el" ))
 
 ;; (defun gbl/get-token ()
 ;;   (interactive)

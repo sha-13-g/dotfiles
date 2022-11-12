@@ -14,17 +14,48 @@
 
   (setq org-directory "~/documents/org/")
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "WAITING(w@)" "|" "DONE(d!)")
-          (sequence "READ(r)" "|" "READED(R!)")
-          (sequence "PROJECT(p)" "|" "FINISH(f!)")
-          (sequence "|" "CANCELED(c@)" "DEFERRED(D@)")))
+        '((sequence "TODO(t)" "STARTED(s@)" "NEXT(n@)" "WAIT(w@)" "|" "DONE(d)")
+          (sequence "READ(r@)" "|" "READED(R)")
+          (sequence "PROJECT(p@)" "|" "FINISH(f)")
+          (sequence "|" "CANCELED(c)" "DEFERRED(D)")))
   
+  (setq org-global-properties
+        '(("Effort_ALL" . "0:15 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00")))
+
+  (setq org-columns-default-format
+        "%40ITEM(Task) %17Effort(Estimated Effort){:} %CLOCKSUM")
+
   (setq org-priority-default ?A)
   (setq org-priority-highest ?A)
   (setq org-priority-lowest ?J)
   (setq org-agenda-files
         '("~/documents/org/"))
 
+  ;; Emacs ask what to do for the time spend over doing something else during a cloking after 5 min
+  (setq org-clock-idle-time 5)
+    ;; To save the clock history accross sessions
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+
+  (setq org-tag-alist ; I don't really use those, but whatever
+        '(("@book" . ?b)
+          ("@vim" . ?v)
+          ("software" . ?s)
+          ("@work" . ?w)
+          ("@home" . ?h)
+          ("@email" . ?e)
+          ("@emacs" . ?E)
+          ("@website" . ?W)))
+
+  (add-to-list
+   'org-src-lang-modes '(("plantuml" . plantuml)
+                         ("python" . python)
+                         ("javascript" . js)))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((plantuml . t)
+                               (js . t)
+                               (python . t)))
   (setq org-todo-keyword-faces
         '(("TODO" . org-todo)
           ("NEXT" . "purple")
@@ -35,7 +66,7 @@
           ("CANCELED" . org-done)))
 
   ;; Enforce all the sub tasks to be DONE for the parent to be
-  (setq org-enforce-todo-dependencies t)
+  ;; (setq org-enforce-todo-dependencies nil)
   (setq org-log-done 'note)
   (setq org-log-into-drawer t)
 
@@ -107,21 +138,7 @@
 ;;   (setq org-default-priority ?A)
 
 ;; ;;;; tags
-;;   (setq org-tag-alist ; I don't really use those, but whatever
-;;         '(("meeting")
-;;           ("admin")
-;;           ("emacs")
-;;           ("modus")
-;;           ("politics")
-;;           ("economics")
-;;           ("philosophy")
-;;           ("book")
-;;           ("essay")
-;;           ("mail")
-;;           ("purchase")
-;;           ("hardware")
-;;           ("software")
-;;           ("website")))
+  
 
 ;;   (setq org-auto-align-tags nil)
 ;;   (setq org-tags-column 0)

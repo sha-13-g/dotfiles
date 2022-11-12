@@ -1,12 +1,20 @@
-(global-set-key (kbd "C-c & l") 'consult-yasnippet)
+;; Some convenient maps
+
+(global-set-key (kbd "C-c y l") 'consult-yasnippet)
+(global-set-key (kbd "C-c y d") 'yas-describe-tables)
+(global-set-key (kbd "C-c y n") 'yas-new-snippet)
+(global-set-key (kbd "C-c C-x r") 'org-clock-report)
+
+;; (eval-after-load 'yassnippet
+    ;; (define-key yas-minor-mode-map (kbd "C-j") 'yas-expand)) ; 
+
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
 
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
+
 (global-set-key (kbd "s-u") 'universal-argument)
-
-
 
 (global-set-key (kbd "M-:") 'evil-ex)
 
@@ -98,8 +106,11 @@
 
 (nvmap :prefix gbl/super-leader
   "l"   '(:ignore t :which-key "Applications")
+  "l b"   '(:ignore t :which-key "Browsers")
 
-  "l q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+  "l b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+  "l b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
+  "l b c" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
   "l d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
   "l T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
   "l t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
@@ -139,6 +150,7 @@
 
 (nvmap :prefix gbl/leader
   "p s" '(gbl/shutdown :which-key "Shutdown")
+  "p l" '((lambda () (interactive) (gbl/exwm-logout)) :which-key "Log out")
   "p r" '(gbl/restart :which-key "Restart"))
 
 (nvmap :keymaps 'override :prefix gbl/leader
@@ -166,16 +178,16 @@
 (nvmap :prefix gbl/leader
   "f" '(:ignore t :which-key "Files")
   "f d" '((lambda () (interactive) (dired "~/git_repos/dotfiles/")) :which-key "Dotfiles")
-  "f D" '((lambda () (interactive) (find-file "~/.emacs.d/desktop.el")) :which-key "Desktop")
+  "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Dotfiles")
+  "f F" '((lambda () (interactive) (find-file "~/.emacs.d/desktop.el")) :which-key "Desktop")
   "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
   "f c" '((lambda () (interactive) (dired "~/.config/")) :which-key "Configs")
   "f b" '((lambda () (interactive) (dired "~/documents/books/")) :which-key "Books")
-  "f q" '((lambda () (interactive) (dired "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
+  "f q" '((lambda () (interactive) (find-file "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
   "f f" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Emacs init.el")
-  "f g" '((lambda () (interactive) (find-file "~/git_repos/")) :which-key "Git repos")
-  "f h" '((lambda () (interactive) (find-file "~/")) :which-key "Home")
-  "f m" '((lambda () (interactive) (find-file "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
-  "f F" '((lambda () (interactive) (dired "~/documents/files/")) :which-key "Personal Files")
+  "f g" '((lambda () (interactive) (dired "~/git_repos/")) :which-key "Git repos")
+  "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
+  "f m" '((lambda () (interactive) (dired "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
   "f o" '((lambda () (interactive) (dired "~/documents/org/")) :which-key "Org Files")
   "f e" '((lambda () (interactive) (dired "~/.emacs.d/")) :which-key "Emacs Directory")
   "f p" '((lambda () (interactive) (dired "~/documents/personal/")) :which-key "Personal Directory"))

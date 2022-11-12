@@ -48,6 +48,12 @@
 				   (window-width . 0.25)
 				   (side . bottom)
 				   (slot . -1))
+                  
+                  ("\\*Proced*"
+                   (display-buffer-in-side-window)
+                   (window-width . 0.25)
+                   (side . bottom)
+                   (slot . 0))
 
 				  ("\\*eshell*"
 				   (display-buffer-in-side-window)
