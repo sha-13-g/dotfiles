@@ -7,6 +7,8 @@
 
 (add-hook 'org-after-todo-statistics-hook #'org-summary-todo)
 
+(use-package org-modern)
+
 (use-package org
   :ensure nil
   :hook (org-mode . org-indent-mode)
