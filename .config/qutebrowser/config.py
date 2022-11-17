@@ -230,7 +230,7 @@ config.set('content.register_protocol_handler', True, 'https://mail.proton.me#ma
 # Directory to save downloads to. If unset, a sensible OS-specific
 # default is used.
 # Type: Directory
-c.downloads.location.directory = '~/downloads/'
+# c.downloads.location.directory = '~/downloads/'
 
 # Where to show the downloaded files.
 # Type: VerticalPosition

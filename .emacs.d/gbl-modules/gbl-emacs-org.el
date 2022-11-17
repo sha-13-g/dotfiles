@@ -14,7 +14,7 @@
   :hook (org-mode . org-indent-mode)
   :config
 
-  (setq org-directory "~/documents/org/")
+  (setq org-directory "~/Documents/org/")
   (setq org-todo-keywords
         '((sequence "TODO(t)" "STARTED(s@)" "NEXT(n@)" "WAIT(w@)" "|" "DONE(d)")
           (sequence "READ(r@)" "|" "READED(R)")
@@ -31,7 +31,8 @@
   (setq org-priority-highest ?A)
   (setq org-priority-lowest ?J)
   (setq org-agenda-files
-        '("~/documents/org/"))
+        '("~/Documents/org/"))
+  
 
   ;; Emacs ask what to do for the time spend over doing something else during a cloking after 5 min
   (setq org-clock-idle-time 5)
