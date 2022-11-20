@@ -1,6 +1,7 @@
+
+
 ;; Setting up Package.el to work with MELP
 (require 'package)
-
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 		 				 ("elpa-devel" . "https://elpa.gnu.org/devel/")
 						 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
@@ -21,9 +22,9 @@
 ;;   (load bootstrap-file nil 'nomessage))
 
 ;;Variable definition
-    (defvar gbl/leader "C-SPC")
+    (defvar gbl/leader "s-SPC")
     (defvar gbl/super-leader "s-a")
-    (defvar gbl/frame-transparency-v '(70 . 70))
+    (defvar gbl/frame-transparency-v '(90 . 90))
 
 
 (set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency-v)
@@ -139,7 +140,8 @@
 (require 'gbl-emacs-completion)
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
-(require 'gbl-emacs-evil)
+(require 'gbl-emacs-desktop)
+;; (require 'gbl-emacs-evil)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-dired)
 (require 'gbl-emacs-langs)
@@ -185,8 +187,9 @@
   (gbl/load-dark-theme))
 
 ;; Adding upport for emojis and icons
-(use-package all-the-icons
-  :diminish t)
+(use-package all-the-icons)
+
+(use-package ef-themes)
 
 (use-package emojify
   :hook (after-init . global-emojify-mode))
@@ -215,6 +218,9 @@
 (use-package diminish
   :diminish t)
 
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
 
 (use-package minions
   :after doom-modeline)
@@ -435,12 +441,12 @@
 (add-hook 'elfeed-search-mode-hook 'toggle-truncate-lines) ; Article names often reach past 1 length/
 
 ;; Vim keybindings for elfeed
-(evil-define-key 'normal elfeed-show-mode-map
-  (kbd "J") 'elfeed-goodies/split-show-next
-  (kbd "K") 'elfeed-goodies/split-show-prev)
-(evil-define-key 'normal elfeed-search-mode-map
-  (kbd "J") 'elfeed-goodies/split-show-next
-  (kbd "K") 'elfeed-goodies/split-show-prev)
+;; (evil-define-key 'normal elfeed-show-mode-map
+;;   (kbd "J") 'elfeed-goodies/split-show-next
+;;   (kbd "K") 'elfeed-goodies/split-show-prev)
+;; (evil-define-key 'normal elfeed-search-mode-map
+;;   (kbd "J") 'elfeed-goodies/split-show-next
+;;   (kbd "K") 'elfeed-goodies/split-show-prev)
 
 ;; Configuring EWW, emacs web wowser
 (setq
@@ -453,29 +459,10 @@
 
 ;; General.el keybindings for opening applications
 
-;;; LSP-Mode
-;; Initial Configuration
-;; (use-package lsp-mode
-;;   :hook (lsp-mode . gbl/lsp-mode-setup)
-;;   :commands (lsp lsp-deferred)
-;;   :init
-;;   (setq lsp-keymap-prefix "C-c l"))
-
 ;; Breader Headcrumb
 (defun gbl/lsp-mode-setup ()
   (setq lsp-headline-breadcrumb-segmments '(path-up-to-project file symbols))
   (lsp-headline-breadcrumb-mode))
-
-
-
-;;snippets
-;; Better completions with company-mode
-;; (use-package flymake
-;;   :hook (prog-mode . flymake-mode)
-;;   :init
-;;   (flymake-mode))
-
-
 
 ;;;; Languages Servers
 

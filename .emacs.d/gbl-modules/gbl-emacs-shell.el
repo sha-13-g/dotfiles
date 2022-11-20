@@ -1,4 +1,4 @@
-;;; Eshell and prot-eshell.el
+;;; Eshell and gbl-eshell.el
 (use-package eshell
   :ensure nil
   :config
@@ -31,27 +31,27 @@
   (setq eshell-hist-ignoredups t)
   (setq eshell-save-history-on-exit t))
 
-(use-package prot-eshell
+(use-package gbl-eshell
   :ensure nil
   :config
-  (setq prot-eshell-output-buffer "*Exported Eshell output*")
-  (setq prot-eshell-output-delimiter "* * *")
+  (setq gbl-eshell-output-buffer "*Exported Eshell output*")
+  (setq gbl-eshell-output-delimiter "* * *")
   (let ((map eshell-mode-map))
     (define-key map (kbd "M-k") #'eshell-kill-input)
-    (define-key map (kbd "C-c C-f") #'prot-eshell-ffap-find-file)
-    (define-key map (kbd "C-c C-j") #'prot-eshell-ffap-dired-jump)
-    (define-key map (kbd "C-c C-w") #'prot-eshell-ffap-kill-save)
-    (define-key map (kbd "C-c C->") #'prot-eshell-redirect-to-buffer)
-    (define-key map (kbd "C-c C-e") #'prot-eshell-export)
-    (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir))
+    (define-key map (kbd "C-c C-f") #'gbl-eshell-ffap-find-file)
+    (define-key map (kbd "C-c C-j") #'gbl-eshell-ffap-dired-jump)
+    (define-key map (kbd "C-c C-w") #'gbl-eshell-ffap-kill-save)
+    (define-key map (kbd "C-c C->") #'gbl-eshell-redirect-to-buffer)
+    (define-key map (kbd "C-c C-e") #'gbl-eshell-export)
+    (define-key map (kbd "C-c C-r") #'gbl-eshell-root-dir))
   (let ((map eshell-cmpl-mode-map))
-    (define-key map (kbd "C-c TAB") #'prot-eshell-ffap-insert) ; C-c C-i
-    (define-key map (kbd "C-c C-h") #'prot-eshell-narrow-output-highlight-regexp))
+    (define-key map (kbd "C-c TAB") #'gbl-eshell-ffap-insert) ; C-c C-i
+    (define-key map (kbd "C-c C-h") #'gbl-eshell-narrow-output-highlight-regexp))
   (let ((map eshell-hist-mode-map))
     (define-key map (kbd "M-s") #'nil) ; I use this prefix for lots of more useful commands
-    (define-key map (kbd "M-r") #'prot-eshell-complete-history)
-    (define-key map (kbd "C-c C-d") #'prot-eshell-complete-recent-dir)
-    (define-key map (kbd "C-c C-s") #'prot-eshell-find-subdirectory-recursive)))
+    (define-key map (kbd "M-r") #'gbl-eshell-complete-history)
+    (define-key map (kbd "C-c C-d") #'gbl-eshell-complete-recent-dir)
+    (define-key map (kbd "C-c C-s") #'gbl-eshell-find-subdirectory-recursive)))
 
 ;;; Shell (M-x shell)
 (use-package shell
@@ -77,10 +77,10 @@
   (setq proced-descend t)
   (setq proced-filter 'user))
 
-(use-package prot-proced
+(use-package gbl-proced
   :ensure nil
   :config
-  (prot-proced-extra-keywords 1))
+  (gbl-proced-extra-keywords 1))
 
 ;;; Pass interface (password-store)
 (use-package password-store

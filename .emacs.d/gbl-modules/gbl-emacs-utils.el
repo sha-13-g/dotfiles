@@ -26,6 +26,16 @@
 ;;   (interactive)
 ;;  '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)
 
+(defun gbl/get-token ()
+  (interactive)
+  (save-excursion
+    (find-file "~/Documents/org/git_tokken")
+    (next-line)
+    (call-interactively 'set-mark-command)
+    (end-of-visual-line)
+    (call-interactively 'kill-ring-save)))
+
+
 (defun gbl/scratch-buffer ()
   (interactive)
   (get-buffer-create "*scratch*")
@@ -38,7 +48,8 @@
 (defun gbl/next-buffer-other-window()
   "Commands that split the current window & select the next buffer"
   (interactive)
-  (evil-window-vsplit)
+  (split-window-right)
+  (other-window)
   (next-buffer))
 
 (defun gbl/dired-mode (arg)
@@ -48,7 +59,8 @@
 (defun gbl/prev-buffer-other-window()
   "Commands that split the current window & select the next buffer"
   (interactive)
-  (evil-window-vsplit)
+  (split-window-right)
+  (other-window)
   (previous-buffer))
 
 (defun gbl/maximaze-other-window()
@@ -121,7 +133,7 @@
 	(set-frame-parameter (selected-frame) 'alpha
 						 (setq gbl/frame-transparency-v '(70 . 70)))))
 
-(defun kill-buffer-slip-window ()
+(defun gbl/kill-buffer-slipt-window ()
   "a function for delete slip window and kill the buffer."
   (interactive)
   (kill-buffer)
@@ -140,11 +152,11 @@ folder, otherwise delete a character backward"
 
 (defun gbl/shutdown ()
   (interactive)
-  (start-process-shell-command "shutdown" nil "shutdown now"))
+  (start-process-shell-command "systemctl" nil "systemctl poweroff"))
 
 (defun gbl/restart ()
   (interactive)
-  (start-process-shell-command "shutdown" nil "shutdown -r now"))
+  (start-process-shell-command "systemctl" nil "systemctl reboot"))
 
 (defun gbl/increase-transparency ()
   "Increase transparency by (1 . 1)"

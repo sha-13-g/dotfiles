@@ -1,4 +1,4 @@
-;;; prot-sideline.el --- Extensions for line numbers and relevant indicators -*- lexical-binding: t -*-
+;;; gbl-sideline.el --- Extensions for line numbers and relevant indicators -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,56 +34,56 @@
 
 ;;; Code:
 
-(defgroup prot-sideline ()
+(defgroup gbl-sideline ()
   "Setup for reading and presenting text-heavy buffers."
   :group 'files)
 
 ;;;###autoload
-(define-minor-mode prot-sideline-mode
+(define-minor-mode gbl-sideline-mode
   "Buffer-local wrapper mode for presentations."
   :init-value nil
   :global nil)
 
 (autoload 'diff-hl-mode "diff-hl")
 
-(defun prot-sideline--diff-hl-toggle ()
+(defun gbl-sideline--diff-hl-toggle ()
   "Toggle buffer local diff indicators in the fringe."
   (if (or (bound-and-true-p diff-hl-mode)
-          (not (bound-and-true-p prot-sideline-mode)))
+          (not (bound-and-true-p gbl-sideline-mode)))
       (diff-hl-mode -1)
     (diff-hl-mode 1)))
 
-(add-hook 'prot-sideline-mode-hook #'prot-sideline--diff-hl-toggle)
+(add-hook 'gbl-sideline-mode-hook #'gbl-sideline--diff-hl-toggle)
 
-(defun prot-sideline--numbers-toggle ()
+(defun gbl-sideline--numbers-toggle ()
   "Toggle line numbers."
   (if (or (bound-and-true-p display-line-numbers-mode)
-          (not (bound-and-true-p prot-sideline-mode)))
+          (not (bound-and-true-p gbl-sideline-mode)))
       (display-line-numbers-mode -1)
     (display-line-numbers-mode 1)))
 
-(add-hook 'prot-sideline-mode-hook #'prot-sideline--numbers-toggle)
+(add-hook 'gbl-sideline-mode-hook #'gbl-sideline--numbers-toggle)
 
-(defun prot-sideline--hl-line-toggle ()
+(defun gbl-sideline--hl-line-toggle ()
   "Toggle line highlight."
   (if (or (bound-and-true-p hl-line-mode)
-          (not (bound-and-true-p prot-sideline-mode)))
+          (not (bound-and-true-p gbl-sideline-mode)))
       (hl-line-mode -1)
     (hl-line-mode 1)))
 
-(add-hook 'prot-sideline-mode-hook #'prot-sideline--hl-line-toggle)
+(add-hook 'gbl-sideline-mode-hook #'gbl-sideline--hl-line-toggle)
 
 (autoload 'whitespace-mode "whitespace")
 
 ;; We keep this separate, as I do not want it bundled up together with
 ;; the rest of the functionality included here.
 ;;;###autoload
-(defun prot-sideline-negative-space-toggle ()
+(defun gbl-sideline-negative-space-toggle ()
   "Toggle the display of indentation and space characters."
   (interactive)
   (if (bound-and-true-p whitespace-mode)
       (whitespace-mode -1)
     (whitespace-mode)))
 
-(provide 'prot-sideline)
-;;; prot-sideline.el ends here
+(provide 'gbl-sideline)
+;;; gbl-sideline.el ends here

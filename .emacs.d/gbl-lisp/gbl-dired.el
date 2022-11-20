@@ -1,4 +1,4 @@
-;;; prot-dired.el --- Extensions to dired.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-dired.el --- Extensions to dired.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -35,65 +35,65 @@
 ;;; Code:
 
 (eval-when-compile (require 'cl-lib))
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-dired ()
+(defgroup gbl-dired ()
   "Extensions for Dired."
   :group 'dired)
 
 ;;;; File associations
 
-(defcustom prot-dired-media-extensions
+(defcustom gbl-dired-media-extensions
   "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)"
   "Regular expression for media file extensions.
 
-Also see the function `prot-dired-media-player' and the variable
-`prot-dired-media-players'.
+Also see the function `gbl-dired-media-player' and the variable
+`gbl-dired-media-players'.
 
 To be used in user configurations while setting up the variable
 `dired-guess-shell-alist-user'."
   :type 'string
-  :group 'prot-dired)
+  :group 'gbl-dired)
 
-(defcustom prot-dired-image-extensions
+(defcustom gbl-dired-image-extensions
   "\\.\\(png\\|jpe?g\\|tiff\\)"
   "Regular expression for media file extensions.
 
-Also see the function `prot-dired-image-viewer' and the variable
-`prot-dired-image-viewers'.
+Also see the function `gbl-dired-image-viewer' and the variable
+`gbl-dired-image-viewers'.
 
 To be used in user configurations while setting up the variable
 `dired-guess-shell-alist-user'."
   :type 'string
-  :group 'prot-dired)
+  :group 'gbl-dired)
 
-(defcustom prot-dired-media-players '("mpv" "vlc")
+(defcustom gbl-dired-media-players '("mpv" "vlc")
   "List of strings for media player programs.
 
-Also see the function `prot-dired-media-player' and the variable
-`prot-dired-media-extensions'.
+Also see the function `gbl-dired-media-player' and the variable
+`gbl-dired-media-extensions'.
 
 To be used in user configurations while setting up the variable
 `dired-guess-shell-alist-user'."
   :type '(repeat string)
-  :group 'prot-dired)
+  :group 'gbl-dired)
 
-(defcustom prot-dired-image-viewers '("feh" "sxiv")
+(defcustom gbl-dired-image-viewers '("feh" "sxiv")
   "List of strings for image viewer programs.
 
-Also see the function `prot-dired-image-viewer' and the variable
-`prot-dired-image-extensions'.
+Also see the function `gbl-dired-image-viewer' and the variable
+`gbl-dired-image-extensions'.
 
 To be used in user configurations while setting up the variable
 `dired-guess-shell-alist-user'."
   :type '(repeat string)
-  :group 'prot-dired)
+  :group 'gbl-dired)
 
 ;; NOTE 2021-06-28: I am not sure why the compiler complains without
 ;; this, even though we require cl-lib.
 (declare-function cl-remove-if "cl-lib")
 
-(defmacro prot-dired-file-association (name programs)
+(defmacro gbl-dired-file-association (name programs)
   "Make NAME function to check for PROGRAMS."
   (declare (indent defun))
   `(defun ,name ()
@@ -110,13 +110,13 @@ This function is for use in `dired-guess-shell-alist-user'."
          (when (executable-find p)
            (throw :found p))))))
 
-(prot-dired-file-association
-  prot-dired-media-player
-  prot-dired-media-players)
+(gbl-dired-file-association
+  gbl-dired-media-player
+  gbl-dired-media-players)
 
-(prot-dired-file-association
-  prot-dired-image-viewer
-  prot-dired-image-viewers)
+(gbl-dired-file-association
+  gbl-dired-image-viewer
+  gbl-dired-image-viewers)
 
 ;;;; General commands
 
@@ -124,11 +124,11 @@ This function is for use in `dired-guess-shell-alist-user'."
 (autoload 'dired-toggle-marks "dired")
 (autoload 'dired-do-kill-lines "dired-aux")
 
-(defvar prot-dired--limit-hist '()
-  "Minibuffer history for `prot-dired-limit-regexp'.")
+(defvar gbl-dired--limit-hist '()
+  "Minibuffer history for `gbl-dired-limit-regexp'.")
 
 ;;;###autoload
-(defun prot-dired-limit-regexp (regexp omit)
+(defun gbl-dired-limit-regexp (regexp omit)
   "Limit Dired to keep files matching REGEXP.
 
 With optional OMIT argument as a prefix (\\[universal-argument]),
@@ -142,19 +142,19 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
              (when current-prefix-arg
                (propertize "NOT " 'face 'warning))
              "matching PATTERN: ")
-     nil 'prot-dired--limit-hist)
+     nil 'gbl-dired--limit-hist)
     current-prefix-arg))
   (dired-mark-files-regexp regexp)
   (unless omit (dired-toggle-marks))
   (dired-do-kill-lines)
-  (add-to-history 'prot-dired--limit-hist regexp))
+  (add-to-history 'gbl-dired--limit-hist regexp))
 
-(defvar prot-dired--find-grep-hist '()
-  "Minibuffer history for `prot-dired-grep-marked-files'.")
+(defvar gbl-dired--find-grep-hist '()
+  "Minibuffer history for `gbl-dired-grep-marked-files'.")
 
-;; Also see `prot-search-grep' from prot-search.el.
+;; Also see `gbl-search-grep' from gbl-search.el.
 ;;;###autoload
-(defun prot-dired-grep-marked-files (regexp &optional arg)
+(defun gbl-dired-grep-marked-files (regexp &optional arg)
   "Run `find' with `grep' for REGEXP on marked files.
 When no files are marked or when just a single one is marked,
 search the entire directory instead.
@@ -166,7 +166,7 @@ running find+grep on its contents.  Visit it and call `occur' or
 run grep directly on it without the whole find part."
   (interactive
    (list
-    (read-string "grep for PATTERN (marked files OR current directory): " nil 'prot-dired--find-grep-hist)
+    (read-string "grep for PATTERN (marked files OR current directory): " nil 'gbl-dired--find-grep-hist)
     current-prefix-arg)
    dired-mode)
   (when-let* ((marks (dired-get-marked-files 'no-dir))
@@ -192,21 +192,21 @@ run grep directly on it without the whole find part."
     (compilation-start
      args
      'grep-mode
-     (lambda (mode) (format "*prot-dired-find-%s for '%s'" mode regexp))
+     (lambda (mode) (format "*gbl-dired-find-%s for '%s'" mode regexp))
      t)))
 
 ;;;; Subdir extras and Imenu setup
 
-(defvar prot-dired--directory-header-regexp "^ +\\(.+\\):\n"
+(defvar gbl-dired--directory-header-regexp "^ +\\(.+\\):\n"
   "Pattern to match Dired directory headings.")
 
 ;;;###autoload
-(defun prot-dired-subdirectory-next (&optional arg)
+(defun gbl-dired-subdirectory-next (&optional arg)
   "Move to next or optional ARGth Dired subdirectory heading.
 For more on such headings, read `dired-maybe-insert-subdir'."
   (interactive "p")
   (let ((pos (point))
-        (subdir prot-dired--directory-header-regexp))
+        (subdir gbl-dired--directory-header-regexp))
     (goto-char (point-at-eol))
     (if (re-search-forward subdir nil t (or arg nil))
         (progn
@@ -215,12 +215,12 @@ For more on such headings, read `dired-maybe-insert-subdir'."
       (goto-char pos))))
 
 ;;;###autoload
-(defun prot-dired-subdirectory-previous (&optional arg)
+(defun gbl-dired-subdirectory-previous (&optional arg)
   "Move to previous or optional ARGth Dired subdirectory heading.
 For more on such headings, read `dired-maybe-insert-subdir'."
   (interactive "p")
   (let ((pos (point))
-        (subdir prot-dired--directory-header-regexp))
+        (subdir gbl-dired--directory-header-regexp))
     (goto-char (point-at-bol))
     (if (re-search-backward subdir nil t (or arg nil))
         (goto-char (point-at-bol))
@@ -230,25 +230,25 @@ For more on such headings, read `dired-maybe-insert-subdir'."
 (autoload 'dired-kill-subdir "dired-aux")
 
 ;;;###autoload
-(defun prot-dired-remove-inserted-subdirs ()
+(defun gbl-dired-remove-inserted-subdirs ()
   "Remove all inserted Dired subdirectories."
   (interactive)
   (goto-char (point-max))
-  (while (and (prot-dired-subdirectory-previous)
+  (while (and (gbl-dired-subdirectory-previous)
               (not (equal (dired-current-directory)
                           (expand-file-name default-directory))))
       (dired-kill-subdir)))
 
 (autoload 'cl-remove-if-not "cl-seq")
 
-(defun prot-dired--dir-list (list)
+(defun gbl-dired--dir-list (list)
   "Filter out non-directory file paths in LIST."
   (cl-remove-if-not
    (lambda (dir)
      (file-directory-p dir))
    list))
 
-(defun prot-dired--insert-dir (dir &optional flags)
+(defun gbl-dired--insert-dir (dir &optional flags)
   "Insert DIR using optional FLAGS."
   (dired-maybe-insert-subdir (expand-file-name dir) (or flags nil)))
 
@@ -259,7 +259,7 @@ For more on such headings, read `dired-maybe-insert-subdir'."
 (defvar dired-actual-switches)
 
 ;;;###autoload
-(defun prot-dired-insert-subdir (&optional arg)
+(defun gbl-dired-insert-subdir (&optional arg)
   "Generic command to insert subdirectories in Dired buffers.
 
 When items are marked, insert those which are subsirectories of
@@ -284,37 +284,37 @@ inserted subdirectories."
                                (or dired-subdir-switches dired-actual-switches)))))
     (cond  ; NOTE 2021-07-20: `length>', `length=' are from Emacs28
      ((eq arg 16)
-      (prot-dired-remove-inserted-subdirs))
-     ((and (length> name 1) (prot-dired--dir-list name))
+      (gbl-dired-remove-inserted-subdirs))
+     ((and (length> name 1) (gbl-dired--dir-list name))
       (mapc (lambda (file)
               (when (file-directory-p file)
-                (prot-dired--insert-dir file flags)))
+                (gbl-dired--insert-dir file flags)))
             name))
      ((and (length= name 1) (file-directory-p (car name)))
-      (prot-dired--insert-dir (car name) flags))
+      (gbl-dired--insert-dir (car name) flags))
      (t
       (let ((selection (read-directory-name "Insert directory: ")))
-        (prot-dired--insert-dir selection flags))))))
+        (gbl-dired--insert-dir selection flags))))))
 
-(defun prot-dired--imenu-prev-index-position ()
+(defun gbl-dired--imenu-prev-index-position ()
   "Find the previous file in the buffer."
-  (let ((subdir prot-dired--directory-header-regexp))
+  (let ((subdir gbl-dired--directory-header-regexp))
     (re-search-backward subdir nil t)))
 
-(defun prot-dired--imenu-extract-index-name ()
+(defun gbl-dired--imenu-extract-index-name ()
   "Return the name of the file at point."
   (file-relative-name
    (buffer-substring-no-properties (+ (point-at-bol) 2)
                                    (1- (point-at-eol)))))
 
 ;;;###autoload
-(defun prot-dired-setup-imenu ()
+(defun gbl-dired-setup-imenu ()
   "Configure imenu for the current dired buffer.
 Add this to `dired-mode-hook'."
   (set (make-local-variable 'imenu-prev-index-position-function)
-       'prot-dired--imenu-prev-index-position)
+       'gbl-dired--imenu-prev-index-position)
   (set (make-local-variable 'imenu-extract-index-name-function)
-       'prot-dired--imenu-extract-index-name))
+       'gbl-dired--imenu-extract-index-name))
 
-(provide 'prot-dired)
-;;; prot-dired.el ends here
+(provide 'gbl-dired)
+;;; gbl-dired.el ends here

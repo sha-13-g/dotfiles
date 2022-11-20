@@ -1,4 +1,4 @@
-;;; prot-vc.el --- Extensions to vc.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-vc.el --- Extensions to vc.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -27,7 +27,7 @@
 ;; This covers my vc.el extensions, which mostly concern Git.  For use
 ;; in my Emacs setup: https://protesilaos.com/emacs/dotemacs.
 ;;
-;; Make sure to also inspect prot-project.el and prot-diff.el for a more
+;; Make sure to also inspect gbl-project.el and gbl-diff.el for a more
 ;; complete view of what I have on the topic of version control.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
@@ -47,76 +47,76 @@
 
 (require 'vc)
 (require 'log-edit)
-(require 'prot-common)
+(require 'gbl-common)
 
 ;;;; Customisation options
 
-(defgroup prot-vc ()
+(defgroup gbl-vc ()
   "Extensions for vc.el and related libraries."
   :group 'project)
 
-(defcustom prot-vc-log-limit 100
-  "Limit commits in `prot-vc-custom-log' and others."
+(defcustom gbl-vc-log-limit 100
+  "Limit commits in `gbl-vc-custom-log' and others."
   :type 'integer
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-log-bulk-action-limit 50
-  "Limit for `prot-vc-log-view-toggle-entry-all'.
+(defcustom gbl-vc-log-bulk-action-limit 50
+  "Limit for `gbl-vc-log-view-toggle-entry-all'.
 This is to ensure that performance does not take a hit.  The
 default value is conservative."
   :type 'integer
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-git-log-edit-show-commits nil
+(defcustom gbl-vc-git-log-edit-show-commits nil
   "Show recent commits in Git Log Edit comments."
   :type 'boolean
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-git-log-edit-show-commit-count 10
-  "Commit number for `prot-vc-git-log-edit-show-commits'."
+(defcustom gbl-vc-git-log-edit-show-commit-count 10
+  "Commit number for `gbl-vc-git-log-edit-show-commits'."
   :type 'integer
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-shell-output "*prot-vc-output*"
+(defcustom gbl-vc-shell-output "*gbl-vc-output*"
   "Name of buffer for VC-related shell output."
   :type 'string
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-patch-output-dirs (list "~/" "~/Desktop/")
-  "List of directories to save `prot-vc-patch-dwim' output."
+(defcustom gbl-vc-patch-output-dirs (list "~/" "~/Desktop/")
+  "List of directories to save `gbl-vc-patch-dwim' output."
   :type 'list
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
-(defcustom prot-vc-git-patch-apply-args (list "--3way")
+(defcustom gbl-vc-git-patch-apply-args (list "--3way")
   "List of strings to pass as arguments to 'git am'."
   :type '(repeat string)
-  :group 'prot-vc)
+  :group 'gbl-vc)
 
 ;;;; Commands and helper functions
 
-(defun prot-vc--current-project ()
+(defun gbl-vc--current-project ()
   "Return root directory of current project."
   (or (vc-root-dir)
       (locate-dominating-file "." ".git")))
 
 ;;;###autoload
-(defun prot-vc-project-or-dir (&optional arg)
+(defun gbl-vc-project-or-dir (&optional arg)
   "Run `vc-dir' for the current project root.
 With optional prefix ARG (\\[universal-argument]), use the
 `default-directory' instead."
   (interactive "P")
-  (let* ((root (prot-vc--current-project))
+  (let* ((root (gbl-vc--current-project))
          (dir (if arg default-directory root)))
     (vc-dir dir)))
 
-(defun prot-vc--log-edit-files-prompt ()
-  "Helper completion for `prot-vc-extract-file-name'."
+(defun gbl-vc--log-edit-files-prompt ()
+  "Helper completion for `gbl-vc-extract-file-name'."
   (let ((files (log-edit-files)))
     (completing-read
      "Derive shortname from: " files nil nil)))
 
 ;;;###autoload
-(defun prot-vc-git-log-edit-extract-file-name ()
+(defun gbl-vc-git-log-edit-extract-file-name ()
   "Insert at point shortname from file in log edit buffers.
 If multiple files are part of the log, a minibuffer completion
 prompt will be produced: it can be used to narrow down to an
@@ -126,7 +126,7 @@ existing item or input an arbitrary string of characters."
     (user-error "Only try this in Log Edit mode"))
   (let* ((files (log-edit-files))
          (file (if (> (length files) 1)
-                   (prot-vc--log-edit-files-prompt)
+                   (gbl-vc--log-edit-files-prompt)
                  (car files)))
          (name (file-name-sans-extension
                 (file-name-nondirectory
@@ -135,13 +135,13 @@ existing item or input an arbitrary string of characters."
 
 (autoload 'project-current "project")
 
-(defvar prot-vc--log-insert-num-hist '()
-  "History for `prot-vc-git-log-insert-commits'.")
+(defvar gbl-vc--log-insert-num-hist '()
+  "History for `gbl-vc-git-log-insert-commits'.")
 
 (declare-function project-prompt-project-dir "project")
 
 ;;;###autoload
-(defun prot-vc-git-log-insert-commits (&optional arg)
+(defun gbl-vc-git-log-insert-commits (&optional arg)
   "Insert at point number of commits starting from git HEAD.
 If in a version-controlled directory, the commit log is based on
 the root of the project, else a prompt for project selection is
@@ -152,37 +152,37 @@ for a known project."
   (interactive "P")
   (let* ((dir (when arg (project-prompt-project-dir)))
          (default-directory (or dir
-                                (prot-vc--current-project)
+                                (gbl-vc--current-project)
                                 (cdr (project-current t))))
          (number (number-to-string
                   (read-number "Insert N commits from HEAD: " 5
-                               'prot-vc--log-insert-num-hist))))
+                               'gbl-vc--log-insert-num-hist))))
     (insert
      (with-temp-buffer
        (apply 'vc-git-command t nil nil
               (list "log" "--pretty=format:%h  %cs  %s" "-n" number "--"))
        (buffer-string)))
-    (add-to-history 'prot-vc--log-insert-num-hist number)))
+    (add-to-history 'gbl-vc--log-insert-num-hist number)))
 
 (autoload 'log-view-current-entry "log-view")
 (autoload 'dired-get-marked-files "dired")
 
-(defun prot-vc--commit-num ()
-  "Determime whether `prot-vc-log-limit' is a positive integer."
-  (let ((num prot-vc-log-limit))
+(defun gbl-vc--commit-num ()
+  "Determime whether `gbl-vc-log-limit' is a positive integer."
+  (let ((num gbl-vc-log-limit))
     (if (and (integerp num)
              (> num 0))
         num
       (error "'%s' is not a valid number" num))))
 
 ;;;###autoload
-(defun prot-vc-custom-log (&optional arg)
+(defun gbl-vc-custom-log (&optional arg)
   "Like `vc-print-log' but for a custom fileset.
 
 With optional prefix ARG (\\[universal-argument]), prompt for a
 number to limit the log to.  Then prompt the user for matching
 files in the `default-directory' with `completing-read-multiple'.
-The default limit is controlled by the `prot-vc-log-limit'
+The default limit is controlled by the `gbl-vc-log-limit'
 variable.
 
 In a `dired-mode' buffer, print log for the file at point, or any
@@ -194,7 +194,7 @@ that covers all files in the present directory."
   (interactive "P")
   (let* ((lim (if arg
                   (read-number "Limit log to N entries: " 5)
-                (prot-vc--commit-num)))
+                (gbl-vc--commit-num)))
          (dir default-directory)
          (dotless directory-files-no-dot-files-regexp)
          (files (directory-files dir nil dotless t))
@@ -206,7 +206,7 @@ that covers all files in the present directory."
                (t
                 (completing-read-multiple
                  "Select files in current dir: " files
-                 #'prot-common-crm-exclude-selected-p t))))
+                 #'gbl-common-crm-exclude-selected-p t))))
          (backend (vc-backend set))
          (vc-log-short-style (if (> (length set) 1) '(file) '(directory))))
     (vc-print-log-internal backend set nil nil lim nil)))
@@ -218,7 +218,7 @@ that covers all files in the present directory."
 (defvar vc-git-root-log-format)
 
 ;;;###autoload
-(defun prot-vc-log-view-toggle-entry-all ()
+(defun gbl-vc-log-view-toggle-entry-all ()
   "Run `log-view-toggle-entry-display' on all commits."
   (interactive)
   (let ((oldlines (count-lines (point-min) (point-max)))
@@ -226,7 +226,7 @@ that covers all files in the present directory."
         (newlines)
         (commits (count-matches (nth 1 vc-git-root-log-format)
                                 (point-min) (point-max)))
-        (limit prot-vc-log-bulk-action-limit))
+        (limit gbl-vc-log-bulk-action-limit))
     (cond
      ((<= commits limit)
       (save-excursion
@@ -243,51 +243,51 @@ that covers all files in the present directory."
       (user-error "%d commits here; won't expand more than %d" commits limit)))))
 
 ;;;###autoload
-(defun prot-vc-log-kill-hash ()
+(defun gbl-vc-log-kill-hash ()
   "Save to `kill-ring' contextual commit hash in `vc-print-log'."
   (interactive)
   (let ((commit (cadr (log-view-current-entry (point) t))))
     (kill-new (format "%s" commit))
     (message "Copied: %s" commit)))
 
-(defvar prot-vc--commit-hist '()
+(defvar gbl-vc--commit-hist '()
   "Minibuffer history for commit logs.")
 
-(defvar prot-vc--patch-output-hist '()
-  "Minibuffer history for `prot-vc-patch-dwim' output.")
+(defvar gbl-vc--patch-output-hist '()
+  "Minibuffer history for `gbl-vc-patch-dwim' output.")
 
-(defun prot-vc--log-commit-hash (fn)
+(defun gbl-vc--log-commit-hash (fn)
   "Extract commit hash from FN.
-FN is assumed to be something like `prot-vc--log-commit-prompt'."
+FN is assumed to be something like `gbl-vc--log-commit-prompt'."
   (string-match "· \\([a-z0-9]*\\) ·" fn)
   (match-string-no-properties 1 fn))
 
-(defun prot-vc--log-commit-prompt (&optional prompt limit)
+(defun gbl-vc--log-commit-prompt (&optional prompt limit)
   "Select git log commit with completion.
 
 Optional PROMPT pertains to the minibuffer's input field.  While
-optional LIMIT will apply `prot-vc-log-limit' as a constraint,
+optional LIMIT will apply `gbl-vc-log-limit' as a constraint,
 instead of producing a complete log."
   (let ((text (or prompt "Select a commit: "))
-        (vc (prot-vc--current-project))
+        (vc (gbl-vc--current-project))
         (num (cond
               ((integerp limit)
                (format "%d" limit))
               (limit
-               (format "%d" (prot-vc--commit-num)))
+               (format "%d" (gbl-vc--commit-num)))
               (t
                (format "%d" -1)))))
     (if vc
         (completing-read
          text
-         (prot-common-completion-table
+         (gbl-common-completion-table
           'line
           (process-lines "git" "log" "--pretty=format:%d · %h · %cs %an: %s" "-n" num))
-         nil t nil 'prot-vc--commit-hist)
+         nil t nil 'gbl-vc--commit-hist)
       (error "'%s' is not under version control" default-directory))))
 
 ;;;###autoload
-(defun prot-vc-git-patch-apply (patch project &optional args)
+(defun gbl-vc-git-patch-apply (patch project &optional args)
   "Apply PATCH to current project using 'git am'.
 
 PROJECT is a path to the root of a git repo, automatically
@@ -297,24 +297,24 @@ prompt for a project instead.
 
 When called non-interactively, ARGS is a list of strings with
 command line flags for 'git am'.  Otherwise it takes the value of
-`prot-vc-git-patch-apply-args'."
+`gbl-vc-git-patch-apply-args'."
   (interactive
    (list
     (read-file-name "Path to patch: ")
     (when (or current-prefix-arg
-              (null (prot-vc--current-project)))
+              (null (gbl-vc--current-project)))
       (project-prompt-project-dir))))
-  ;; FIXME 2021-06-30: Avoid calling `prot-vc--current-project' twice
-  (let* ((default-directory (or project (prot-vc--current-project)))
-         (buf-name prot-vc-shell-output)
+  ;; FIXME 2021-06-30: Avoid calling `gbl-vc--current-project' twice
+  (let* ((default-directory (or project (gbl-vc--current-project)))
+         (buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (resize-mini-windows nil)
-         (arguments (or args prot-vc-git-patch-apply-args))
+         (arguments (or args gbl-vc-git-patch-apply-args))
          (arg-string (mapconcat #'identity arguments " ")))
     (shell-command (format "git am %s %s" arg-string patch) buf)))
 
 ;;;###autoload
-(defun prot-vc-git-patch-create-dwim (&optional arg)
+(defun gbl-vc-git-patch-create-dwim (&optional arg)
   "Do-What-I-mean to output Git patches to a directory.
 
 When the region is active inside of a Log View buffer, produce
@@ -338,17 +338,17 @@ a base commit.  If the region is active in Log View buffers, ARG
 is ignored.
 
 Whatever the case, the list of completion candidates for commits
-is always confined to `prot-vc-log-limit'."
+is always confined to `gbl-vc-log-limit'."
   (interactive "P")
-  (let* ((vc-dir (or (prot-vc--current-project)
+  (let* ((vc-dir (or (gbl-vc--current-project)
                      default-directory))
-         (dirs (append (list vc-dir) prot-vc-patch-output-dirs))
+         (dirs (append (list vc-dir) gbl-vc-patch-output-dirs))
          (out-dir
           (completing-read
            "Output directory: "
-           (prot-common-completion-table 'file dirs)
-           nil t nil 'prot-vc--patch-output-hist))
-         (buf (get-buffer-create prot-vc-shell-output)))
+           (gbl-common-completion-table 'file dirs)
+           nil t nil 'gbl-vc--patch-output-hist))
+         (buf (get-buffer-create gbl-vc-shell-output)))
     (cond
      ((and (use-region-p) (derived-mode-p 'log-view-mode))
       (let* ((beg (region-beginning))
@@ -369,8 +369,8 @@ is always confined to `prot-vc-log-limit'."
                  (propertize range 'face 'bold)
                  (propertize out-dir 'face 'success))))
      (arg
-      (let ((base (prot-vc--log-commit-hash
-                   (prot-vc--log-commit-prompt
+      (let ((base (gbl-vc--log-commit-hash
+                   (gbl-vc--log-commit-prompt
                     "Select base commit for base..HEAD: " t))))
         (shell-command
          (format "git format-patch %s..HEAD -o %s --" base out-dir) buf)
@@ -381,8 +381,8 @@ is always confined to `prot-vc-log-limit'."
       (let* ((commit-at-point (when (derived-mode-p 'log-view-mode)
                                 (cadr (log-view-current-entry (point) t))))
              (commit (if (not commit-at-point)
-                         (prot-vc--log-commit-hash
-                          (prot-vc--log-commit-prompt
+                         (gbl-vc--log-commit-hash
+                          (gbl-vc--log-commit-prompt
                            "Prepare patch for commit: " t))
                        commit-at-point)))
         (shell-command
@@ -390,15 +390,15 @@ is always confined to `prot-vc-log-limit'."
         (message "Prepared patch for `%s' and sent it to %s"
                  (propertize commit 'face 'bold)
                  (propertize out-dir 'face 'success))
-        (add-to-history 'prot-vc--commit-hist commit)))
-     (add-to-history 'prot-vc--patch-output-hist out-dir))))
+        (add-to-history 'gbl-vc--commit-hist commit)))
+     (add-to-history 'gbl-vc--patch-output-hist out-dir))))
 
 ;;;###autoload
-(defun prot-vc-git-show (&optional limit)
+(defun gbl-vc-git-show (&optional limit)
   "Run git show for commit selected via completion.
 With optional LIMIT as a prefix arg (\\[universal-argument]),
 prompt for a number to confine the log to.  If LIMIT is a number,
-accept it directly.  In the absence of LIMIT, `prot-vc-log-limit'
+accept it directly.  In the absence of LIMIT, `gbl-vc-log-limit'
 will be used instead."
   (interactive "P")
   (let* ((num (cond
@@ -408,20 +408,20 @@ will be used instead."
                 (prefix-numeric-value limit))
                (t
                 t)))
-         (commit (prot-vc--log-commit-hash
-                  (prot-vc--log-commit-prompt "Commit to git-show: " num)))
-         (buf-name prot-vc-shell-output)
+         (commit (gbl-vc--log-commit-hash
+                  (gbl-vc--log-commit-prompt "Commit to git-show: " num)))
+         (buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name)))
     (shell-command (format "git show %s -u --stat -1 --" commit) buf)
     (with-current-buffer buf-name
       (setq-local revert-buffer-function nil)
       (diff-mode))
-    (add-to-history 'prot-vc--commit-hist commit)))
+    (add-to-history 'gbl-vc--commit-hist commit)))
 
 (autoload 'vc-git-grep "vc-git")
 
 ;;;###autoload
-(defun prot-vc-git-grep (regexp)
+(defun gbl-vc-git-grep (regexp)
   "Run 'git grep' for REGEXP in current project.
 This is a simple wrapper around `vc-git-grep' to streamline the
 basic task of searching for a regexp in the current project.  Use
@@ -429,19 +429,19 @@ the original command for its other features."
   (interactive
    (list (read-regexp "git-grep for PATTERN: "
                       nil 'grep-history)))
-  (vc-git-grep regexp "*" (prot-vc--current-project)))
+  (vc-git-grep regexp "*" (gbl-vc--current-project)))
 
 (autoload 'vc-git-region-history-mode "vc-git")
 
 ;;;###autoload
-(defun prot-vc-git-log-grep (pattern &optional diff)
+(defun gbl-vc-git-log-grep (pattern &optional diff)
   "Run ’git log --grep’ for PATTERN.
 With optional DIFF as a prefix (\\[universal-argument])
 argument, also show the corresponding diffs."
   (interactive
    (list (read-regexp "Run 'git log --grep' for PATTERN")
          current-prefix-arg))
-  (let* ((buf-name prot-vc-shell-output)
+  (let* ((buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (diffs (if diff "-p" ""))
          (type (if diff 'with-diff 'log-search))
@@ -453,29 +453,29 @@ argument, also show the corresponding diffs."
       (vc-git-region-history-mode)
       (setq-local log-view-vc-backend 'git))))
 
-(defun prot-vc-git--file-rev (file &optional limit)
+(defun gbl-vc-git--file-rev (file &optional limit)
   "Select revision for FILE using completion.
 Optionally apply LIMIT to the log."
   (let ((num (cond
               ((integerp limit)
                (format "%d" limit))
               (limit
-               (format "%d" (prot-vc--commit-num)))
+               (format "%d" (gbl-vc--commit-num)))
               (t
                (format "%d" -1)))))
     (completing-read
      (format "Find revision for %s: " file)
-     (prot-common-completion-table
+     (gbl-common-completion-table
       'line
       (process-lines "git" "log" "--pretty=format:%d · %h · %cs %an: %s" "-n" num "--" file))
-     nil t nil 'prot-vc--commit-hist)))
+     nil t nil 'gbl-vc--commit-hist)))
 
 ;;;###autoload
-(defun prot-vc-git-find-revision (&optional limit)
+(defun gbl-vc-git-find-revision (&optional limit)
   "Visit a version of the current file using completion.
 With optional LIMIT as a prefix arg (\\[universal-argument]),
 prompt for a number to confine the log to.  If LIMIT is a number,
-accept it directly.  In the absence of LIMIT, `prot-vc-log-limit'
+accept it directly.  In the absence of LIMIT, `gbl-vc-log-limit'
 will be used instead."
   (interactive "P")
   (let* ((num (cond
@@ -485,30 +485,30 @@ will be used instead."
                 (prefix-numeric-value limit))
                (t
                 t)))
-         (rev (prot-vc--log-commit-hash
-               (prot-vc-git--file-rev buffer-file-name num))))
+         (rev (gbl-vc--log-commit-hash
+               (gbl-vc-git--file-rev buffer-file-name num))))
     (switch-to-buffer-other-window
      (vc-find-revision buffer-file-name rev))
-    (add-to-history 'prot-vc--commit-hist rev)))
+    (add-to-history 'gbl-vc--commit-hist rev)))
 
 (autoload 'vc-annotate-mode "vc-annotate")
 (autoload 'vc-annotate-display-select "vc-annotate")
 
 ;; XXX NOTE XXX 2021-07-31: Those are meant to enable `revert-buffer'
-;; inside of `prot-vc-git-blame-region-or-file'.  I do not know whether
+;; inside of `gbl-vc-git-blame-region-or-file'.  I do not know whether
 ;; this is a good approach.  It seems very convoluted and fragile.  But
 ;; anyway, I tried and it seems to work.
-(defvar prot-vc--blame-beg nil)
-(defvar prot-vc--blame-end nil)
-(defvar prot-vc--blame-file nil)
-(defvar prot-vc--blame-origin nil)
+(defvar gbl-vc--blame-beg nil)
+(defvar gbl-vc--blame-end nil)
+(defvar gbl-vc--blame-file nil)
+(defvar gbl-vc--blame-origin nil)
 
 ;;;###autoload
-(defun prot-vc-git-blame-region-or-file (beg end &optional file)
+(defun gbl-vc-git-blame-region-or-file (beg end &optional file)
   "Git blame lines in region between BEG and END.
 Optionally specify FILE, else default to the current one."
   (interactive "r")
-  (let* ((buf-name prot-vc-shell-output)
+  (let* ((buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (f (or file buffer-file-name))
          (backend (vc-backend f))
@@ -517,17 +517,17 @@ Optionally specify FILE, else default to the current one."
          (b (if (region-active-p) end (- (point-max) 1)))
          (beg-line (line-number-at-pos b t))
          (end-line (line-number-at-pos e t))
-         (default-directory (prot-vc--current-project))
+         (default-directory (gbl-vc--current-project))
          (origin (current-buffer))
          (resize-mini-windows nil))
     (shell-command
      (format "git blame -L %d,%d -- %s" beg-line end-line f) buf)
     ;; FIXME 2021-07-31: Learn how to implement a cleaner
     ;; `revert-buffer'.  See NOTE above.
-    (setq-local prot-vc--blame-beg beg
-                prot-vc--blame-end end
-                prot-vc--blame-file f
-                prot-vc--blame-origin origin)
+    (setq-local gbl-vc--blame-beg beg
+                gbl-vc--blame-end end
+                gbl-vc--blame-file f
+                gbl-vc--blame-origin origin)
     (with-current-buffer buf-name
       (unless (equal major-mode 'vc-annotate-mode)
         (vc-annotate-mode))
@@ -536,9 +536,9 @@ Optionally specify FILE, else default to the current one."
                   (lambda (_ignore-auto _noconfirm)
                     (let ((inhibit-read-only t))
                       (with-current-buffer origin
-                        (prot-vc-git-blame-region-or-file prot-vc--blame-beg
-                                                          prot-vc--blame-end
-                                                          prot-vc--blame-file)))))
+                        (gbl-vc-git-blame-region-or-file gbl-vc--blame-beg
+                                                          gbl-vc--blame-end
+                                                          gbl-vc--blame-file)))))
       (setq-local vc-annotate-backend backend)
       (setq-local vc-annotate-parent-file f)
       (setq-local vc-annotate-parent-rev rev)
@@ -548,11 +548,11 @@ Optionally specify FILE, else default to the current one."
 (autoload 'vc-refresh-state "vc-hooks")
 
 ;;;###autoload
-(defun prot-vc-git-reset (&optional limit)
+(defun gbl-vc-git-reset (&optional limit)
   "Select commit to 'git reset --soft' back to.
 With optional LIMIT as a prefix arg (\\[universal-argument]),
 prompt for a number to confine the log to.  If LIMIT is a number,
-accept it directly.  In the absence of LIMIT, `prot-vc-log-limit'
+accept it directly.  In the absence of LIMIT, `gbl-vc-log-limit'
 will be used instead."
   (interactive "P")
   (let* ((num (cond
@@ -562,22 +562,22 @@ will be used instead."
                 (prefix-numeric-value limit))
                (t
                 t)))
-         (commit (prot-vc--log-commit-hash
-                  (prot-vc--log-commit-prompt "Run 'git reset --soft' on: " num)))
-         (buf-name prot-vc-shell-output)
+         (commit (gbl-vc--log-commit-hash
+                  (gbl-vc--log-commit-prompt "Run 'git reset --soft' on: " num)))
+         (buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name)))
     (when (yes-or-no-p (format "Run 'git reset --soft %s'?" commit))
       (shell-command (format "git reset --soft %s --quiet --" commit) buf)
       (vc-refresh-state))))
 
 ;;;###autoload
-(defun prot-vc-git-log-reset (&optional hard)
+(defun gbl-vc-git-log-reset (&optional hard)
   "Select commit in VC Git Log to 'git reset --soft' back to.
 With optional prefix argument (\\[universal-argument]) for HARD,
 pass the '--hard' flag instead."
   (interactive "P")
   (let* ((commit (cadr (log-view-current-entry (point) t)))
-         (buf-name prot-vc-shell-output)
+         (buf-name gbl-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (flag (if hard "--hard" "--soft")))
     (when (yes-or-no-p (format "Run 'git reset %s %s'?" flag commit))
@@ -585,7 +585,7 @@ pass the '--hard' flag instead."
       (revert-buffer))))
 
 ;;;###autoload
-(defun prot-vc-git-checkout-remote (remote)
+(defun gbl-vc-git-checkout-remote (remote)
   "Checkout new local branch tracking REMOTE (git checkout -b)."
   (interactive
    (list (completing-read
@@ -601,7 +601,7 @@ pass the '--hard' flag instead."
 ;;;; User Interface setup
 
 ;; This is a tweaked variant of `vc-git-expanded-log-entry'
-(defun prot-vc-git-expanded-log-entry (revision)
+(defun gbl-vc-git-expanded-log-entry (revision)
   "Expand git commit message for REVISION."
   (with-temp-buffer
     (apply 'vc-git-command t nil nil (list "log" revision "--stat" "-1" "--"))
@@ -612,22 +612,22 @@ pass the '--hard' flag instead."
         (forward-line))
       (concat "\n" (buffer-string)))))
 
-(defun prot-vc-git-expand-function ()
+(defun gbl-vc-git-expand-function ()
   "Set `log-view-expanded-log-entry-function' for `vc-git'."
   (when (eq vc-log-view-type 'short)
     (setq-local log-view-expanded-log-entry-function
-                #'prot-vc-git-expanded-log-entry)))
+                #'gbl-vc-git-expanded-log-entry)))
 
-(defvar prot-vc-git-log-view-mode-hook nil
+(defvar gbl-vc-git-log-view-mode-hook nil
   "Hook that runs after `vc-git-log-view-mode'.")
 
-(defun prot-vc-git-log-view-add-hook (&rest _)
-  "Run `prot-vc-git-log-view-mode-hook'."
-  (run-hooks 'prot-vc-git-log-view-mode-hook))
+(defun gbl-vc-git-log-view-add-hook (&rest _)
+  "Run `gbl-vc-git-log-view-mode-hook'."
+  (run-hooks 'gbl-vc-git-log-view-mode-hook))
 
 (declare-function log-edit-add-field "log-edit")
 
-(defun prot-vc--format-git-comment (branch remote files &optional commits)
+(defun gbl-vc--format-git-comment (branch remote files &optional commits)
   "Add Git Log Edit comment with BRANCH, REMOTE, FILES, COMMITS."
   (let ((log (if commits (concat "\n# Recent commits:\n#\n" commits "\n#") "")))
     (concat
@@ -636,7 +636,7 @@ pass the '--hard' flag instead."
      "\n#\n" files "\n#" log
      "\n# All lines starting with `#' are ignored.")))
 
-(defun prot-vc-git-log-edit-comment (&optional no-headers)
+(defun gbl-vc-git-log-edit-comment (&optional no-headers)
   "Append comment block to Git Log Edit buffer.
 With optional NO-HEADERS skip the step of inserting the special
 headers 'Amend' and 'Summary'."
@@ -655,13 +655,13 @@ headers 'Amend' and 'Summary'."
                              (concat "#   " x))
                            (log-edit-files)
                            "\n"))
-         (commits (when (and prot-vc-git-log-edit-show-commits
+         (commits (when (and gbl-vc-git-log-edit-show-commits
                              (ignore-errors (process-lines "git" "log" "-1")))
                     (mapconcat (lambda (x)
                                  (concat "#   " x))
                                (process-lines
                                 "git" "log" "--pretty=format:%h  %cs  %s"
-                                (format "-n %d" prot-vc-git-log-edit-show-commit-count))
+                                (format "-n %d" gbl-vc-git-log-edit-show-commit-count))
                                "\n"))))
     (unless no-headers
       (save-excursion
@@ -673,12 +673,12 @@ headers 'Amend' and 'Summary'."
           (log-edit-add-field "Summary" ""))))
     (goto-char (point-max))
     (insert "\n")
-    (insert (prot-vc--format-git-comment branch remote files commits))
+    (insert (gbl-vc--format-git-comment branch remote files commits))
     (rfc822-goto-eoh)
     (when (looking-at "\n") (forward-char -1))))
 
 ;;;###autoload
-(defun prot-vc-git-log-edit-previous-comment (arg)
+(defun gbl-vc-git-log-edit-previous-comment (arg)
   "Cycle backwards through comment history.
 With a numeric prefix ARG, go back ARG comments."
   (interactive "*p")
@@ -690,7 +690,7 @@ With a numeric prefix ARG, go back ARG comments."
       (setq log-edit-comment-ring-index (log-edit-new-comment-index arg len))
       (message "Comment %d" (1+ log-edit-comment-ring-index))
       (insert (ring-ref log-edit-comment-ring log-edit-comment-ring-index))
-      (prot-vc-git-log-edit-comment t)
+      (gbl-vc-git-log-edit-comment t)
       (save-excursion
         (goto-char (point-min))
         (search-forward "# ---")
@@ -699,23 +699,23 @@ With a numeric prefix ARG, go back ARG comments."
         (newline 2)))))
 
 ;;;###autoload
-(defun prot-vc-git-log-edit-next-comment (arg)
+(defun gbl-vc-git-log-edit-next-comment (arg)
   "Cycle forwards through comment history.
 With a numeric prefix ARG, go forward ARG comments."
   (interactive "*p")
-  (prot-vc-git-log-edit-previous-comment (- arg)))
+  (gbl-vc-git-log-edit-previous-comment (- arg)))
 
-(defvar prot-vc--log-edit-comment-hist '()
-  "History of inputs for `prot-vc-git-log-edit-complete-comment'.")
+(defvar gbl-vc--log-edit-comment-hist '()
+  "History of inputs for `gbl-vc-git-log-edit-complete-comment'.")
 
-(defun prot-vc--log-edit-complete-prompt (comments)
+(defun gbl-vc--log-edit-complete-prompt (comments)
   "Select entry from COMMENTS."
   (completing-read
    "Select comment: "
-   comments nil t nil 'prot-vc--log-edit-comment-hist))
+   comments nil t nil 'gbl-vc--log-edit-comment-hist))
 
 ;;;###autoload
-(defun prot-vc-git-log-edit-complete-comment ()
+(defun gbl-vc-git-log-edit-complete-comment ()
   "Insert text from Log Edit history ring using completion."
   (interactive)
   (let* ((newline (propertize "^J" 'face 'escape-glyph))
@@ -724,12 +724,12 @@ With a numeric prefix ARG, go forward ARG comments."
           (mapcar (lambda (s)
                     (string-replace "\n" newline s))
                   ring))
-         (selection (prot-vc--log-edit-complete-prompt completions))
+         (selection (gbl-vc--log-edit-complete-prompt completions))
          (comment (string-replace newline "\n" selection)))
-    (add-to-history 'prot-vc--log-edit-comment-hist comment)
+    (add-to-history 'gbl-vc--log-edit-comment-hist comment)
     (delete-region (point-min) (point-max))
     (insert comment)
-    (prot-vc-git-log-edit-comment t)
+    (gbl-vc-git-log-edit-comment t)
     (save-excursion
       (goto-char (point-min))
       (search-forward "# ---")
@@ -737,7 +737,7 @@ With a numeric prefix ARG, go forward ARG comments."
       (delete-blank-lines)
       (newline 2))))
 
-(defun prot-vc-git-log-remove-comment ()
+(defun gbl-vc-git-log-remove-comment ()
   "Remove Git Log Edit comment, empty lines; keep final newline."
   (let ((buffer (get-buffer "*vc-log*"))) ; REVIEW: This is fragile
     (with-current-buffer (when (buffer-live-p buffer) buffer)
@@ -747,7 +747,7 @@ With a numeric prefix ARG, go forward ARG comments."
         (flush-lines "^#")))))
 
 ;;;###autoload
-(defun prot-vc-git-log-edit-toggle-amend ()
+(defun gbl-vc-git-log-edit-toggle-amend ()
   "Toggle 'Amend' header for current Log Edit buffer.
 
 Setting the header to 'yes' means that the current commit will
@@ -759,7 +759,7 @@ the buffer."
   (interactive)
   (when (log-edit-toggle-header "Amend" "yes")))
 
-(defun prot-vc--buffer-string-omit-comment ()
+(defun gbl-vc--buffer-string-omit-comment ()
   "Remove Git comment and empty lines from buffer string."
   (let* ((buffer (get-buffer "*vc-log*"))
          (string (when buffer
@@ -773,46 +773,46 @@ the buffer."
 (autoload 'ring-ref "ring")
 (autoload 'ring-insert "ring")
 
-(defun prot-vc-git-log-edit-remember-comment (&optional comment)
+(defun gbl-vc-git-log-edit-remember-comment (&optional comment)
   "Store Log Edit text or optional COMMENT.
 Remove special Git comment block before storing the genuine
 commit message."
   (let ((commit (or comment (gensym))))
-    (setq commit (prot-vc--buffer-string-omit-comment))
+    (setq commit (gbl-vc--buffer-string-omit-comment))
     (when (or (ring-empty-p log-edit-comment-ring)
               (not (equal commit (ring-ref log-edit-comment-ring 0))))
       (ring-insert log-edit-comment-ring commit))))
 
 (declare-function log-edit-show-diff "log-edit")
 
-(defvar prot-vc--current-window-configuration nil
+(defvar gbl-vc--current-window-configuration nil
   "Current window configuration for use with Log Edit.")
 
-(defvar prot-vc--current-window-configuration-point nil
+(defvar gbl-vc--current-window-configuration-point nil
   "Point in current window configuration for use with Log Edit.")
 
-(defun prot-vc--store-window-configuration ()
+(defun gbl-vc--store-window-configuration ()
   "Store window configuration before calling `vc-start-logentry'.
-This should be called via `prot-vc-git-pre-log-edit-hook'."
-  (setq prot-vc--current-window-configuration (current-window-configuration))
-  (setq prot-vc--current-window-configuration-point (point)))
+This should be called via `gbl-vc-git-pre-log-edit-hook'."
+  (setq gbl-vc--current-window-configuration (current-window-configuration))
+  (setq gbl-vc--current-window-configuration-point (point)))
 
-(defvar prot-vc-git-pre-log-edit-hook nil
+(defvar gbl-vc-git-pre-log-edit-hook nil
   "Hook that runs right before `vc-start-logentry'.")
 
-(defun prot-vc-git-pre-log-edit (&rest _)
-  "Run `prot-vc-git-pre-log-edit-hook'.
+(defun gbl-vc-git-pre-log-edit (&rest _)
+  "Run `gbl-vc-git-pre-log-edit-hook'.
 To be used as advice before `vc-start-logentry'."
-  (run-hooks 'prot-vc-git-pre-log-edit-hook))
+  (run-hooks 'gbl-vc-git-pre-log-edit-hook))
 
-(defun prot-vc--log-edit-restore-window-configuration ()
+(defun gbl-vc--log-edit-restore-window-configuration ()
   "Set window configuration to the pre Log Edit state."
-  (when prot-vc--current-window-configuration
-    (set-window-configuration prot-vc--current-window-configuration))
-  (when prot-vc--current-window-configuration-point
-    (goto-char prot-vc--current-window-configuration-point)))
+  (when gbl-vc--current-window-configuration
+    (set-window-configuration gbl-vc--current-window-configuration))
+  (when gbl-vc--current-window-configuration-point
+    (goto-char gbl-vc--current-window-configuration-point)))
 
-(defun prot-vc--log-edit-diff-window-configuration ()
+(defun gbl-vc--log-edit-diff-window-configuration ()
   "Show current diff for Git Log Edit buffer."
   (let ((buffer (get-buffer "*vc-log*")))
     (with-current-buffer (if (buffer-live-p buffer)
@@ -824,28 +824,28 @@ To be used as advice before `vc-start-logentry'."
         (log-edit-show-diff))
       (other-window -1))))
 
-(defun prot-vc--kill-log-edit ()
+(defun gbl-vc--kill-log-edit ()
   "Local hook to restore windows when Log Edit buffer is killed."
   (when (or (derived-mode-p 'log-edit-mode)
             (derived-mode-p 'diff-mode))
-    (add-hook 'kill-buffer-hook #'prot-vc--log-edit-restore-window-configuration 0 t)))
+    (add-hook 'kill-buffer-hook #'gbl-vc--log-edit-restore-window-configuration 0 t)))
 
-(defvar prot-vc-git-log-edit-done-hook nil
-  "Hook that runs after `prot-vc-git-log-edit-done'.")
+(defvar gbl-vc-git-log-edit-done-hook nil
+  "Hook that runs after `gbl-vc-git-log-edit-done'.")
 
-;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
+;; FIXME: Why does `gbl-vc-git-log-remove-comment' not work when added
 ;; to `log-edit-done-hook'?
 ;;;###autoload
-(defun prot-vc-git-log-edit-done ()
+(defun gbl-vc-git-log-edit-done ()
   "Remove Git Log Edit comments and commit change set.
 This is a thin wrapper around `log-edit-done', which first calls
-`prot-vc-git-log-remove-comment'."
+`gbl-vc-git-log-remove-comment'."
   (interactive)
-  (prot-vc-git-log-remove-comment)
+  (gbl-vc-git-log-remove-comment)
   (log-edit-done)
-  (run-hooks 'prot-vc-git-log-edit-done-hook))
+  (run-hooks 'gbl-vc-git-log-edit-done-hook))
 
-(defface prot-vc-git-log-edit-file-name
+(defface gbl-vc-git-log-edit-file-name
   '((default :inherit font-lock-comment-face)
     (((class color) (min-colors 88) (background light))
      :foreground "#2a486a")
@@ -854,7 +854,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (t :foreground "cyan"))
   "Face for file names in VC Git Log Edit buffers.")
 
-(defface prot-vc-git-log-edit-local-branch-name
+(defface gbl-vc-git-log-edit-local-branch-name
   '((default :inherit font-lock-comment-face)
     (((class color) (min-colors 88) (background light))
      :foreground "#0031a9")
@@ -863,7 +863,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (t :foreground "blue"))
   "Face for local branch name in VC Git Log Edit buffers.")
 
-(defface prot-vc-git-log-edit-remote-branch-name
+(defface gbl-vc-git-log-edit-remote-branch-name
   '((default :inherit font-lock-comment-face)
     (((class color) (min-colors 88) (background light))
      :foreground "#55348e")
@@ -872,20 +872,20 @@ This is a thin wrapper around `log-edit-done', which first calls
     (t :foreground "magenta"))
   "Face for remote branch name in VC Git Log Edit buffers.")
 
-(defconst prot-vc-git-log-edit-font-lock
+(defconst gbl-vc-git-log-edit-font-lock
   '(("^#.*"
      (0 'font-lock-comment-face))
     ("^#.*`\\(.+?\\)'.*`\\(.+?\\)'"
-     (1 'prot-vc-git-log-edit-local-branch-name t)
-     (2 'prot-vc-git-log-edit-remote-branch-name t))
+     (1 'gbl-vc-git-log-edit-local-branch-name t)
+     (2 'gbl-vc-git-log-edit-remote-branch-name t))
     ("^#[\s\t][\s\t]+\\(.+\\)"
-     (1 'prot-vc-git-log-edit-file-name t)))
+     (1 'gbl-vc-git-log-edit-file-name t)))
   "Fontification rules for Log Edit buffers.")
 
-(defun prot-vc-git-log-edit-extra-keywords ()
-  "Apply `prot-vc-git-log-edit-font-lock' to Log Edit buffers."
+(defun gbl-vc-git-log-edit-extra-keywords ()
+  "Apply `gbl-vc-git-log-edit-font-lock' to Log Edit buffers."
   (font-lock-flush (point-min) (point-max))
-  (font-lock-add-keywords nil prot-vc-git-log-edit-font-lock nil))
+  (font-lock-add-keywords nil gbl-vc-git-log-edit-font-lock nil))
 
 (autoload 'vc-git-log-view-mode "vc-git")
 (autoload 'vc-git-checkin "vc-git")
@@ -897,7 +897,7 @@ This is a thin wrapper around `log-edit-done', which first calls
 (defvar vc-git-log-edit-mode-map)
 
 ;;;###autoload
-(define-minor-mode prot-vc-git-setup-mode
+(define-minor-mode gbl-vc-git-setup-mode
   "Extend `vc-git' Log View and Log Edit buffers.
 
 Tweak the format of expanded commit messages in Log View buffers.  The
@@ -912,14 +912,14 @@ or its termination by means of `log-edit-kill-buffer'.
 
 Append a comment block to the Log Edit buffer with information about the
 files being committed and the branch they are a part of.  When
-`prot-vc-git-log-edit-show-commits' is non-nil, also include a commit
+`gbl-vc-git-log-edit-show-commits' is non-nil, also include a commit
 log.  The number of commits in that log is controlled by
-`prot-vc-git-log-edit-show-commit-count'.
+`gbl-vc-git-log-edit-show-commit-count'.
 
-For Log Edit buffers, bind C-c C-c to `prot-vc-git-log-edit-done' which
+For Log Edit buffers, bind C-c C-c to `gbl-vc-git-log-edit-done' which
 is designed to remove the comment block before checking in the changes.
-Rebind other keys in the same vein.  `prot-vc-git-log-edit-done' calls
-the normal hook `prot-vc-git-log-edit-done-hook' which is used to
+Rebind other keys in the same vein.  `gbl-vc-git-log-edit-done' calls
+the normal hook `gbl-vc-git-log-edit-done-hook' which is used to
 restore the window layout.
 
 Set up font-lock directives to make the aforementioned block look like a
@@ -927,41 +927,41 @@ comment in Log Edit buffers.  Also highlight file and branch names
 inside the comment block."
   :init-value nil
   :global t
-  (if prot-vc-git-setup-mode
+  (if gbl-vc-git-setup-mode
       (progn
         ;; Log view expanded commits
-        (advice-add #'vc-git-log-view-mode :after #'prot-vc-git-log-view-add-hook)
-        (add-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)
+        (advice-add #'vc-git-log-view-mode :after #'gbl-vc-git-log-view-add-hook)
+        (add-hook 'gbl-vc-git-log-view-mode-hook #'gbl-vc-git-expand-function)
         ;; Append comment block in Log edit showing branch and files.
         ;; This means that we no longer need the files' window to pop up
         ;; automatically
-        (add-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
+        (add-hook 'log-edit-hook #'gbl-vc-git-log-edit-comment)
         (remove-hook 'log-edit-hook #'log-edit-show-files)
         ;; Window configuration with just the commit and the diff
         ;; (restores previous state after finalising or aborting the
         ;; commit).
-        (advice-add #'vc-start-logentry :before #'prot-vc-git-pre-log-edit)
-        (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-        (advice-add #'log-edit-remember-comment :around #'prot-vc-git-log-edit-remember-comment)
+        (advice-add #'vc-start-logentry :before #'gbl-vc-git-pre-log-edit)
+        (add-hook 'gbl-vc-git-pre-log-edit-hook #'gbl-vc--store-window-configuration)
+        (advice-add #'log-edit-remember-comment :around #'gbl-vc-git-log-edit-remember-comment)
         (let ((map vc-git-log-edit-mode-map))
-          (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-          (define-key map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
-          (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
-          (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
-          (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
-          (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
-        (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
-        (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
-        (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
+          (define-key map (kbd "C-c C-c") #'gbl-vc-git-log-edit-done)
+          (define-key map (kbd "C-c C-e") #'gbl-vc-git-log-edit-toggle-amend)
+          (define-key map (kbd "M-p") #'gbl-vc-git-log-edit-previous-comment)
+          (define-key map (kbd "M-n") #'gbl-vc-git-log-edit-next-comment)
+          (define-key map (kbd "M-s") #'gbl-vc-git-log-edit-complete-comment)
+          (define-key map (kbd "M-r") #'gbl-vc-git-log-edit-complete-comment))
+        (add-hook 'log-edit-mode-hook #'gbl-vc--kill-log-edit)
+        (add-hook 'gbl-vc-git-log-edit-done-hook #'gbl-vc--log-edit-restore-window-configuration)
+        (add-hook 'log-edit-hook #'gbl-vc--log-edit-diff-window-configuration)
         ;; Extra font lock rules for Log Edit comment block
-        (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
-    (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
-    (remove-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)
-    (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
+        (add-hook 'log-edit-hook #'gbl-vc-git-log-edit-extra-keywords))
+    (advice-remove #'vc-git-log-view-mode #'gbl-vc-git-log-view-add-hook)
+    (remove-hook 'gbl-vc-git-log-view-mode-hook #'gbl-vc-git-expand-function)
+    (remove-hook 'log-edit-hook #'gbl-vc-git-log-edit-comment)
     (add-hook 'log-edit-hook #'log-edit-show-files)
-    (advice-remove #'vc-start-logentry #'prot-vc-git-pre-log-edit)
-    (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-    (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-edit-remember-comment)
+    (advice-remove #'vc-start-logentry #'gbl-vc-git-pre-log-edit)
+    (remove-hook 'gbl-vc-git-pre-log-edit-hook #'gbl-vc--store-window-configuration)
+    (advice-remove #'log-edit-remember-comment #'gbl-vc-git-log-edit-remember-comment)
     (let ((map vc-git-log-edit-mode-map))
       (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
       (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
@@ -969,10 +969,10 @@ inside the comment block."
       (define-key map (kbd "M-n") #'log-edit-next-comment)
       (define-key map (kbd "M-s") #'log-edit-comment-search-forward)
       (define-key map (kbd "M-r") #'log-edit-comment-search-backward))
-    (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
-    (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords)))
+    (remove-hook 'log-edit-mode-hook #'gbl-vc--kill-log-edit)
+    (remove-hook 'gbl-vc-git-log-edit-done-hook #'gbl-vc--log-edit-restore-window-configuration)
+    (remove-hook 'log-edit-hook #'gbl-vc--log-edit-diff-window-configuration)
+    (remove-hook 'log-edit-hook #'gbl-vc-git-log-edit-extra-keywords)))
 
-(provide 'prot-vc)
-;;; prot-vc.el ends here
+(provide 'gbl-vc)
+;;; gbl-vc.el ends here

@@ -1,4 +1,4 @@
-;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
+;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and gbl-eww.el
 (use-package browse-url
   :ensure nil
   :config
@@ -12,7 +12,7 @@
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
   (setq shr-image-animate nil)          ; No GIFs, thank you!
-  (setq shr-width nil)                  ; check `prot-eww-readable'
+  (setq shr-width nil)                  ; check `gbl-eww-readable'
   (setq shr-discard-aria-hidden t)
   (setq shr-cookie-policy nil))
 
@@ -59,34 +59,34 @@
 
 (use-package elpher)    ; NOTE 2021-07-24: work-in-progress
 
-(use-package prot-eww
+(use-package gbl-eww
   :ensure nil
   :config
-  (setq prot-eww-save-history-file
-        (locate-user-emacs-file "prot-eww-visited-history"))
-  (setq prot-eww-save-visited-history t)
-  (setq prot-eww-bookmark-link nil)
+  (setq gbl-eww-save-history-file
+        (locate-user-emacs-file "gbl-eww-visited-history"))
+  (setq gbl-eww-save-visited-history t)
+  (setq gbl-eww-bookmark-link nil)
 
-  (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
+  (add-hook 'gbl-eww-history-mode-hook #'hl-line-mode)
 
-  (define-prefix-command 'prot-eww-map)
-  (define-key global-map (kbd "C-c w") 'prot-eww-map)
-  (let ((map prot-eww-map))
-    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
-    (define-key map (kbd "e") #'prot-eww-browse-dwim)
-    (define-key map (kbd "s") #'prot-eww-search-engine))
+  (define-prefix-command 'gbl-eww-map)
+  (define-key global-map (kbd "C-c w") 'gbl-eww-map)
+  (let ((map gbl-eww-map))
+    (define-key map (kbd "b") #'gbl-eww-visit-bookmark)
+    (define-key map (kbd "e") #'gbl-eww-browse-dwim)
+    (define-key map (kbd "s") #'gbl-eww-search-engine))
   (let ((map eww-mode-map))
-    (define-key map (kbd "B") #'prot-eww-bookmark-page)
-    (define-key map (kbd "D") #'prot-eww-download-html)
-    (define-key map (kbd "F") #'prot-eww-find-feed)
-    (define-key map (kbd "H") #'prot-eww-list-history)
-    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
-    (define-key map (kbd "e") #'prot-eww-browse-dwim)
-    (define-key map (kbd "o") #'prot-eww-open-in-other-window)
-    (define-key map (kbd "E") #'prot-eww-visit-url-on-page)
-    (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
-    (define-key map (kbd "R") #'prot-eww-readable)
-    (define-key map (kbd "Q") #'prot-eww-quit)))
+    (define-key map (kbd "B") #'gbl-eww-bookmark-page)
+    (define-key map (kbd "D") #'gbl-eww-download-html)
+    (define-key map (kbd "F") #'gbl-eww-find-feed)
+    (define-key map (kbd "H") #'gbl-eww-list-history)
+    (define-key map (kbd "b") #'gbl-eww-visit-bookmark)
+    (define-key map (kbd "e") #'gbl-eww-browse-dwim)
+    (define-key map (kbd "o") #'gbl-eww-open-in-other-window)
+    (define-key map (kbd "E") #'gbl-eww-visit-url-on-page)
+    (define-key map (kbd "J") #'gbl-eww-jump-to-url-on-page)
+    (define-key map (kbd "R") #'gbl-eww-readable)
+    (define-key map (kbd "Q") #'gbl-eww-quit)))
 
 ;;; Elfeed feed/RSS reader
 (use-package elfeed
@@ -119,17 +119,17 @@
     (define-key map (kbd "w") #'elfeed-show-yank)))
 
 (with-eval-after-load 'elfeed
-  (use-package prot-elfeed
+  (use-package gbl-elfeed
 	:ensure nil
 	:config
-    (setq prot-elfeed-tag-faces t)
-    (prot-elfeed-fontify-tags)
-    (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
+    (setq gbl-elfeed-tag-faces t)
+    (gbl-elfeed-fontify-tags)
+    (add-hook 'elfeed-search-mode-hook #'gbl-elfeed-load-feeds)
 
     (let ((map elfeed-search-mode-map))
-      (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
-    (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
+      (define-key map (kbd "s") #'gbl-elfeed-search-tag-filter)
+      (define-key map (kbd "+") #'gbl-elfeed-toggle-tag))
+    (define-key elfeed-show-mode-map (kbd "+") #'gbl-elfeed-toggle-tag)))
 
 ;;; Elfeed extensions for watching videos (elfeed-tube)
 (use-package elfeed-tube
@@ -164,7 +164,7 @@
         `(("irc.libera.chat"
            :channels ("#emacs" "#org-mode" "#rcirc" "#sr.ht")
            :port 6697 :encryption tls
-           :password ,(prot-mail-auth-get-field "libera" :secret))))
+           :password ,(gbl-mail-auth-get-field "libera" :secret))))
 
   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
 

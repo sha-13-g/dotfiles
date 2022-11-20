@@ -1,4 +1,4 @@
-;;; prot-recentf.el --- Extensions to recentf.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-recentf.el --- Extensions to recentf.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -35,46 +35,46 @@
 ;;; Code:
 
 (require 'recentf)
-(require 'prot-common)
+(require 'gbl-common)
 
 ;;;###autoload
-(defun prot-recentf-keep-predicate (file)
+(defun gbl-recentf-keep-predicate (file)
   "Additional conditions for saving FILE in `recentf-list'.
 Add this function to `recentf-keep'."
   (cond
    ((file-directory-p file) (file-readable-p file))))
 
-(defvar prot-recentf--history-files '()
-  "Minibuffer history for prot-recentf files.")
+(defvar gbl-recentf--history-files '()
+  "Minibuffer history for gbl-recentf files.")
 
-(defvar prot-recentf--history-dirs '()
-  "Minibuffer history for prot-recentf directories.")
+(defvar gbl-recentf--history-dirs '()
+  "Minibuffer history for gbl-recentf directories.")
 
-(defun prot-recentf--files ()
+(defun gbl-recentf--files ()
   "Return completion table with files in `recentf-list'."
-  (prot-common-completion-table
+  (gbl-common-completion-table
    'file
    (mapcar 'abbreviate-file-name recentf-list)))
 
-(defun prot-recentf--files-prompt (files)
-  "Helper of `prot-recentf-recent-files' to read FILES."
-  (let ((def (car prot-recentf--history-files)))
+(defun gbl-recentf--files-prompt (files)
+  "Helper of `gbl-recentf-recent-files' to read FILES."
+  (let ((def (car gbl-recentf--history-files)))
     (completing-read
      (format "Recentf [%s]: " def)
-     files nil t nil 'prot-recentf--history-files def)))
+     files nil t nil 'gbl-recentf--history-files def)))
 
 ;;;###autoload
-(defun prot-recentf-recent-files (file)
+(defun gbl-recentf-recent-files (file)
   "Select FILE from `recentf-list' using completion."
   (interactive
-   (list (prot-recentf--files-prompt (prot-recentf--files))))
+   (list (gbl-recentf--files-prompt (gbl-recentf--files))))
   (find-file file)
-  (add-to-history 'prot-recentf--history-files file))
+  (add-to-history 'gbl-recentf--history-files file))
 
-(defun prot-recentf--dirs ()
+(defun gbl-recentf--dirs ()
   "Return completion table with directories in `recentf-list'."
   (let ((list (mapcar 'abbreviate-file-name recentf-list)))
-    (prot-common-completion-table
+    (gbl-common-completion-table
      'file
      (delete-dups
       (mapcar (lambda (file)
@@ -83,28 +83,28 @@ Add this function to `recentf-keep'."
                   (substring (file-name-directory file) 0 -1)))
               list)))))
 
-(defun prot-recentf--dirs-prompt (dirs)
-  "Helper of `prot-recentf-recent-dirs' to read DIRS."
-  (let ((def (car prot-recentf--history-dirs)))
+(defun gbl-recentf--dirs-prompt (dirs)
+  "Helper of `gbl-recentf-recent-dirs' to read DIRS."
+  (let ((def (car gbl-recentf--history-dirs)))
     (completing-read
      (format "Recent dir [%s]: " def)
-     dirs nil t nil 'prot-recentf--history-dirs def)))
+     dirs nil t nil 'gbl-recentf--history-dirs def)))
 
 ;;;###autoload
-(defun prot-recentf-recent-dirs (dir)
+(defun gbl-recentf-recent-dirs (dir)
   "Select DIR from `recentf-list' using completion."
   (interactive
-   (list (prot-recentf--dirs-prompt (prot-recentf--dirs))))
+   (list (gbl-recentf--dirs-prompt (gbl-recentf--dirs))))
   (find-file dir)
-  (add-to-history 'prot-recentf--history-dirs dir))
+  (add-to-history 'gbl-recentf--history-dirs dir))
 
 ;;;###autoload
-(defun prot-recentf-recent-files-or-dirs (&optional arg)
+(defun gbl-recentf-recent-files-or-dirs (&optional arg)
   "Select recent file or, with ARG, recent directory."
   (interactive "P")
   (if arg
-      (call-interactively 'prot-recentf-recent-dirs)
-    (call-interactively 'prot-recentf-recent-files)))
+      (call-interactively 'gbl-recentf-recent-dirs)
+    (call-interactively 'gbl-recentf-recent-files)))
 
-(provide 'prot-recentf)
-;;; prot-recentf.el ends here
+(provide 'gbl-recentf)
+;;; gbl-recentf.el ends here

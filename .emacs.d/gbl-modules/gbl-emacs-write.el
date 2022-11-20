@@ -12,7 +12,7 @@
 
     ;; I normally don't use those as I usually move around with my
     ;; `logos' package.  Otherwise I use Consult's outline/imenu
-    ;; commands or `prot-search-occur-outline'.
+    ;; commands or `gbl-search-occur-outline'.
     (define-key map (kbd "C-c C-n") #'outline-next-visible-heading)
     (define-key map (kbd "C-c C-p") #'outline-previous-visible-heading)
     (define-key map (kbd "C-c C-f") #'outline-forward-same-level)

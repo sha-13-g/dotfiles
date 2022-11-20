@@ -1,4 +1,4 @@
-;;; Client-agnostic email settings (and prot-mail.el)
+;;; Client-agnostic email settings (and gbl-mail.el)
 (use-package auth-source
   :ensure nil
   :config
@@ -61,17 +61,17 @@
   :config
   (add-hook 'dired-mode-hook #'gnus-dired-mode))
 
-(use-package prot-mail
+(use-package gbl-mail
   :ensure nil
   :config
   ;; NOTE 2021-05-14: This is a generic indicator for new mail in the
   ;; maildir.  As I now use notmuch (see relevant section in this
-  ;; document) I have an alternative approach in prot-notmuch.el.
-  (setq prot-mail-maildir-path-regexp "~/.mail/*/Inbox/new/") ; shell regexp
-  (setq prot-mail-mode-line-indicator-commands
+  ;; document) I have an alternative approach in gbl-notmuch.el.
+  (setq gbl-mail-maildir-path-regexp "~/.mail/*/Inbox/new/") ; shell regexp
+  (setq gbl-mail-mode-line-indicator-commands
         '(notmuch-refresh-this-buffer))
   ;; mode line indicator with the number of new mails
-  (prot-mail-mail-indicator -1))
+  (gbl-mail-mail-indicator -1))
 
 ;;; Notmuch (mail indexer and mail user agent (MUA))
 ;; I install notmuch from the distro's repos because the CLI program is
@@ -83,9 +83,9 @@
   :config
 
 ;;; Account settings
-  (let ((prv (prot-mail-auth-get-field "prv" :user))
-        (pub (prot-mail-auth-get-field "pub" :user))
-        (inf (prot-mail-auth-get-field "inf" :user)))
+  (let ((prv (gbl-mail-auth-get-field "prv" :user))
+        (pub (gbl-mail-auth-get-field "pub" :user))
+        (inf (gbl-mail-auth-get-field "inf" :user)))
     (setq notmuch-identities
           (mapcar (lambda (str)
                     (format "%s <%s>" user-full-name str))
@@ -184,7 +184,7 @@
   (setq notmuch-draft-tags '("+draft"))
   (setq notmuch-draft-folder "drafts")
   (setq notmuch-draft-save-plaintext 'ask)
-  ;; ;; NOTE 2021-06-18: See an updated version in the `prot-notmuch'
+  ;; ;; NOTE 2021-06-18: See an updated version in the `gbl-notmuch'
   ;; ;; section below.
   ;; (setq notmuch-tagging-keys
   ;;       `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
@@ -252,7 +252,7 @@
     (define-key map (kbd "R") #'notmuch-show-reply-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
-(use-package prot-notmuch
+(use-package gbl-notmuch
   :ensure nil
   :config
   ;; Those are for the actions that are available after pressing 'k'
@@ -260,61 +260,61 @@
   ;; bindings below.
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "c") prot-notmuch-mark-complete-tags "Complete and archive")
-          (,(kbd "d") prot-notmuch-mark-delete-tags "Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "Flag as important")
-          (,(kbd "s") prot-notmuch-mark-spam-tags "Mark as spam")
-          (,(kbd "t") prot-notmuch-mark-todo-tags "To-do")
-          (,(kbd "x") prot-notmuch-mark-reference-tags "Reference for the future")
+          (,(kbd "c") gbl-notmuch-mark-complete-tags "Complete and archive")
+          (,(kbd "d") gbl-notmuch-mark-delete-tags "Mark for deletion")
+          (,(kbd "f") gbl-notmuch-mark-flag-tags "Flag as important")
+          (,(kbd "s") gbl-notmuch-mark-spam-tags "Mark as spam")
+          (,(kbd "t") gbl-notmuch-mark-todo-tags "To-do")
+          (,(kbd "x") gbl-notmuch-mark-reference-tags "Reference for the future")
           (,(kbd "r") ("-unread") "Mark as read")
           (,(kbd "u") ("+unread") "Mark as unread")))
 
   (add-to-list 'notmuch-tag-formats
-               '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
+               '("encrypted" (propertize tag 'face 'gbl-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("sent" (propertize tag 'face 'prot-notmuch-sent-tag)))
+               '("sent" (propertize tag 'face 'gbl-notmuch-sent-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("ref" (propertize tag 'face 'prot-notmuch-ref-tag)))
+               '("ref" (propertize tag 'face 'gbl-notmuch-ref-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
+               '("todo" (propertize tag 'face 'gbl-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("spam" (propertize tag 'face 'prot-notmuch-spam-tag)))
+               '("spam" (propertize tag 'face 'gbl-notmuch-spam-tag)))
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat
-  ;; simplistic, though it worked just fine: see prot-mail.el.  I prefer
+  ;; simplistic, though it worked just fine: see gbl-mail.el.  I prefer
   ;; this implementation instead, as it leverages notmuch and so I can
   ;; pass arbitrary search terms to it.
-  (setq prot-notmuch-mode-line-count-args "tag:unread and tag:inbox")
-  (setq prot-notmuch-mode-line-indicator-commands
+  (setq gbl-notmuch-mode-line-count-args "tag:unread and tag:inbox")
+  (setq gbl-notmuch-mode-line-indicator-commands
         '(notmuch notmuch-refresh-this-buffer))
   ;; Mode line indicator with the number of new mails.
-  (prot-notmuch-mail-indicator 1)
+  (gbl-notmuch-mail-indicator 1)
 
-  (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
-                prot-notmuch-ask-sourcehut-control-code))
+  (dolist (fn '(gbl-notmuch-check-valid-sourcehut-email
+                gbl-notmuch-ask-sourcehut-control-code))
     (add-hook 'notmuch-mua-send-hook fn))
 
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-search-archive-thread)
-    (define-key map (kbd "D") #'prot-notmuch-search-delete-thread)
-    (define-key map (kbd "T") #'prot-notmuch-search-todo-thread)
-    (define-key map (kbd "X") #'prot-notmuch-search-reference-thread)
-    (define-key map (kbd "C") #'prot-notmuch-search-complete-thread)
-    (define-key map (kbd "S") #'prot-notmuch-search-spam-thread)
-    (define-key map (kbd "g") #'prot-notmuch-refresh-buffer))
+    (define-key map (kbd "D") #'gbl-notmuch-search-delete-thread)
+    (define-key map (kbd "T") #'gbl-notmuch-search-todo-thread)
+    (define-key map (kbd "X") #'gbl-notmuch-search-reference-thread)
+    (define-key map (kbd "C") #'gbl-notmuch-search-complete-thread)
+    (define-key map (kbd "S") #'gbl-notmuch-search-spam-thread)
+    (define-key map (kbd "g") #'gbl-notmuch-refresh-buffer))
   (let ((map notmuch-show-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-show-archive-message-then-next-or-next-thread)
-    (define-key map (kbd "D") #'prot-notmuch-show-delete-message)
-    (define-key map (kbd "T") #'prot-notmuch-show-todo-message)
-    (define-key map (kbd "X") #'prot-notmuch-show-reference-message)
-    (define-key map (kbd "C") #'prot-notmuch-show-complete-message)
-    (define-key map (kbd "S") #'prot-notmuch-show-spam-message))
-  (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
+    (define-key map (kbd "D") #'gbl-notmuch-show-delete-message)
+    (define-key map (kbd "T") #'gbl-notmuch-show-todo-message)
+    (define-key map (kbd "X") #'gbl-notmuch-show-reference-message)
+    (define-key map (kbd "C") #'gbl-notmuch-show-complete-message)
+    (define-key map (kbd "S") #'gbl-notmuch-show-spam-message))
+  (define-key notmuch-show-stash-map (kbd "S") #'gbl-notmuch-stash-sourcehut-link)
   ;; Like C-c M-h for `message-insert-headers'
-  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
+  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'gbl-notmuch-patch-add-email-control-code))
 
 (use-package ol-notmuch)
 
@@ -365,8 +365,8 @@
   (setq ebdb-user-name-address-re 'self) ; match the above
   (setq ebdb-save-on-exit t)
 
-  (with-eval-after-load 'prot-mail ; check my `prot-mail.el'
-    (add-hook 'message-setup-hook #'prot-mail-ebdb-message-setup))
+  (with-eval-after-load 'gbl-mail ; check my `gbl-mail.el'
+    (add-hook 'message-setup-hook #'gbl-mail-ebdb-message-setup))
 
   (let ((map ebdb-mode-map))
     (define-key map (kbd "D") #'ebdb-delete-field-or-record)

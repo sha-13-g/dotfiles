@@ -6,7 +6,7 @@
 
 ;; Read their manual with Emacs' Info reader, or visit:
 ;; <https://protesilaos.com/emacs/modus-themes>.
-(prot-emacs-elpa-package 'modus-themes
+(gbl-emacs-elpa-package 'modus-themes
   ;; Add all your customizations prior to loading the themes
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various

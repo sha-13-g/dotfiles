@@ -1,4 +1,4 @@
-;;; prot-simple.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-simple.el --- Common commands for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -35,14 +35,14 @@
 
 (eval-when-compile
   (require 'cl-lib))
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-simple ()
+(defgroup gbl-simple ()
   "Generic utilities for my dotemacs."
   :group 'editing)
 
 ;; Got those numbers from `string-to-char'
-(defcustom prot-simple-insert-pair-alist
+(defcustom gbl-simple-insert-pair-alist
   '(("' Single quote"        . (39 39))     ; ' '
     ("\" Double quotes"      . (34 34))     ; " "
     ("` Elisp quote"         . (96 39))     ; ` '
@@ -58,37 +58,37 @@
     ("* Asterisks"           . (42 42))     ; * *
     ("/ Forward Slash"       . (47 47))     ; / /
     ("_ underscores"         . (95 95)))    ; _ _
-  "Alist of pairs for use with `prot-simple-insert-pair-completion'."
+  "Alist of pairs for use with `gbl-simple-insert-pair-completion'."
   :type 'alist
-  :group 'prot-simple)
+  :group 'gbl-simple)
 
-(defcustom prot-simple-date-specifier "%F"
+(defcustom gbl-simple-date-specifier "%F"
   "Date specifier for `format-time-string'.
-Used by `prot-simple-inset-date'."
+Used by `gbl-simple-inset-date'."
   :type 'string
-  :group 'prot-simple)
+  :group 'gbl-simple)
 
-(defcustom prot-simple-time-specifier "%R %z"
+(defcustom gbl-simple-time-specifier "%R %z"
   "Time specifier for `format-time-string'.
-Used by `prot-simple-inset-date'."
+Used by `gbl-simple-inset-date'."
   :type 'string
-  :group 'prot-simple)
+  :group 'gbl-simple)
 
-(defcustom prot-simple-focusable-help-commands
+(defcustom gbl-simple-focusable-help-commands
   '( describe-symbol describe-function
      describe-variable describe-key
      view-lossage)
   "Commands whose buffers should be focused when displayed.
 This makes it easier to dismiss them at once.
 
-Also see `prot-simple-focus-help-buffers'."
+Also see `gbl-simple-focus-help-buffers'."
   :type '(repeat symbol)
-  :group 'prot-simple)
+  :group 'gbl-simple)
 
-(defcustom prot-simple-scratch-buffer-default-mode 'markdown-mode
-  "Default major mode for `prot-simple-scratch-buffer'."
+(defcustom gbl-simple-scratch-buffer-default-mode 'markdown-mode
+  "Default major mode for `gbl-simple-scratch-buffer'."
   :type 'symbol
-  :group 'prot-simple)
+  :group 'gbl-simple)
 
 ;;; Generic setup
 
@@ -96,7 +96,7 @@ Also see `prot-simple-focus-help-buffers'."
 ;; The idea is based on the `scratch.el' package by Ian Eure:
 ;; <https://github.com/ieure/scratch-el>.
 
-(defun prot-simple--scratch-list-modes ()
+(defun gbl-simple--scratch-list-modes ()
   "List known major modes."
   (cl-loop for sym the symbols of obarray
            when (and (functionp sym)
@@ -104,7 +104,7 @@ Also see `prot-simple-focus-help-buffers'."
                          (provided-mode-derived-p sym 'prog-mode)))
            collect sym))
 
-(defun prot-simple--scratch-buffer-setup (region &optional mode)
+(defun gbl-simple--scratch-buffer-setup (region &optional mode)
   "Add contents to `scratch' buffer and name it accordingly.
 
 REGION is added to the contents to the new buffer.
@@ -117,7 +117,7 @@ MODE use that major mode instead."
          (buf (format "*%s scratch*" major)))
     (with-current-buffer (pop-to-buffer buf)
       (funcall major)
-      (if (prot-common-empty-buffer-p)
+      (if (gbl-common-empty-buffer-p)
           ;; We could use `save-restriction' for narrowed buffers, but
           ;; it is overkill.
           (progn
@@ -126,16 +126,16 @@ MODE use that major mode instead."
             (comment-region (point-at-bol) (point-at-eol))
             (goto-char (point-max)))
         (goto-char (point-max))
-        (when (prot-common-line-regexp-p 'non-empty)
+        (when (gbl-common-line-regexp-p 'non-empty)
           (insert "\n\n"))
         (insert region)))))
 
 ;;;###autoload
-(defun prot-simple-scratch-buffer (&optional arg)
+(defun gbl-simple-scratch-buffer (&optional arg)
   "Produce a scratch buffer matching the current major mode.
 
 With optional ARG as a prefix argument (\\[universal-argument]),
-use `prot-simple-scratch-buffer-default-mode'.
+use `gbl-simple-scratch-buffer-default-mode'.
 
 With ARG as a double prefix argument, prompt for a major mode
 with completion.  Candidates are derivatives of `text-mode' or
@@ -147,8 +147,8 @@ buffer.
 Buffers are named as *MAJOR-MODE scratch*.  If one already exists
 for the given MAJOR-MODE, any text is appended to it."
   (interactive "P")
-  (let* ((default-mode prot-simple-scratch-buffer-default-mode)
-         (modes (prot-simple--scratch-list-modes))
+  (let* ((default-mode gbl-simple-scratch-buffer-default-mode)
+         (modes (gbl-simple--scratch-list-modes))
          (region (with-current-buffer (current-buffer)
                    (if (region-active-p)
                        (buffer-substring-no-properties
@@ -159,9 +159,9 @@ for the given MAJOR-MODE, any text is appended to it."
     (pcase (prefix-numeric-value arg)
       (16 (progn
             (setq mode (intern (completing-read "Select major mode: " modes nil t)))
-            (prot-simple--scratch-buffer-setup region mode)))
-      (4 (prot-simple--scratch-buffer-setup region default-mode))
-      (_ (prot-simple--scratch-buffer-setup region)))))
+            (gbl-simple--scratch-buffer-setup region mode)))
+      (4 (gbl-simple--scratch-buffer-setup region default-mode))
+      (_ (gbl-simple--scratch-buffer-setup region)))))
 
 ;;; Commands
 
@@ -170,7 +170,7 @@ for the given MAJOR-MODE, any text is appended to it."
 (autoload 'symbol-at-point "thingatpt")
 
 ;;;###autoload
-(defun prot-simple-describe-symbol ()
+(defun gbl-simple-describe-symbol ()
   "Run `describe-symbol' for the `symbol-at-point'."
   (interactive)
   (describe-symbol (symbol-at-point)))
@@ -178,11 +178,11 @@ for the given MAJOR-MODE, any text is appended to it."
 ;;;; Commands for lines
 
 ;;;###autoload
-(defun prot-simple-new-line-below (&optional arg)
+(defun gbl-simple-new-line-below (&optional arg)
   "Create an empty line below the current one.
 Move the point to the absolute beginning.  Adapt indentation by
 passing optional prefix ARG (\\[universal-argument]).  Also see
-`prot-simple-new-line-above'."
+`gbl-simple-new-line-above'."
   (interactive "P")
   (end-of-line)
   (if arg
@@ -190,7 +190,7 @@ passing optional prefix ARG (\\[universal-argument]).  Also see
     (newline)))
 
 ;;;###autoload
-(defun prot-simple-new-line-above (&optional arg)
+(defun gbl-simple-new-line-above (&optional arg)
   "Create an empty line above the current one.
 Move the point to the absolute beginning.  Adapt indentation by
 passing optional prefix ARG (\\[universal-argument])."
@@ -203,10 +203,10 @@ passing optional prefix ARG (\\[universal-argument])."
           (newline)
           (forward-line -1))
       (forward-line -1)
-      (prot-simple-new-line-below indent))))
+      (gbl-simple-new-line-below indent))))
 
 ;;;###autoload
-(defun prot-simple-copy-line-or-region (&optional arg)
+(defun gbl-simple-copy-line-or-region (&optional arg)
   "Kill-save the current line or active region.
 With optional ARG (\\[universal-argument]) duplicate the target
 instead.  When region is active, also apply context-aware
@@ -225,7 +225,7 @@ indentation while duplicating."
           (let ((text (buffer-substring rbeg rend)))
             (when (eq (point) rbeg)
               (exchange-point-and-mark))
-            (prot-simple-new-line-below indent)
+            (gbl-simple-new-line-below indent)
             (insert text))
         (copy-region-as-kill rbeg rend)
         (message "Current region copied")))
@@ -239,7 +239,7 @@ indentation while duplicating."
         (message "Current line copied"))))))
 
 ;;;###autoload
-(defun prot-simple-yank-replace-line-or-region ()
+(defun gbl-simple-yank-replace-line-or-region ()
   "Replace line or region with latest kill.
 This command can then be followed by the standard
 `yank-pop' (default is bound to \\[yank-pop])."
@@ -250,42 +250,42 @@ This command can then be followed by the standard
   (yank))
 
 ;;;###autoload
-(defun prot-simple-multi-line-next ()
+(defun gbl-simple-multi-line-next ()
   "Move point 15 lines down."
   (interactive)
   (forward-line 15))
 
 ;;;###autoload
-(defun prot-simple-multi-line-prev ()
+(defun gbl-simple-multi-line-prev ()
   "Move point 15 lines up."
   (interactive)
   (forward-line -15))
 
 ;;;###autoload
-(defun prot-simple-kill-line-backward ()
+(defun gbl-simple-kill-line-backward ()
   "Kill from point to the beginning of the line."
   (interactive)
   (kill-line 0))
 
 ;;;; Commands for text insertion or manipulation
 
-(defvar prot-simple--character-hist '()
-  "History of inputs for `prot-simple-insert-pair-completion'.")
+(defvar gbl-simple--character-hist '()
+  "History of inputs for `gbl-simple-insert-pair-completion'.")
 
-(defun prot-simple--character-prompt (chars)
-  "Helper of `prot-simple-insert-pair-completion' to read CHARS."
-  (let ((def (car prot-simple--character-hist)))
+(defun gbl-simple--character-prompt (chars)
+  "Helper of `gbl-simple-insert-pair-completion' to read CHARS."
+  (let ((def (car gbl-simple--character-hist)))
     (completing-read
      (format "Select character [%s]: " def)
-     chars nil t nil 'prot-simple--character-hist def)))
+     chars nil t nil 'gbl-simple--character-hist def)))
 
 (define-obsolete-function-alias
-  'prot-simple-insert-pair-completion
-  'prot-simple-insert-pair "2021-07-30")
+  'gbl-simple-insert-pair-completion
+  'gbl-simple-insert-pair "2021-07-30")
 
 ;;;###autoload
-(defun prot-simple-insert-pair (pair &optional count)
-  "Insert PAIR from `prot-simple-insert-pair-alist'.
+(defun gbl-simple-insert-pair (pair &optional count)
+  "Insert PAIR from `gbl-simple-insert-pair-alist'.
 Operate on the symbol at point.  If the region is active, use it
 instead.
 
@@ -294,9 +294,9 @@ universal prefix argument (\\[universal-argument]) when used
 interactively) prompt for the number of delimiters to insert."
   (interactive
    (list
-    (prot-simple--character-prompt prot-simple-insert-pair-alist)
+    (gbl-simple--character-prompt gbl-simple-insert-pair-alist)
     current-prefix-arg))
-  (let* ((data prot-simple-insert-pair-alist)
+  (let* ((data gbl-simple-insert-pair-alist)
          (left (cadr (assoc pair data)))
          (right (caddr (assoc pair data)))
          (n (cond
@@ -326,7 +326,7 @@ interactively) prompt for the number of delimiters to insert."
         (insert left)))))
 
 ;;;###autoload
-(defun prot-simple-delete-pair-dwim ()
+(defun gbl-simple-delete-pair-dwim ()
   "Delete pair following or preceding point.
 For Emacs version 28 or higher, the feedback's delay is
 controlled by `delete-pair-blink-delay'."
@@ -336,17 +336,17 @@ controlled by `delete-pair-blink-delay'."
     (delete-pair 1)))
 
 ;;;###autoload
-(defun prot-simple-insert-date (&optional arg)
-  "Insert the current date as `prot-simple-date-specifier'.
+(defun gbl-simple-insert-date (&optional arg)
+  "Insert the current date as `gbl-simple-date-specifier'.
 
 With optional prefix ARG (\\[universal-argument]) also append the
-current time understood as `prot-simple-time-specifier'.
+current time understood as `gbl-simple-time-specifier'.
 
 When region is active, delete the highlighted text and replace it
 with the specified date."
   (interactive "P")
-  (let* ((date prot-simple-date-specifier)
-         (time prot-simple-time-specifier)
+  (let* ((date gbl-simple-date-specifier)
+         (time gbl-simple-time-specifier)
          (format (if arg (format "%s %s" date time) date)))
     (when (use-region-p)
       (delete-region (region-beginning) (region-end)))
@@ -356,7 +356,7 @@ with the specified date."
 (defvar ffap-string-at-point-region)
 
 ;;;###autoload
-(defun prot-simple-escape-url ()
+(defun gbl-simple-escape-url ()
   "Wrap URL (or email address) in angled brackets."
   (interactive)
   (when-let ((url (ffap-url-at-point)))
@@ -369,7 +369,7 @@ with the specified date."
       (delete-region beg end)
       (insert (format "<%s>" string)))))
 
-(defun prot-simple-zap-to-char-backward (char &optional arg)
+(defun gbl-simple-zap-to-char-backward (char &optional arg)
   "Backward `zap-to-char' for CHAR.
 Optional ARG is a numeric prefix to match ARGth occurence of
 CHAR."
@@ -381,7 +381,7 @@ CHAR."
 
 ;;;; Commands for object transposition
 
-(defmacro prot-simple-transpose (name scope &optional doc)
+(defmacro gbl-simple-transpose (name scope &optional doc)
   "Macro to produce transposition functions.
 NAME is the function's symbol.  SCOPE is the text object to
 operate on.  Optional DOC is the function's docstring.
@@ -396,28 +396,28 @@ mark (region beginning) with the one at point (region end)"
            (funcall (intern x) 0)
          (funcall (intern x) arg)))))
 
-(prot-simple-transpose
- prot-simple-transpose-lines
+(gbl-simple-transpose
+ gbl-simple-transpose-lines
  "lines"
  "Transpose lines or swap over active region.")
 
-(prot-simple-transpose
- prot-simple-transpose-paragraphs
+(gbl-simple-transpose
+ gbl-simple-transpose-paragraphs
  "paragraphs"
  "Transpose paragraphs or swap over active region.")
 
-(prot-simple-transpose
- prot-simple-transpose-sentences
+(gbl-simple-transpose
+ gbl-simple-transpose-sentences
  "sentences"
  "Transpose sentences or swap over active region.")
 
-(prot-simple-transpose
- prot-simple-transpose-sexps
+(gbl-simple-transpose
+ gbl-simple-transpose-sexps
  "sexps"
  "Transpose balanced expressions or swap over active region.")
 
 ;;;###autoload
-(defun prot-simple-transpose-chars ()
+(defun gbl-simple-transpose-chars ()
   "Always transposes the two characters before point.
 There is no 'dragging' the character forward.  This is the
 behaviour of `transpose-chars' when point is at the end of the
@@ -427,7 +427,7 @@ line."
   (forward-char))
 
 ;;;###autoload
-(defun prot-simple-transpose-words (arg)
+(defun gbl-simple-transpose-words (arg)
   "Transpose ARG words.
 
 If region is active, swap the word at mark (region beginning)
@@ -453,7 +453,7 @@ last/first two words)."
 
 ;;;; Commands for marking syntactic constructs
 
-(defmacro prot-simple-mark (name object &optional docstring)
+(defmacro gbl-simple-mark (name object &optional docstring)
   "Produce function for marking small syntactic constructs.
 NAME is how the function should be called.  OBJECT is its scope.
 Optional DOCSTRING describes the resulting function.
@@ -486,18 +486,18 @@ This is a slightly modified version of the built-in `mark-word'."
                    (point)))
                 (activate-mark)))))))
 
-(prot-simple-mark
- prot-simple-mark-word
+(gbl-simple-mark
+ gbl-simple-mark-word
  "word"
  "Mark the whole word at point.
 This function is a slightly modified version of the built-in
 `mark-word', that I intend to use only in special circumstances,
 such as when recording a keyboard macro where precision is
-required.  For a general purpose utility, use `prot-simple-mark-symbol'
+required.  For a general purpose utility, use `gbl-simple-mark-symbol'
 instead.")
 
-(prot-simple-mark
- prot-simple-mark-symbol
+(gbl-simple-mark
+ gbl-simple-mark-symbol
  "symbol"
  "Mark the whole symbol at point.
 With optional ARG, mark the current symbol and any remaining
@@ -509,7 +509,7 @@ In the absence of a symbol and if a word is present at point,
 this command will operate on it as described above.")
 
 ;;;###autoload
-(defun prot-simple-mark-sexp-backward (&optional arg)
+(defun gbl-simple-mark-sexp-backward (&optional arg)
   "Mark previous or ARGth balanced expression[s].
 Just a convenient backward-looking `mark-sexp'."
   (interactive "P")
@@ -518,10 +518,10 @@ Just a convenient backward-looking `mark-sexp'."
     (mark-sexp (- 1) t)))
 
 ;;;###autoload
-(defun prot-simple-mark-construct-dwim (&optional arg)
+(defun gbl-simple-mark-construct-dwim (&optional arg)
   "Mark symbol or balanced expression at point.
-A do-what-I-mean wrapper for `prot-simple-mark-sexp-backward',
-`mark-sexp', and `prot-simple-mark-symbol'.
+A do-what-I-mean wrapper for `gbl-simple-mark-sexp-backward',
+`mark-sexp', and `gbl-simple-mark-symbol'.
 
 When point is over a symbol, mark the entirety of it.  Regular
 words are interpreted as symbols when an actual symbol is not
@@ -536,23 +536,23 @@ the opening delimiter.
 Optional ARG will mark a total of ARGth objects while counting
 the current one (so 3 would be 1+2 more).  A negative count moves
 the mark backward (though that would invert the backward-moving
-sexp matching of `prot-simple-mark-sexp-backward', so be mindful of
+sexp matching of `gbl-simple-mark-sexp-backward', so be mindful of
 where the point is).  Repeated invocations of this command
 incrementally mark objects in the direction originally
 specified."
   (interactive "P")
   (cond
    ((symbol-at-point)
-    (prot-simple-mark-symbol arg t))
+    (gbl-simple-mark-symbol arg t))
    ((eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
-    (prot-simple-mark-sexp-backward arg))
+    (gbl-simple-mark-sexp-backward arg))
    (t
     (mark-sexp arg t))))
 
 ;;;; Commands for code navigation (work in progress)
 
 ;;;###autoload
-(defun prot-simple-downward-list (&optional arg)
+(defun gbl-simple-downward-list (&optional arg)
   "Like `backward-up-list' but defaults to a forward motion.
 With optional ARG, move that many times in the given
 direction (negative is forward due to this being a
@@ -563,7 +563,7 @@ direction (negative is forward due to this being a
 ;;;; Commands for paragraphs
 
 ;;;###autoload
-(defun prot-simple-unfill-region-or-paragraph (&optional beg end)
+(defun gbl-simple-unfill-region-or-paragraph (&optional beg end)
   "Unfill paragraph or, when active, the region.
 Join all lines in region delimited by BEG and END, if active,
 while respecting any empty lines (so multiple paragraphs are not
@@ -579,11 +579,11 @@ paragraph.  The idea is to produce the opposite effect of both
 ;;;; Commands for windows and pages
 
 ;;;###autoload
-(defun prot-simple-narrow-visible-window ()
+(defun gbl-simple-narrow-visible-window ()
   "Narrow buffer to wisible window area.
-Also check `prot-simple-narrow-dwim'."
+Also check `gbl-simple-narrow-dwim'."
   (interactive)
-  (let* ((bounds (prot-common-window-bounds))
+  (let* ((bounds (gbl-common-window-bounds))
          (window-area (- (cadr bounds) (car bounds)))
          (buffer-area (- (point-max) (point-min))))
     (if (/= buffer-area window-area)
@@ -591,12 +591,12 @@ Also check `prot-simple-narrow-dwim'."
       (user-error "Buffer fits in the window; won't narrow"))))
 
 ;;;###autoload
-(defun prot-simple-narrow-dwim ()
+(defun gbl-simple-narrow-dwim ()
   "Do-what-I-mean narrowing.
 If region is active, narrow the buffer to the region's
 boundaries.
 
-If pages are defined by virtue of `prot-common-page-p', narrow to
+If pages are defined by virtue of `gbl-common-page-p', narrow to
 the current page boundaries.
 
 If no region is active and no pages exist, narrow to the visible
@@ -610,13 +610,13 @@ If narrowing is in effect, widen the view."
    ((and (use-region-p)
          (null (buffer-narrowed-p)))
     (narrow-to-region (region-beginning) (region-end)))
-   ((prot-common-page-p)
+   ((gbl-common-page-p)
     (narrow-to-page))
    ((null (buffer-narrowed-p))
-    (prot-simple-narrow-visible-window))
+    (gbl-simple-narrow-visible-window))
    ((widen))))
 
-(defun prot-simple--narrow-to-page (count &optional back)
+(defun gbl-simple--narrow-to-page (count &optional back)
   "Narrow to COUNTth page with optional BACK motion."
   (if back
       (narrow-to-page (or (- count) -1))
@@ -625,31 +625,31 @@ If narrowing is in effect, widen the view."
   (goto-char (point-min)))
 
 ;;;###autoload
-(defun prot-simple-forward-page-dwim (&optional count)
+(defun gbl-simple-forward-page-dwim (&optional count)
   "Move to next or COUNTth page forward.
 If buffer is narrowed to the page, keep the effect while
 performing the motion.  Always move point to the beginning of the
 narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
-      (prot-simple--narrow-to-page count)
+      (gbl-simple--narrow-to-page count)
     (forward-page count)
     (setq this-command 'forward-page)))
 
 ;;;###autoload
-(defun prot-simple-backward-page-dwim (&optional count)
+(defun gbl-simple-backward-page-dwim (&optional count)
   "Move to previous or COUNTth page backward.
 If buffer is narrowed to the page, keep the effect while
 performing the motion.  Always move point to the beginning of the
 narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
-      (prot-simple--narrow-to-page count t)
+      (gbl-simple--narrow-to-page count t)
     (backward-page count)
     (setq this-command 'backward-page)))
 
 ;;;###autoload
-(defun prot-simple-delete-page-delimiters (&optional beg end)
+(defun gbl-simple-delete-page-delimiters (&optional beg end)
   "Delete lines with just page delimiters in the current buffer.
 When region is active, only operate on the region between BEG and
 END, representing the point and mark."
@@ -666,37 +666,37 @@ END, representing the point and mark."
 
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
-(defvar prot-simple--windows-current nil
+(defvar gbl-simple--windows-current nil
   "Current window configuration.")
 
 ;;;###autoload
-(define-minor-mode prot-simple-monocle
+(define-minor-mode gbl-simple-monocle
   "Toggle between multiple windows and single window.
 This is the equivalent of maximising a window.  Tiling window
 managers such as DWM, BSPWM refer to this state as 'monocle'."
   :lighter " -M-"
   :global nil
-  (let ((win prot-simple--windows-current))
+  (let ((win gbl-simple--windows-current))
     (if (one-window-p)
         (when win
           (set-window-configuration win))
-      (setq prot-simple--windows-current (current-window-configuration))
+      (setq gbl-simple--windows-current (current-window-configuration))
       (delete-other-windows))))
 
-(defun prot-simple--monocle-disable ()
-  "Set variable `prot-simple-monocle' to nil, when appropriate.
+(defun gbl-simple--monocle-disable ()
+  "Set variable `gbl-simple-monocle' to nil, when appropriate.
 To be hooked to `window-configuration-change-hook'."
-  (when (and prot-simple-monocle (not (one-window-p)))
+  (when (and gbl-simple-monocle (not (one-window-p)))
     (delete-other-windows)
-    (prot-simple-monocle -1)
-    (set-window-configuration prot-simple--windows-current)))
+    (gbl-simple-monocle -1)
+    (set-window-configuration gbl-simple--windows-current)))
 
-(add-hook 'window-configuration-change-hook #'prot-simple--monocle-disable)
+(add-hook 'window-configuration-change-hook #'gbl-simple--monocle-disable)
 
 ;;;; Commands for buffers
 
 ;;;###autoload
-(defun prot-simple-kill-buffer-current (&optional arg)
+(defun gbl-simple-kill-buffer-current (&optional arg)
   "Kill current buffer or abort recursion when in minibuffer.
 With optional prefix ARG (\\[universal-argument]) delete the
 buffer's window as well."
@@ -709,7 +709,7 @@ buffer's window as well."
     (delete-window)))
 
 ;;;###autoload
-(defun prot-simple-rename-file-and-buffer (name)
+(defun gbl-simple-rename-file-and-buffer (name)
   "Apply NAME to current file and rename its buffer.
 Do not try to make a new directory or anything fancy."
   (interactive
@@ -720,8 +720,8 @@ Do not try to make a new directory or anything fancy."
       (rename-file file name))
     (set-visited-file-name name t t)))
 
-(defun prot-simple--buffer-major-mode-prompt ()
-  "Prompt of `prot-simple-buffers-major-mode'."
+(defun gbl-simple--buffer-major-mode-prompt ()
+  "Prompt of `gbl-simple-buffers-major-mode'."
   (let ((major major-mode))
     (read-buffer
      (format "Buffer for %s: " major)
@@ -730,14 +730,14 @@ Do not try to make a new directory or anything fancy."
        (with-current-buffer (cdr pair) (derived-mode-p major))))))
 
 ;;;###autoload
-(defun prot-simple-buffers-major-mode (buffer)
+(defun gbl-simple-buffers-major-mode (buffer)
   "Select BUFFER matching the current one's major mode."
   (interactive
-   (list (prot-simple--buffer-major-mode-prompt)))
+   (list (gbl-simple--buffer-major-mode-prompt)))
   (switch-to-buffer buffer))
 
-(defun prot-simple--buffer-vc-root-prompt ()
-  "Prompt of `prot-simple-buffers-vc-root'."
+(defun gbl-simple--buffer-vc-root-prompt ()
+  "Prompt of `gbl-simple-buffers-vc-root'."
   (let ((root (or (vc-root-dir)
                    (locate-dominating-file "." ".git"))))
     (read-buffer
@@ -747,11 +747,11 @@ Do not try to make a new directory or anything fancy."
        (with-current-buffer (cdr pair) (string-match-p root default-directory))))))
 
 ;;;###autoload
-(defun prot-simple-buffers-vc-root (buffer)
+(defun gbl-simple-buffers-vc-root (buffer)
   "Select BUFFER matching the current one's VC root."
   (interactive
-   (list (prot-simple--buffer-vc-root-prompt)))
+   (list (gbl-simple--buffer-vc-root-prompt)))
   (switch-to-buffer buffer))
 
-(provide 'prot-simple)
-;;; prot-simple.el ends here
+(provide 'gbl-simple)
+;;; gbl-simple.el ends here

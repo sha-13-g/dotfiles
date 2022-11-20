@@ -1,4 +1,4 @@
-;;; Orderless completion style (and prot-orderless.el)
+;;; Orderless completion style (and gbl-orderless.el)
 (use-package company
   :hook (prog-mode . company-mode)
   :bind
@@ -54,11 +54,11 @@
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
          ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-         ("C-s" . consult-line)
-         ("C-\\" . consult-line-multi)
+         ;; ("C-s" . consult-line)
+         ("C-\\" . consult-line)
 
          :map isearch-mode-map
-         ("C-s" . consult-line)                  ;; needed by consult-line to detect isearch
+         ;; ("C-s" . consult-line)                  ;; needed by consult-line to detect isearch
          ("M-s l" . consult-line-multi)            ;; needed by consult-line to detect isearch
 
          :map minibuffer-local-map
@@ -173,7 +173,7 @@
   ;; ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-;;(use-package prot-orderless
+;;(use-package gbl-orderless
 ;;:ensure nil)
 ;;  (marginalia-mode 1))
 
@@ -289,7 +289,7 @@
 ;; commands.
 (use-package embark-consult)
 
-;;; Completion for recent files and directories (prot-recentf.el)
+;;; Completion for recent files and directories (gbl-recentf.el)
 (use-package recentf
   :ensure nil
   :config
@@ -298,12 +298,12 @@
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
   (add-hook 'after-init-hook #'recentf-mode))
 
-(use-package prot-recentf
+(use-package gbl-recentf
   :ensure nil
   :config
-  (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
+  (add-to-list 'recentf-keep 'gbl-recentf-keep-predicate)
   (let ((map global-map))
-    (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
+    (define-key map (kbd "C-x C-r") #'gbl-recentf-recent-files-or-dirs)))
 
 ;;; Corfu (in-buffer completion popup)
 ;; (use-package corfu

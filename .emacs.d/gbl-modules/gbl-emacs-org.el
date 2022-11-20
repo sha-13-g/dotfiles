@@ -232,7 +232,7 @@
 ;;   (setq org-agenda-max-tags nil)
 ;;   (setq org-agenda-max-effort nil)
 
-;;   ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
+;;   ;; NOTE 2021-12-07: In my `gbl-org.el' (see further below), I add
 ;;   ;; `org-agenda-to-appt' to various relevant hooks.
 ;;   ;;
 ;;   ;; Create reminders for tasks with a due date when this file is read.
@@ -431,20 +431,20 @@
 ;;     (define-key map (kbd "C-c M-l") #'org-insert-last-stored-link)
 ;;     (define-key map (kbd "C-c C-M-l") #'org-toggle-link-display)))
 
-;; ;;; Custom extensions (prot-org.el)
-;; (use-package prot-org
+;; ;;; Custom extensions (gbl-org.el)
+;; (use-package gbl-org
 ;;   :ensure nil
 ;;   :config
-;;   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+;;   (setq org-agenda-format-date #'gbl-org-agenda-format-date-aligned)
 
-;;   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
+;;   ;; Check the variable `gbl-org-custom-daily-agenda' in gbl-org.el
 ;;   (setq org-agenda-custom-commands
 ;;         `(("A" "Daily agenda and top priority tasks"
-;;            ,prot-org-custom-daily-agenda
+;;            ,gbl-org-custom-daily-agenda
 ;;            ((org-agenda-fontify-priorities nil)
 ;;             (org-agenda-dim-blocked-tasks nil)))
 ;;           ("P" "Plain text daily agenda and top priorities"
-;;            ,prot-org-custom-daily-agenda
+;;            ,gbl-org-custom-daily-agenda
 ;;            ((org-agenda-with-colors nil)
 ;;             (org-agenda-prefix-format "%t %s")
 ;;             (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
@@ -459,7 +459,7 @@
 ;;   (add-to-list 'org-capture-templates
 ;;                '("j" "Music suggestion (jukebox)" entry
 ;;                  (file+headline "tasks.org" "Music suggestions")
-;;                  #'prot-org-capture-jukebox
+;;                  #'gbl-org-capture-jukebox
 ;;                  :empty-lines-after 1
 ;;                  :immediate-finish t)))
 

@@ -1,4 +1,4 @@
-;;; prot-ibuffer.el --- Extensions to ibuffer.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-ibuffer.el --- Extensions to ibuffer.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -35,13 +35,13 @@
 ;;; Code:
 
 ;; NOTE 2022-01-18: Deprecated as I wrote cleaner commands in
-;; prot-simple.el.  Search for `prot-simple-buffers-major-mode' and
-;; `prot-simple-buffers-vc-root'.
+;; gbl-simple.el.  Search for `gbl-simple-buffers-major-mode' and
+;; `gbl-simple-buffers-vc-root'.
 
 (require 'ibuffer)
 
 ;;;###autoload
-(defun prot-ibuffer-buffers-major-mode (&optional arg)
+(defun gbl-ibuffer-buffers-major-mode (&optional arg)
   "Select buffers that match the current buffer's major mode.
 With optional prefix ARG (\\[universal-argument]) produce an
 `ibuffer' filtered accordingly.  Else use standard completion."
@@ -58,7 +58,7 @@ With optional prefix ARG (\\[universal-argument]) produce an
           (with-current-buffer (cdr pair) (derived-mode-p major))))))))
 
 ;;;###autoload
-(defun prot-ibuffer-buffers-vc-root (&optional arg)
+(defun gbl-ibuffer-buffers-vc-root (&optional arg)
   "Select buffers that belong to the version controlled directory.
 With optional prefix ARG (\\[universal-argument]) produce an
 `ibuffer' filtered accordingly.  Else use standard completion."
@@ -77,5 +77,5 @@ With optional prefix ARG (\\[universal-argument]) produce an
               (with-current-buffer (cdr pair) (string= (vc-root-dir) root))))))
       (user-error "Not in a version-controlled directory"))))
 
-(provide 'prot-ibuffer)
-;;; prot-ibuffer.el ends here
+(provide 'gbl-ibuffer)
+;;; gbl-ibuffer.el ends here

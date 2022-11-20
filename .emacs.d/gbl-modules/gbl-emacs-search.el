@@ -1,4 +1,4 @@
-;;; Isearch, occur, grep, and extras (prot-search.el)
+;;; Isearch, occur, grep, and extras (gbl-search.el)
 (use-package isearch
   :ensure nil
   :config
@@ -29,39 +29,39 @@
   :config
   (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
-  (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
+  (add-hook 'occur-mode-hook #'gbl-common-truncate-lines-silently) ; from `gbl-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
 (use-package grep)
 
-(use-package prot-search
+(use-package gbl-search
   :ensure nil
   :config
-  (setq prot-search-outline-regexp-alist
+  (setq gbl-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
           (conf-toml-mode . "^\\[")
           (markdown-mode . "^#+ +")))
-  (setq prot-search-todo-keywords
+  (setq gbl-search-todo-keywords
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
   (let ((map global-map))
-    (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
-    (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
-    (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
-    (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
-    (define-key map (kbd "M-s g") #'prot-search-grep)
-    (define-key map (kbd "M-s u") #'prot-search-occur-urls)
-    (define-key map (kbd "M-s t") #'prot-search-occur-todo-keywords)
-    (define-key map (kbd "M-s M-t") #'prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
-    (define-key map (kbd "M-s M-o") #'prot-search-occur-outline)
-    (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
+    (define-key map (kbd "M-s %") #'gbl-search-isearch-replace-symbol)
+    (define-key map (kbd "M-s M-%") #'gbl-search-replace-markup) ; see `gbl-search-markup-replacements'
+    (define-key map (kbd "M-s M-<") #'gbl-search-isearch-beginning-of-buffer)
+    (define-key map (kbd "M-s M->") #'gbl-search-isearch-end-of-buffer)
+    (define-key map (kbd "M-s g") #'gbl-search-grep)
+    (define-key map (kbd "M-s u") #'gbl-search-occur-urls)
+    (define-key map (kbd "M-s t") #'gbl-search-occur-todo-keywords)
+    (define-key map (kbd "M-s M-t") #'gbl-search-grep-todo-keywords) ; With C-u it runs `gbl-search-git-grep-todo-keywords'
+    (define-key map (kbd "M-s M-o") #'gbl-search-occur-outline)
+    (define-key map (kbd "M-s M-u") #'gbl-search-occur-browse-url))
   (let ((map isearch-mode-map))
-    (define-key map (kbd "<up>") #'prot-search-isearch-repeat-backward)
-    (define-key map (kbd "<down>") #'prot-search-isearch-repeat-forward)
-    (define-key map (kbd "<backspace>") #'prot-search-isearch-abort-dwim)
-    (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
+    (define-key map (kbd "<up>") #'gbl-search-isearch-repeat-backward)
+    (define-key map (kbd "<down>") #'gbl-search-isearch-repeat-forward)
+    (define-key map (kbd "<backspace>") #'gbl-search-isearch-abort-dwim)
+    (define-key map (kbd "<C-return>") #'gbl-search-isearch-other-end)))
 
 ;;; Test regular expressions (re-builder)
 (use-package re-builder
@@ -89,7 +89,7 @@
   (setq xref-file-name-display 'project-relative)
   (setq xref-search-program 'grep))
 
-;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
+;;; Built-in bookmarking framework (bookmark.el and gbl-bookmark.el)
 (use-package bookmark
   :ensure nil
   :config
@@ -99,9 +99,9 @@
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
-(use-package prot-bookmark
+(use-package gbl-bookmark
   :ensure nil
   :config
-  (prot-bookmark-extra-keywords 1))
+  (gbl-bookmark-extra-keywords 1))
 
 (provide 'gbl-emacs-search)

@@ -1,12 +1,12 @@
-;;; Plain text (text-mode with prot-text.el)
+;;; Plain text (text-mode with gbl-text.el)
 
 ;;(use-package text-mode)
 
-;; (use-package prot-text
+;; (use-package gbl-text
 ;;   :ensure nil
 ;;   :config
 ;;   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
-;;   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
+;;   (define-key text-mode-map (kbd "<M-return>") #'gbl-text-insert-heading)
 ;;   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
 ;;   (define-key org-mode-map (kbd "M-;") nil))
 
@@ -51,12 +51,12 @@
   :config
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
-;;; Paragraphs and fill-mode (prot-fill.el)
-;; (use-package prot-fill
+;;; Paragraphs and fill-mode (gbl-fill.el)
+;; (use-package gbl-fill
 ;;   :ensure nil
 ;;   :config
-;;   (setq prot-fill-default-column 72)
-;;   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
+;;   (setq gbl-fill-default-column 72)
+;;   (setq gbl-fill-prog-mode-column 72)  ; Set this to another value if you want
 ;;   ;; Those variables come from various sources, though they feel part of the
 ;;   ;; same conceptual framework.
 ;;   (setq sentence-end-double-space t)
@@ -64,10 +64,10 @@
 ;;   (setq colon-double-space nil)
 ;;   (setq use-hard-newlines nil)
 ;;   (setq adaptive-fill-mode t)
-;;   (prot-fill-fill-mode 1)
+;;   (gbl-fill-fill-mode 1)
 ;;   (add-hook 'after-init-hook #'column-number-mode))
 
-;;; Comments (newcomment.el and prot-comment.el)
+;;; Comments (newcomment.el and gbl-comment.el)
 ;; (use-package newcomment                 ;
 ;;   :ensure nil
 ;;   :config
@@ -79,16 +79,16 @@
 ;;     (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
     ;; (define-key map (kbd "M-;") #'comment-indent)))
 
-;; (use-package prot-comment
+;; (use-package gbl-comment
 ;;   :ensure nil
 ;;   :config
-;;   (setq prot-comment-comment-keywords
+;;   (setq gbl-comment-comment-keywords
 ;;         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-;;   (setq prot-comment-timestamp-format-concise "%F")
-;;   (setq prot-comment-timestamp-format-verbose "%F %T %z")
+;;   (setq gbl-comment-timestamp-format-concise "%F")
+;;   (setq gbl-comment-timestamp-format-verbose "%F %T %z")
 ;;   (let ((map global-map))
-;;     (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
-;;     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
+;;     (define-key map (kbd "C-;") #'gbl-comment-comment-dwim)
+;;     (define-key map (kbd "C-x C-;") #'gbl-comment-timestamp-keyword)))
 
 ;;; Configure 'electric' behaviour
 
@@ -135,7 +135,7 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
-;;; Flyspell and prot-spell.el (spell check)
+;;; Flyspell and gbl-spell.el (spell check)
 ;; (use-package flyspell
 ;;   :ensure nil
 ;;   :config
@@ -145,17 +145,17 @@
 ;;   (setq ispell-dictionary "en_GB")
 ;;   (define-key flyspell-mode-map (kbd "C-;") nil))
 
-;; (use-package prot-spell
+;; (use-package gbl-spell
 ;;   :ensure nil
 ;;   :config
-;;   (setq prot-spell-dictionaries
+;;   (setq gbl-spell-dictionaries
 ;;         '(("EN English" . "en")
 ;;           ("EL Ελληνικά" . "el")
 ;;           ("FR Français" . "fr")
 ;;           ("ES Espanõl" . "es")))
 ;;   (let ((map global-map))
-;;     (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
-;;     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
+;;     (define-key map (kbd "M-$") #'gbl-spell-spell-dwim)
+;;     (define-key map (kbd "C-M-$") #'gbl-spell-change-dictionary)))
 
 ;;; Flymake
 (use-package flymake
@@ -276,26 +276,5 @@
 (use-package eglot
   :hook ((python-mode . eglot-ensure)
          (js2-mode . eglot-ensure)))
-
-
-;; (use-package lsp-mode
-;;   :init
-;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-;;          (python-mode . lsp)
-;;          ;; if you want which-key integration
-;;          (lsp-mode . lsp-enable-which-key-integration))
-;;   :commands lsp)
-
-
-;; (use-package lsp-jedi
-;;   :config
-;;   (with-eval-after-load "lsp-mode"
-;;     (add-to-list 'lsp-disabled-clients 'pyls)
-;;     (add-to-list 'lsp-enabled-clients 'jedi)))
-;; optionally
-;; (use-package lsp-ui :commands lsp-ui-mode
-;;   :diminish)
 
 (provide 'gbl-emacs-langs)

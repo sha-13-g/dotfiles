@@ -44,7 +44,7 @@
   (setq minions-prominent-modes
         (list 'defining-kbd-macro
               'flymake-mode
-              'prot-simple-monocle))
+              'gbl-simple-monocle))
   (minions-mode 1))
 
 ;;; Mode line recursion indicators
@@ -65,9 +65,9 @@
   (setq display-time-default-load-average nil)
   ;; NOTE 2021-04-19: For all those, I have implemented a custom
   ;; solution that also shows the number of new items.  Refer to my
-  ;; email settings, specifically `prot-mail-mail-indicator'.
+  ;; email settings, specifically `gbl-mail-mail-indicator'.
   ;;
-  ;; NOTE 2021-05-16: Or better check `prot-notmuch-mail-indicator'.
+  ;; NOTE 2021-05-16: Or better check `gbl-notmuch-mail-indicator'.
   (setq display-time-mail-directory nil)
   (setq display-time-mail-function nil)
   (setq display-time-use-mail-icon nil)
@@ -98,7 +98,7 @@
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
 
-  ;; ;; NOTE 2021-10-04: Check `prot-tab-status-line'.
+  ;; ;; NOTE 2021-10-04: Check `gbl-tab-status-line'.
   ;; (add-hook 'after-init-hook #'display-time-mode)
   )
 

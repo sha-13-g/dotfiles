@@ -1,4 +1,4 @@
-;;; prot-elfeed.el --- Elfeed extensions for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-elfeed.el --- Elfeed extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -41,51 +41,51 @@
 (eval-when-compile (require 'subr-x))
 (require 'elfeed nil t)
 (require 'url-util)
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-elfeed ()
+(defgroup gbl-elfeed ()
   "Personal extensions for Elfeed."
   :group 'elfeed)
 
-(defcustom prot-elfeed-feeds-file
+(defcustom gbl-elfeed-feeds-file
   (thread-last user-emacs-directory (expand-file-name "feeds.el.gpg"))
   "Path to file with `elfeed-feeds'."
   :type 'string
-  :group 'prot-elfeed)
+  :group 'gbl-elfeed)
 
-(defcustom prot-elfeed-archives-directory "~/Documents/feeds/"
+(defcustom gbl-elfeed-archives-directory "~/Documents/feeds/"
   "Path to directory for storing Elfeed entries."
   :type 'string
-  :group 'prot-elfeed)
+  :group 'gbl-elfeed)
 
-(defcustom prot-elfeed-tag-faces nil
+(defcustom gbl-elfeed-tag-faces nil
   "Add faces for certain tags.
 The tags are: critical, important, personal."
   :type 'boolean
-  :group 'prot-elfeed)
+  :group 'gbl-elfeed)
 
-(defcustom prot-elfeed-search-tags '(critical important personal)
+(defcustom gbl-elfeed-search-tags '(critical important personal)
   "List of user-defined tags.
-Used by `prot-elfeed-toggle-tag'."
+Used by `gbl-elfeed-toggle-tag'."
   :type 'list
-  :group 'prot-elfeed)
+  :group 'gbl-elfeed)
 
-(defface prot-elfeed-entry-critical '((t :inherit font-lock-warning-face))
+(defface gbl-elfeed-entry-critical '((t :inherit font-lock-warning-face))
   "Face for Elfeed entries tagged with `critical'.")
 
-(defface prot-elfeed-entry-important '((t :inherit font-lock-constant-face))
+(defface gbl-elfeed-entry-important '((t :inherit font-lock-constant-face))
   "Face for Elfeed entries tagged with `important'.")
 
-(defface prot-elfeed-entry-personal '((t :inherit font-lock-variable-name-face))
+(defface gbl-elfeed-entry-personal '((t :inherit font-lock-variable-name-face))
   "Face for Elfeed entries tagged with `personal'.")
 
 ;;;; Utilities
 
 ;;;###autoload
-(defun prot-elfeed-load-feeds ()
+(defun gbl-elfeed-load-feeds ()
   "Load file containing the `elfeed-feeds' list.
 Add this to `elfeed-search-mode-hook'."
-  (let ((feeds prot-elfeed-feeds-file))
+  (let ((feeds gbl-elfeed-feeds-file))
     (if (file-exists-p feeds)
         (load-file feeds)
       (user-error "Missing feeds' file"))))
@@ -93,26 +93,26 @@ Add this to `elfeed-search-mode-hook'."
 (defvar elfeed-search-face-alist)
 
 ;;;###autoload
-(defun prot-elfeed-fontify-tags ()
-  "Expand Elfeed faces if `prot-elfeed-tag-faces' is non-nil."
-  (if prot-elfeed-tag-faces
+(defun gbl-elfeed-fontify-tags ()
+  "Expand Elfeed faces if `gbl-elfeed-tag-faces' is non-nil."
+  (if gbl-elfeed-tag-faces
       (setq elfeed-search-face-alist
-            '((critical prot-elfeed-entry-critical)
-              (important prot-elfeed-entry-important)
-              (personal prot-elfeed-entry-personal)
+            '((critical gbl-elfeed-entry-critical)
+              (important gbl-elfeed-entry-important)
+              (personal gbl-elfeed-entry-personal)
               (unread elfeed-search-unread-title-face)))
     (setq elfeed-search-face-alist
           '((unread elfeed-search-unread-title-face)))))
 
-(defvar prot-elfeed--tag-hist '()
-  "History of inputs for `prot-elfeed-toggle-tag'.")
+(defvar gbl-elfeed--tag-hist '()
+  "History of inputs for `gbl-elfeed-toggle-tag'.")
 
-(defun prot-elfeed--character-prompt (tags)
-  "Helper of `prot-elfeed-toggle-tag' to read TAGS."
-  (let ((def (car prot-elfeed--tag-hist)))
+(defun gbl-elfeed--character-prompt (tags)
+  "Helper of `gbl-elfeed-toggle-tag' to read TAGS."
+  (let ((def (car gbl-elfeed--tag-hist)))
     (completing-read
      (format "Toggle tag [%s]: " def)
-     tags nil t nil 'prot-elfeed--tag-hist def)))
+     tags nil t nil 'gbl-elfeed--tag-hist def)))
 
 (defvar elfeed-show-entry)
 (declare-function elfeed-tagged-p "elfeed")
@@ -121,7 +121,7 @@ Add this to `elfeed-search-mode-hook'."
 (declare-function elfeed-show-untag "elfeed")
 
 ;;;###autoload
-(defun prot-elfeed-toggle-tag (tag)
+(defun gbl-elfeed-toggle-tag (tag)
   "Toggle TAG for the current item.
 
 When the region is active in the `elfeed-search-mode' buffer, all
@@ -129,11 +129,11 @@ entries encompassed by it are affected.  Otherwise the item at
 point is the target.  For `elfeed-show-mode', the current entry
 is always the target.
 
-The list of tags is provided by `prot-elfeed-search-tags'."
+The list of tags is provided by `gbl-elfeed-search-tags'."
   (interactive
    (list
     (intern
-     (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+     (gbl-elfeed--character-prompt gbl-elfeed-search-tags))))
   (if (derived-mode-p 'elfeed-show-mode)
       (if (elfeed-tagged-p tag elfeed-show-entry)
           (elfeed-show-untag tag)
@@ -152,14 +152,14 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 (declare-function elfeed-search-update "elfeed")
 (declare-function elfeed-search-clear-filter "elfeed")
 
-(defun prot-elfeed--format-tags (tags sign)
+(defun gbl-elfeed--format-tags (tags sign)
   "Prefix SIGN to each tag in TAGS."
   (mapcar (lambda (tag)
             (format "%s%s" sign tag))
           tags))
 
 ;;;###autoload
-(defun prot-elfeed-search-tag-filter ()
+(defun gbl-elfeed-search-tag-filter ()
   "Filter Elfeed search buffer by tags using completion.
 
 Completion accepts multiple inputs, delimited by `crm-separator'.
@@ -170,15 +170,15 @@ minibuffer with something like `exit-minibuffer'."
       (elfeed-search-clear-filter)
     (let* ((elfeed-search-filter-active :live)
            (db-tags (elfeed-db-get-all-tags))
-           (plus-tags (prot-elfeed--format-tags db-tags "+"))
-           (minus-tags (prot-elfeed--format-tags db-tags "-"))
+           (plus-tags (gbl-elfeed--format-tags db-tags "+"))
+           (minus-tags (gbl-elfeed--format-tags db-tags "-"))
            (all-tags (delete-dups (append plus-tags minus-tags)))
            (tags (completing-read-multiple
                   "Apply one or more tags: "
-                  all-tags #'prot-common-crm-exclude-selected-p t))
+                  all-tags #'gbl-common-crm-exclude-selected-p t))
            (input (string-join `(,elfeed-search-filter ,@tags) " ")))
       (setq elfeed-search-filter input))
     (elfeed-search-update :force)))
 
-(provide 'prot-elfeed)
-;;; prot-elfeed.el ends here
+(provide 'gbl-elfeed)
+;;; gbl-elfeed.el ends here

@@ -1,4 +1,4 @@
-;;; prot-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-comment.el --- Extensions newcomment.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,32 +34,32 @@
 
 ;;; Code:
 
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-comment ()
+(defgroup gbl-comment ()
   "Extensions for newcomment.el."
   :group 'comment)
 
-(defcustom prot-comment-comment-keywords
+(defcustom gbl-comment-comment-keywords
   '("TODO" "NOTE" "XXX" "REVIEW" "FIXME")
   "List of strings with comment keywords."
   :type '(repeat string)
-  :group 'prot-comment)
+  :group 'gbl-comment)
 
-(defcustom prot-comment-timestamp-format-concise "%F"
-  "Specifier for date in `prot-comment-timestamp-keyword'.
+(defcustom gbl-comment-timestamp-format-concise "%F"
+  "Specifier for date in `gbl-comment-timestamp-keyword'.
 Refer to the doc string of `format-time-string' for the available
 options."
   :type 'string
-  :group 'prot-comment)
+  :group 'gbl-comment)
 
-(defcustom prot-comment-timestamp-format-verbose "%F %T %z"
-  "Like `prot-comment-timestamp-format-concise', but longer."
+(defcustom gbl-comment-timestamp-format-verbose "%F %T %z"
+  "Like `gbl-comment-timestamp-format-concise', but longer."
   :type 'string
-  :group 'prot-comment)
+  :group 'gbl-comment)
 
 ;;;###autoload
-(defun prot-comment-comment-dwim (arg)
+(defun gbl-comment-comment-dwim (arg)
   "Flexible, do-what-I-mean commenting.
 
 If region is active and ARG is either a numeric argument greater
@@ -86,22 +86,22 @@ operates on the lines before point)."
    (t
     (save-excursion (comment-line (or arg 1))))))
 
-(defvar prot-comment--keyword-hist '()
+(defvar gbl-comment--keyword-hist '()
   "Input history of selected comment keywords.")
 
-(defun prot-comment--keyword-prompt (keywords)
+(defun gbl-comment--keyword-prompt (keywords)
   "Prompt for candidate among KEYWORDS."
-  (let ((def (car prot-comment--keyword-hist)))
+  (let ((def (car gbl-comment--keyword-hist)))
     (completing-read
      (format "Select keyword [%s]: " def)
-     keywords nil nil nil 'prot-comment--keyword-hist def)))
+     keywords nil nil nil 'gbl-comment--keyword-hist def)))
 
 ;;;###autoload
-(defun prot-comment-timestamp-keyword (keyword &optional verbose)
+(defun gbl-comment-timestamp-keyword (keyword &optional verbose)
   "Add timestamped comment with KEYWORD.
 
 When called interactively, the list of possible keywords is that
-of `prot-comment-comment-keywords', though it is possible to
+of `gbl-comment-comment-keywords', though it is possible to
 input arbitrary text.
 
 If point is at the beginning of the line or if line is empty (no
@@ -115,24 +115,24 @@ with `comment-indent'.
 
 The comment is always formatted as 'DELIMITER KEYWORD DATE:',
 with the date format being controlled by the variable
-`prot-comment-timestamp-format-concise'.
+`gbl-comment-timestamp-format-concise'.
 
 With optional VERBOSE argument (such as a prefix argument
 `\\[universal-argument]'), use an alternative date format, as
-specified by `prot-comment-timestamp-format-verbose'."
+specified by `gbl-comment-timestamp-format-verbose'."
   (interactive
    (list
-    (prot-comment--keyword-prompt prot-comment-comment-keywords)
+    (gbl-comment--keyword-prompt gbl-comment-comment-keywords)
     current-prefix-arg))
   (let* ((date (if verbose
-                   prot-comment-timestamp-format-verbose
-                 prot-comment-timestamp-format-concise))
+                   gbl-comment-timestamp-format-verbose
+                 gbl-comment-timestamp-format-concise))
          (string (format "%s %s: " keyword (format-time-string date)))
          (beg (point)))
     (cond
      ((or (eq beg (point-at-bol))
-          (prot-common-line-regexp-p 'empty))
-      (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
+          (gbl-common-line-regexp-p 'empty))
+      (let* ((maybe-newline (unless (gbl-common-line-regexp-p 'empty 1) "\n")))
         ;; NOTE 2021-07-24: we use this `insert' instead of
         ;; `comment-region' because of a yet-to-be-determined bug that
         ;; traps `undo' to the two states between the insertion of the
@@ -154,5 +154,5 @@ specified by `prot-comment-timestamp-format-verbose'."
       (comment-indent t)
       (insert (concat " " string))))))
 
-(provide 'prot-comment)
-;;; prot-comment.el ends here
+(provide 'gbl-comment)
+;;; gbl-comment.el ends here

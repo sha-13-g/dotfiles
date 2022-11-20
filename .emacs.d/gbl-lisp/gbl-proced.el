@@ -1,4 +1,4 @@
-;;; prot-proced.el --- Extras for proced -*- lexical-binding: t -*-
+;;; gbl-proced.el --- Extras for proced -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,78 +34,78 @@
 
 ;;; Code:
 
-(defgroup prot-proced ()
+(defgroup gbl-proced ()
   "Proced extras for my dotemacs."
   :group 'proced)
 
 ;;;; Extend `proced' faces
 
-(defface prot-proced-user '((t :inherit shadow))
+(defface gbl-proced-user '((t :inherit shadow))
   "Face for user indicator in `proced'.")
 
-(defface prot-proced-pid
+(defface gbl-proced-pid
   '((((class color) (min-colors 88) (background light))
      :foreground "#5317ac")
     (((class color) (min-colors 88) (background dark))
      :foreground "#b6a0ff"))
   "Face for PID indicator in `proced'.")
 
-(defface prot-proced-cpu
+(defface gbl-proced-cpu
   '((((class color) (min-colors 88) (background light))
      :foreground "#8f0075")
     (((class color) (min-colors 88) (background dark))
      :foreground "#f78fe7"))
   "Face for memory indicator in `proced'.")
 
-(defface prot-proced-mem
+(defface gbl-proced-mem
   '((((class color) (min-colors 88) (background light))
      :foreground "#0031a9")
     (((class color) (min-colors 88) (background dark))
      :foreground "#2fafff"))
   "Face for CPU indicator in `proced'.")
 
-(defface prot-proced-time-start
+(defface gbl-proced-time-start
   '((((class color) (min-colors 88) (background light))
      :foreground "#30517f")
     (((class color) (min-colors 88) (background dark))
      :foreground "#a0bfdf"))
   "Face for start time indicator in `proced'.")
 
-(defface prot-proced-time-duration
+(defface gbl-proced-time-duration
   '((((class color) (min-colors 88) (background light))
      :foreground "#00538b")
     (((class color) (min-colors 88) (background dark))
      :foreground "#00cdc8"))
   "Face for time indicator in `proced'.")
 
-(defface prot-proced-process nil
+(defface gbl-proced-process nil
   "Face for process indicator in `proced'.")
 
-(defconst prot-proced-keywords
+(defconst gbl-proced-keywords
   `((,(concat "^\s+\\(.*?\\)\s+\\(.*?\\)\s+\\(.*?\\)\s+\\(.*?\\)\s+"
              "\\(.*?\\)\s+\\(.*?\\)\s+\\(.*\\)")
-     (1 'prot-proced-user)
-     (2 'prot-proced-pid)
-     (3 'prot-proced-cpu)
-     (4 'prot-proced-mem)
-     (5 'prot-proced-time-start)
-     (6 'prot-proced-time-duration)
-     (7 'prot-proced-process)))
+     (1 'gbl-proced-user)
+     (2 'gbl-proced-pid)
+     (3 'gbl-proced-cpu)
+     (4 'gbl-proced-mem)
+     (5 'gbl-proced-time-start)
+     (6 'gbl-proced-time-duration)
+     (7 'gbl-proced-process)))
   "Extra font-lock patterns for the `proced' menu.")
 
 ;;;###autoload
-(define-minor-mode prot-proced-extra-keywords
+(define-minor-mode gbl-proced-extra-keywords
   "Apply extra font-lock rules to diff buffers."
   :init-value nil
   :global t
-  (if prot-proced-extra-keywords
+  (if gbl-proced-extra-keywords
       (progn
         (font-lock-flush (point-min) (point-max))
-        (font-lock-add-keywords nil prot-proced-keywords nil)
-        (add-hook 'proced-mode-hook #'prot-proced-extra-keywords))
-    (font-lock-remove-keywords nil prot-proced-keywords)
-    (remove-hook 'proced-mode-hook #'prot-proced-extra-keywords)
+        (font-lock-add-keywords nil gbl-proced-keywords nil)
+        (add-hook 'proced-mode-hook #'gbl-proced-extra-keywords))
+    (font-lock-remove-keywords nil gbl-proced-keywords)
+    (remove-hook 'proced-mode-hook #'gbl-proced-extra-keywords)
     (font-lock-flush (point-min) (point-max))))
 
-(provide 'prot-proced)
-;;; prot-proced.el ends here
+(provide 'gbl-proced)
+;;; gbl-proced.el ends here

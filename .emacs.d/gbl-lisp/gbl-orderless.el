@@ -1,4 +1,4 @@
-;;; prot-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
+;;; gbl-orderless.el --- Extensions for Orderless -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -37,7 +37,7 @@
 ;;;; Style dispatchers
 
 ;;;###autoload
-(defun prot-orderless-literal-dispatcher (pattern _index _total)
+(defun gbl-orderless-literal-dispatcher (pattern _index _total)
   "Literal style dispatcher using the equals sign as a suffix.
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
@@ -45,7 +45,7 @@ parses its input."
     `(orderless-literal . ,(substring pattern 0 -1))))
 
 ;;;###autoload
-(defun prot-orderless-initialism-dispatcher (pattern _index _total)
+(defun gbl-orderless-initialism-dispatcher (pattern _index _total)
   "Leading initialism  dispatcher using the comma suffix.
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
@@ -53,7 +53,7 @@ parses its input."
     `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
 
 ;;;###autoload
-(defun prot-orderless-flex-dispatcher (pattern _index _total)
+(defun gbl-orderless-flex-dispatcher (pattern _index _total)
   "Flex  dispatcher using the tilde suffix.
 It matches PATTERN _INDEX and _TOTAL according to how Orderless
 parses its input."
@@ -105,5 +105,5 @@ first and last initials appear in the first and last words of the
 candidate, respectively."
   (orderless--strict-*-initialism component 'both))
 
-(provide 'prot-orderless)
-;;; prot-orderless.el ends here
+(provide 'gbl-orderless)
+;;; gbl-orderless.el ends here

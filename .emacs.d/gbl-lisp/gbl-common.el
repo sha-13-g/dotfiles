@@ -1,4 +1,4 @@
-;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -36,42 +36,42 @@
 (eval-when-compile
   (require 'subr-x))
 
-(defgroup prot-common ()
+(defgroup gbl-common ()
   "Auxiliary functions for my dotemacs."
   :group 'editing)
 
 ;;;###autoload
-(defun prot-common-number-even-p (n)
+(defun gbl-common-number-even-p (n)
   "Test if N is an even number."
   (if (numberp n)
       (= (% n 2) 0)
     (error "%s is not a number" n)))
 
 ;;;###autoload
-(defun prot-common-number-integer-p (n)
+(defun gbl-common-number-integer-p (n)
   "Test if N is an integer."
   (if (integerp n)
       n
     (error "%s is not an integer" n)))
 
 ;;;###autoload
-(defun prot-common-number-integer-positive-p (n)
+(defun gbl-common-number-integer-positive-p (n)
   "Test if N is a positive integer."
-  (if (prot-common-number-integer-p n)
+  (if (gbl-common-number-integer-p n)
       (> n 0)
     (error "%s is not a positive integer" n)))
 
 ;; Thanks to Gabriel for providing a cleaner version of
-;; `prot-common-number-negative': <https://github.com/gabriel376>.
+;; `gbl-common-number-negative': <https://github.com/gabriel376>.
 ;;;###autoload
-(defun prot-common-number-negative (n)
+(defun gbl-common-number-negative (n)
   "Make N negative."
   (if (and (numberp n) (> n 0))
       (* -1 n)
     (error "%s is not a valid positive number" n)))
 
 ;;;###autoload
-(defun prot-common-reverse-percentage (number percent change-p)
+(defun gbl-common-reverse-percentage (number percent change-p)
   "Determine the original value of NUMBER given PERCENT.
 
 CHANGE-P should specify the increase or decrease.  For simplicity,
@@ -89,7 +89,7 @@ NUMBER must satisfy `numberp', while PERCENT must be `natnump'."
     (/ number n)))
 
 ;;;###autoload
-(defun prot-common-percentage-change (n-original n-final)
+(defun gbl-common-percentage-change (n-original n-final)
   "Find percentage change between N-ORIGINAL and N-FINAL numbers.
 
 When the percentage is not an integer, it is rounded to 4
@@ -105,7 +105,7 @@ floating points: 16.666666666666664 => 16.667."
     (if (> n round) (string-to-number (format "%0.4f" n)) round)))
 
 ;;;###autoload
-(defun prot-common-rotate-list-of-symbol (symbol)
+(defun gbl-common-rotate-list-of-symbol (symbol)
   "Rotate list value of SYMBOL by moving its car to the end.
 Return the first element before performing the rotation.
 
@@ -122,7 +122,7 @@ will continue rotating accordingly."
     first))
 
 ;;;###autoload
-(defun prot-common-empty-buffer-p ()
+(defun gbl-common-empty-buffer-p ()
   "Test whether the buffer is empty."
   (or (= (point-min) (point-max))
       (save-excursion
@@ -132,7 +132,7 @@ will continue rotating accordingly."
         (eobp))))
 
 ;;;###autoload
-(defun prot-common-minor-modes-active ()
+(defun gbl-common-minor-modes-active ()
   "Return list of active minor modes for the current buffer."
   (let ((active-modes))
     (mapc (lambda (m)
@@ -142,29 +142,29 @@ will continue rotating accordingly."
     active-modes))
 
 ;;;###autoload
-(defun prot-common-truncate-lines-silently ()
+(defun gbl-common-truncate-lines-silently ()
   "Toggle line truncation without printing messages."
   (let ((inhibit-message t))
     (toggle-truncate-lines t)))
 
 ;;;###autoload
-(defun prot-common-disable-hl-line ()
+(defun gbl-common-disable-hl-line ()
   "Disable Hl-Line-Mode (for hooks)."
   (hl-line-mode -1))
 
 ;;;###autoload
-(defun prot-common-window-bounds ()
+(defun gbl-common-window-bounds ()
   "Determine start and end points in the window."
   (list (window-start) (window-end)))
 
 ;;;###autoload
-(defun prot-common-page-p ()
+(defun gbl-common-page-p ()
   "Return non-nil if there is a `page-delimiter' in the buffer."
   (or (save-excursion (re-search-forward page-delimiter nil t))
       (save-excursion (re-search-backward page-delimiter nil t))))
 
 ;;;###autoload
-(defun prot-common-read-data (file)
+(defun gbl-common-read-data (file)
   "Read Elisp data from FILE."
   (with-temp-buffer
     (insert-file-contents file)
@@ -172,7 +172,7 @@ will continue rotating accordingly."
 
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
-(defun prot-common-completion-table (category candidates)
+(defun gbl-common-completion-table (category candidates)
   "Pass appropriate metadata CATEGORY to completion CANDIDATES.
 
 This is intended for bespoke functions that need to pass
@@ -183,13 +183,13 @@ tools (e.g. `embark')."
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
-;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
+;; Thanks to Igor Lima for the `gbl-common-crm-exclude-selected-p':
 ;; <https://github.com/0x462e41>.
 ;; This is used as a filter predicate in the relevant prompts.
 (defvar crm-separator)
 
 ;;;###autoload
-(defun prot-common-crm-exclude-selected-p (input)
+(defun gbl-common-crm-exclude-selected-p (input)
   "Filter out INPUT from `completing-read-multiple'.
 Hide non-destructively the selected entries from the completion
 table, thus avoiding the risk of inputting the same match twice.
@@ -211,22 +211,22 @@ To be used as the PREDICATE of `completing-read-multiple'."
         (not flag))
     t))
 
-;; The `prot-common-line-regexp-p' and `prot-common--line-regexp-alist'
+;; The `gbl-common-line-regexp-p' and `gbl-common--line-regexp-alist'
 ;; are contributed by Gabriel: <https://github.com/gabriel376>.  They
 ;; provide a more elegant approach to using a macro, as shown further
 ;; below.
-(defvar prot-common--line-regexp-alist
+(defvar gbl-common--line-regexp-alist
   '((empty . "[\s\t]*$")
     (indent . "^[\s\t]+")
     (non-empty . "^.+$")
     (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
     (heading . "^[=-]+"))
-  "Alist of regexp types used by `prot-common-line-regexp-p'.")
+  "Alist of regexp types used by `gbl-common-line-regexp-p'.")
 
-(defun prot-common-line-regexp-p (type &optional n)
+(defun gbl-common-line-regexp-p (type &optional n)
   "Test for TYPE on line.
 TYPE is the car of a cons cell in
-`prot-common--line-regexp-alist'.  It matches a regular
+`gbl-common--line-regexp-alist'.  It matches a regular
 expression.
 
 With optional N, search in the Nth line from point."
@@ -236,21 +236,21 @@ With optional N, search in the Nth line from point."
          (or (beginning-of-line n) t)
          (save-match-data
            (looking-at
-            (alist-get type prot-common--line-regexp-alist))))))
+            (alist-get type gbl-common--line-regexp-alist))))))
 
-;; The `prot-common-shell-command-with-exit-code-and-output' function is
+;; The `gbl-common-shell-command-with-exit-code-and-output' function is
 ;; courtesy of Harold Carr, who also sent a patch that improved
-;; `prot-eww-download-html' (from the `prot-eww.el' library).
+;; `gbl-eww-download-html' (from the `gbl-eww.el' library).
 ;;
 ;; More about Harold: <http://haroldcarr.com/about/>.
-(defun prot-common-shell-command-with-exit-code-and-output (command &rest args)
+(defun gbl-common-shell-command-with-exit-code-and-output (command &rest args)
   "Run COMMAND with ARGS.
 Return the exit code and output in a list."
   (with-temp-buffer
     (list (apply 'call-process command nil (current-buffer) nil args)
           (buffer-string))))
 
-(defvar prot-common-url-regexp
+(defvar gbl-common-url-regexp
   (concat
    "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
    "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
@@ -273,7 +273,7 @@ Copy of variable `browse-url-button-regexp'.")
 ;; This was my old approach to the task:
 ;;
 ;; ;; Based on `org--line-empty-p'.
-;; (defmacro prot-common--line-p (name regexp)
+;; (defmacro gbl-common--line-p (name regexp)
 ;;   "Make NAME function to match REGEXP on line n from point."
 ;;   `(defun ,name (n)
 ;;      (save-excursion
@@ -283,25 +283,25 @@ Copy of variable `browse-url-button-regexp'.")
 ;; 	        (save-match-data
 ;; 	          (looking-at ,regexp))))))
 ;;
-;; (prot-common--line-p
-;;  prot-common-empty-line-p
+;; (gbl-common--line-p
+;;  gbl-common-empty-line-p
 ;;  "[\s\t]*$")
 ;;
-;; (prot-common--line-p
-;;  prot-common-indent-line-p
+;; (gbl-common--line-p
+;;  gbl-common-indent-line-p
 ;;  "^[\s\t]+")
 ;;
-;; (prot-common--line-p
-;;  prot-common-non-empty-line-p
+;; (gbl-common--line-p
+;;  gbl-common-non-empty-line-p
 ;;  "^.+$")
 ;;
-;; (prot-common--line-p
-;;  prot-common-text-list-line-p
+;; (gbl-common--line-p
+;;  gbl-common-text-list-line-p
 ;;  "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
 ;;
-;; (prot-common--line-p
-;;  prot-common-text-heading-line-p
+;; (gbl-common--line-p
+;;  gbl-common-text-heading-line-p
 ;;  "^[=-]+")
 
-(provide 'prot-common)
-;;; prot-common.el ends here
+(provide 'gbl-common)
+;;; gbl-common.el ends here

@@ -1,4 +1,4 @@
-;;; Dired file manager and prot-dired.el extras
+;;; Dired file manager and gbl-dired.el extras
 (use-package dired
   :ensure nil
   :hook ((dired-mode . dired-hide-details-mode)
@@ -9,11 +9,10 @@
 		   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
 		   (dired-dwim-target t)
 		   (dired-auto-revert-buffer #'dired-directory-changed-p)
-		   (dired-mouse-drag-files t))
+		   (dired-mouse-drag-files))
   :config
-  (evil-collection-define-key 'normal 'dired-mode-map ; VIM keybindings for navigating directories
-	"h" 'dired-single-up-directory
-	"l" 'dired-find-alternate-file)) ; Emacs 29.1
+  (define-key dired-mode-map	(kbd "h") 'dired-single-up-directory)
+  (define-key dired-mode-map (kbd "l") 'dired-find-alternate-file))
 
 (use-package peep-dired
   :diminish t)
@@ -39,20 +38,20 @@
   (setq dired-bind-info nil)
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
-(use-package prot-dired
+(use-package gbl-dired
   :ensure nil
   :config
-  (setq prot-dired-image-viewers '("feh" "sxiv"))
-  (setq prot-dired-media-players '("mpv" "vlc"))
-  (setq prot-dired-media-extensions
+  (setq gbl-dired-image-viewers '("feh" "sxiv"))
+  (setq gbl-dired-media-players '("mpv" "vlc"))
+  (setq gbl-dired-media-extensions
         "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)")
-  (setq prot-dired-image-extensions
+  (setq gbl-dired-image-extensions
         "\\.\\(png\\|jpe?g\\|tiff\\)")
   (setq dired-guess-shell-alist-user ; those are the defaults for ! and & in Dired
-        `((,prot-dired-image-extensions (prot-dired-image-viewer))
-          (,prot-dired-media-extensions (prot-dired-media-player))))
+        `((,gbl-dired-image-extensions (gbl-dired-image-viewer))
+          (,gbl-dired-media-extensions (gbl-dired-media-player))))
 
-  (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)) ; M-s g is `prot-search-grep'
+  (add-hook 'dired-mode-hook #'gbl-dired-setup-imenu)) ; M-s g is `gbl-search-grep'
 
 (use-package dired-subtree
   :config
@@ -118,17 +117,17 @@
     (define-key map (kbd "* g") #'ibuffer-mark-by-content-regexp) ; "g" is for "grep"
     (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
     (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
-    (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
+    ( define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
 
-(use-package dired-hide-dotfiles
-  :hook (dired-mode . dired-hide-dotfiles-mode)
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "H" 'dired-hide-dotfiles-mode))
+;; (use-package dired-hide-dotfiles
+;;   :hook (dired-mode . dired-hide-dotfiles-mode)
+  ;; :config
+  ;; (evil-collection-define-key 'normal 'dired-mode-map
+    ;; "H" 'dired-hide-dotfiles-mode))
 
-(with-eval-after-load 'dired
-  (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
-  (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
+;; (with-eval-after-load 'dired
+  ;; (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+  ;; (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
 
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps) ; Evil normalize keymap
 (setq dired-open-extentions '(("gif" . "sxiv") ;; When a gif is selected, it must be opened within sxiv.

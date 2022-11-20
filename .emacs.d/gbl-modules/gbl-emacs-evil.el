@@ -41,8 +41,8 @@
   :config
   (evil-collection-init))
 
-;; (use-package evil-easymotion
-;;   :config (evilem-default-keybindings "SPC"))
+(use-package evil-easymotion
+  :config (evilem-default-keybindings "SPC"))
 
 (use-package evil-surround
   :config

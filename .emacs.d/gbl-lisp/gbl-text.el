@@ -1,4 +1,4 @@
-;;; prot-text.el --- Extensions to text-mode.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-text.el --- Extensions to text-mode.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -34,11 +34,11 @@
 
 ;;; Code:
 
-(require 'prot-common)
-(require 'prot-simple)
+(require 'gbl-common)
+(require 'gbl-simple)
 
 ;;;###autoload
-(defun prot-text-insert-heading (&optional arg)
+(defun gbl-text-insert-heading (&optional arg)
   "Insert equal length heading delimiter below current line.
 
 A heading delimiter is drawn as a series of dashes (-).  With
@@ -58,35 +58,35 @@ mode which has its own conventions."
   (interactive "P")
   (cond
    ((derived-mode-p 'outline-mode)
-    (user-error "Do not use `prot-text-insert-heading' in `outline-mode' or derivatives!"))
+    (user-error "Do not use `gbl-text-insert-heading' in `outline-mode' or derivatives!"))
    ((derived-mode-p 'text-mode)
     (let* ((num (- (point-at-eol) (point-at-bol)))
            (char (string-to-char (if arg "=" "-"))))
       (cond
        ((and (eobp)
-             (or (prot-common-line-regexp-p 'list 1)
-                 (prot-common-line-regexp-p 'heading 1)
-                 (prot-common-line-regexp-p 'empty 1)
-                 (prot-common-line-regexp-p 'indent 1)))
+             (or (gbl-common-line-regexp-p 'list 1)
+                 (gbl-common-line-regexp-p 'heading 1)
+                 (gbl-common-line-regexp-p 'empty 1)
+                 (gbl-common-line-regexp-p 'indent 1)))
         (newline 1))
-       ((or (prot-common-line-regexp-p 'empty 1)
-            (prot-common-line-regexp-p 'indent 1))
-        (prot-simple-new-line-below))
-       ((or (prot-common-line-regexp-p 'list 1)
-            (prot-common-line-regexp-p 'heading 2))
-        (if (prot-common-line-regexp-p 'empty 3)
+       ((or (gbl-common-line-regexp-p 'empty 1)
+            (gbl-common-line-regexp-p 'indent 1))
+        (gbl-simple-new-line-below))
+       ((or (gbl-common-line-regexp-p 'list 1)
+            (gbl-common-line-regexp-p 'heading 2))
+        (if (gbl-common-line-regexp-p 'empty 3)
             (beginning-of-line 3)
-          (prot-simple-new-line-below)))
-       ((or (prot-common-line-regexp-p 'empty 2)
-            (prot-common-line-regexp-p 'indent 2))
-        (prot-simple-new-line-below)
+          (gbl-simple-new-line-below)))
+       ((or (gbl-common-line-regexp-p 'empty 2)
+            (gbl-common-line-regexp-p 'indent 2))
+        (gbl-simple-new-line-below)
         (insert (make-string num char))
         (newline 1)
         (beginning-of-line 2))
        (t
-        (prot-simple-new-line-below)
+        (gbl-simple-new-line-below)
         (insert (make-string num char))
         (newline 2)))))))
 
-(provide 'prot-text)
-;;; prot-text.el ends here
+(provide 'gbl-text)
+;;; gbl-text.el ends here

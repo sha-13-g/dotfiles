@@ -1,4 +1,4 @@
-;;; prot-org.el --- Tweaks for my org-mode configurations -*- lexical-binding: t -*-
+;;; gbl-org.el --- Tweaks for my org-mode configurations -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,10 +34,10 @@
 
 ;;; Code:
 
-(require 'prot-common)
+(require 'gbl-common)
 (require 'org-macs)
 
-(defgroup prot-org ()
+(defgroup gbl-org ()
   "Extensions for org.el."
   :group 'org)
 
@@ -46,7 +46,7 @@
 (defvar modus-themes-org-blocks)
 (defvar org-fontify-whole-block-delimiter-line)
 
-(defun prot-org--modus-themes-fontify-block-delimiters ()
+(defun gbl-org--modus-themes-fontify-block-delimiters ()
   "Match `org-fontify-whole-block-delimiter-line' to theme style.
 Run this function at the post theme load phase, such as with the
 hook `modus-themes-after-load-theme-hook'."
@@ -58,15 +58,15 @@ hook `modus-themes-after-load-theme-hook'."
 
 (when (require 'modus-themes nil t)
   (add-hook 'modus-themes-after-load-theme-hook
-            #'prot-org--modus-themes-fontify-block-delimiters))
+            #'gbl-org--modus-themes-fontify-block-delimiters))
 
 ;;;; org-capture
 
-(declare-function prot-bongo-show "prot-bongo")
+(declare-function gbl-bongo-show "gbl-bongo")
 
-(defun prot-org-capture-jukebox ()
+(defun gbl-org-capture-jukebox ()
   "Capture template for current Bongo songo." ; NOTE 2021-10-06: Brilliant typo!
-  (concat "* " (prot-bongo-show) " :jukebox:\n"
+  (concat "* " (gbl-bongo-show) " :jukebox:\n"
           ":PROPERTIES:\n"
           ":CAPTURED: %U\n"
           ":END:\n\n"))
@@ -79,12 +79,12 @@ hook `modus-themes-after-load-theme-hook'."
 ;; original version was causing an error in `org-roam'.  I then figure
 ;; we were missing the `&rest':
 ;; <https://github.com/org-roam/org-roam/issues/2142#issuecomment-1100718373>.
-(defun prot-org--capture-no-delete-windows (oldfun &rest args)
+(defun gbl-org--capture-no-delete-windows (oldfun &rest args)
   (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
     (apply oldfun args)))
 
 ;; Same source as above
-(advice-add 'org-capture-place-template :around 'prot-org--capture-no-delete-windows)
+(advice-add 'org-capture-place-template :around 'gbl-org--capture-no-delete-windows)
 
 ;;;; org-agenda
 
@@ -97,7 +97,7 @@ hook `modus-themes-after-load-theme-hook'."
 (defvar org-agenda-format-date)
 
 ;;;###autoload
-(defun prot-org-agenda-format-date-aligned (date)
+(defun gbl-org-agenda-format-date-aligned (date)
   "Format a DATE string for display in the daily/weekly agenda.
 This function makes sure that dates are aligned for easy reading.
 
@@ -125,7 +125,7 @@ produces dates with a fixed length."
 
 (defvar org-priority-highest)
 
-(defvar prot-org-custom-daily-agenda
+(defvar gbl-org-custom-daily-agenda
   ;; NOTE 2021-12-08: Specifying a match like the following does not
   ;; work.
   ;;
@@ -186,45 +186,45 @@ produces dates with a fixed length."
 
 ;;;;; agenda appointments
 
-(defvar prot-org-agenda-after-edit-hook nil
+(defvar gbl-org-agenda-after-edit-hook nil
   "Hook that runs after select Org commands.
 To be used with `advice-add'.")
 
-(defun prot-org--agenda-after-edit (&rest _)
-  "Run `prot-org-agenda-after-edit-hook'."
-  (run-hooks 'prot-org-agenda-after-edit-hook))
+(defun gbl-org--agenda-after-edit (&rest _)
+  "Run `gbl-org-agenda-after-edit-hook'."
+  (run-hooks 'gbl-org-agenda-after-edit-hook))
 
-(defvar prot-org-after-deadline-or-schedule-hook nil
+(defvar gbl-org-after-deadline-or-schedule-hook nil
   "Hook that runs after `org--deadline-or-schedule'.
 To be used with `advice-add'.")
 
-(defvar prot-org--appt-agenda-commands
+(defvar gbl-org--appt-agenda-commands
   '( org-agenda-archive org-agenda-deadline org-agenda-schedule
      org-agenda-todo org-archive-subtree)
-  "List of commands that run `prot-org-agenda-after-edit-hook'.")
+  "List of commands that run `gbl-org-agenda-after-edit-hook'.")
 
-(dolist (fn prot-org--appt-agenda-commands)
-  (advice-add fn :after #'prot-org--agenda-after-edit))
+(dolist (fn gbl-org--appt-agenda-commands)
+  (advice-add fn :after #'gbl-org--agenda-after-edit))
 
-(defun prot-org--after-deadline-or-schedule (&rest _)
-  "Run `prot-org-after-deadline-or-schedule-hook'."
-  (run-hooks 'prot-org-after-deadline-or-schedule-hook))
+(defun gbl-org--after-deadline-or-schedule (&rest _)
+  "Run `gbl-org-after-deadline-or-schedule-hook'."
+  (run-hooks 'gbl-org-after-deadline-or-schedule-hook))
 
-(defun prot-org-org-agenda-to-appt ()
+(defun gbl-org-org-agenda-to-appt ()
   "Make `org-agenda-to-appt' always refresh appointment list."
   (org-agenda-to-appt :refresh))
 
 (dolist (hook '(org-capture-after-finalize-hook
                 org-after-todo-state-change-hook
                 org-agenda-after-show-hook
-                prot-org-agenda-after-edit-hook))
-  (add-hook hook #'prot-org-org-agenda-to-appt))
+                gbl-org-agenda-after-edit-hook))
+  (add-hook hook #'gbl-org-org-agenda-to-appt))
 
 (declare-function org--deadline-or-schedule "org" (arg type time))
 
-(advice-add #'org--deadline-or-schedule :after #'prot-org--after-deadline-or-schedule)
+(advice-add #'org--deadline-or-schedule :after #'gbl-org--after-deadline-or-schedule)
 
-(add-hook 'prot-org-after-deadline-or-schedule-hook #'prot-org-org-agenda-to-appt)
+(add-hook 'gbl-org-after-deadline-or-schedule-hook #'gbl-org-org-agenda-to-appt)
 
 ;;;; org-export
 
@@ -232,13 +232,13 @@ To be used with `advice-add'.")
 (declare-function org-texinfo-export-to-info "org")
 
 ;;;###autoload
-(defun prot-org-ox-html ()
+(defun gbl-org-ox-html ()
   "Streamline HTML export."
   (interactive)
   (org-html-export-as-html nil nil nil t nil))
 
 ;;;###autoload
-(defun prot-org-ox-texinfo ()
+(defun gbl-org-ox-texinfo ()
   "Streamline Info export."
   (interactive)
   (org-texinfo-export-to-info))
@@ -253,7 +253,7 @@ To be used with `advice-add'.")
 
 ;; Copied from this article (with minor tweaks from my side):
 ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
-(defun prot-org--id-get (&optional pom create prefix)
+(defun gbl-org--id-get (&optional pom create prefix)
   "Get the CUSTOM_ID property of the entry at point-or-marker POM.
 
 If POM is nil, refer to the entry at point.  If the entry does
@@ -275,11 +275,11 @@ CUSTOM_ID of the entry is returned."
 (declare-function org-map-entries "calendar")
 
 ;;;###autoload
-(defun prot-org-id-headlines ()
+(defun gbl-org-id-headlines ()
   "Add missing CUSTOM_ID to all headlines in current file."
   (interactive)
   (org-map-entries
-   (lambda () (prot-org--id-get (point) t))))
+   (lambda () (gbl-org--id-get (point) t))))
 
-(provide 'prot-org)
-;;; prot-org.el ends here
+(provide 'gbl-org)
+;;; gbl-org.el ends here

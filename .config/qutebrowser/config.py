@@ -218,6 +218,14 @@ config.set('content.notifications.enabled', True, 'https://www.youtube.com')
 #   - ask
 config.set('content.notifications.enabled', True, 'https://www.betmomo.com')
 
+# Allow websites to show notifications.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+config.set('content.notifications.enabled', True, 'https://www.facebook.com')
+
 # Allow websites to register protocol handlers via
 # `navigator.registerProtocolHandler`.
 # Type: BoolAsk
@@ -226,11 +234,6 @@ config.set('content.notifications.enabled', True, 'https://www.betmomo.com')
 #   - false
 #   - ask
 config.set('content.register_protocol_handler', True, 'https://mail.proton.me#mailto=%25s')
-
-# Directory to save downloads to. If unset, a sensible OS-specific
-# default is used.
-# Type: Directory
-# c.downloads.location.directory = '~/downloads/'
 
 # Where to show the downloaded files.
 # Type: VerticalPosition
@@ -644,18 +647,26 @@ c.colors.tabs.selected.even.fg = '#f8f8f2'
 c.colors.tabs.selected.even.bg = '#282a36'
 
 # Bindings for normal mode
+config.bind('<Alt+j>', 'run-with-count 5 scroll down')
+config.bind('<Alt+k>', 'run-with-count 5 scroll up')
 config.bind('B', 'hint links spawn mpv {hint-url}')
-config.bind('aG', 'https://mail.proton.me/u/1/inbox')
-config.bind('aM', 'open https://manhwatop.com/')
-config.bind('aT', 'open -t https://twitch.tv/')
-config.bind('aY', 'open -t https://youtube.com/')
+config.bind('aMG', 'https://mail.google.com/mail/u/0/#inbox')
+config.bind('aMg', 'https://mail.proton.me/u/1/inbox')
+config.bind('aSf', 'open https://facebook.com/')
+config.bind('aSl', 'open  https://linkedin.com/')
+config.bind('aSr', 'open https://reddit.com/')
+config.bind('aSt', 'open  https://twitter.com/')
+config.bind('aT', 'open  https://twitch.tv/')
+config.bind('aY', 'open https://youtube.com/')
 config.bind('ag', 'open https://github.com/')
-config.bind('am', 'open https://mangareader.to/home')
+config.bind('amn', 'open https://manganato.com/')
+config.bind('amr', 'open https://mangareader.to/home')
+config.bind('amw', 'open https://manhwatop.com/')
 config.bind('as', 'open https://open.spotify.com/')
-config.bind('ast', 'open https://twitter.com/')
-config.bind('at', 'open https://twitter.com/')
+config.bind('at', 'open https://twitch.tv')
 config.bind('aur', 'open https://aur.archlinux.org/')
 config.bind('ay', 'open https://youtube.com/')
+config.bind('cs', 'config-source')
 config.unbind('d')
 config.bind('dd', 'tab-close')
 config.bind('dl', 'youtube-dl {url}')

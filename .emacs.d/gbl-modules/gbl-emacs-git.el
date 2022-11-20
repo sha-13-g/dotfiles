@@ -1,4 +1,4 @@
-;;; Diff-mode (and prot-diff.el extensions)
+;;; Diff-mode (and gbl-diff.el extensions)
 (use-package diff-mode
   :ensure nil
   :config
@@ -9,25 +9,25 @@
   (setq diff-refine nil)                ; I do it on demand
   (setq diff-font-lock-prettify nil)    ; better for patches
   ;; The following is further controlled by
-  ;; `prot-diff-modus-themes-diffs'
+  ;; `gbl-diff-modus-themes-diffs'
   (setq diff-font-lock-syntax 'hunk-also))
 
-(use-package prot-diff
+(use-package gbl-diff
   :ensure nil
   :config
-  (prot-diff-modus-themes-diffs)
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
+  (gbl-diff-modus-themes-diffs)
+  (add-hook 'modus-themes-after-load-theme-hook #'gbl-diff-modus-themes-diffs)
 
-  (prot-diff-extra-keywords 1)
+  (gbl-diff-extra-keywords 1)
 
-  ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
+  ;; `gbl-diff-buffer-dwim' replaces the default for `vc-diff' (which I
   ;; bind to another key---see VC section).
-  (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
+  (define-key global-map (kbd "C-x v =") #'gbl-diff-buffer-dwim)
   (let ((map diff-mode-map))
-    (define-key map (kbd "C-c C-b") #'prot-diff-refine-cycle) ; replace `diff-refine-hunk'
-    (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
+    (define-key map (kbd "C-c C-b") #'gbl-diff-refine-cycle) ; replace `diff-refine-hunk'
+    (define-key map (kbd "C-c C-n") #'gbl-diff-narrow-dwim)))
 
-;;; Version control framework (vc.el and prot-vc.el)
+;;; Version control framework (vc.el and gbl-vc.el)
 (use-package vc
   :ensure nil
   :config
@@ -47,7 +47,7 @@
   (setq log-edit-require-final-newline t)
   (setq log-edit-setup-add-author nil)
 
-  ;; Note that `prot-vc-git-setup-mode' will run the following when
+  ;; Note that `gbl-vc-git-setup-mode' will run the following when
   ;; activated:
   ;;
   ;;   (remove-hook 'log-edit-hook #'log-edit-show-files)
@@ -99,16 +99,16 @@
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
     (define-key map (kbd "k") #'vc-dir-clean-files)
     (define-key map (kbd "G") #'vc-revert)
-    (let ((prot-vc-git-branch-map (make-sparse-keymap)))
-      (define-key map "B" prot-vc-git-branch-map)
-      (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
-      (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
-      (define-key prot-vc-git-branch-map "c" #'prot-vc-git-checkout-remote) ; "checkout" remote
-      (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
-    (let ((prot-vc-git-stash-map (make-sparse-keymap)))
-      (define-key map "S" prot-vc-git-stash-map)
-      (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
-      (define-key prot-vc-git-stash-map "s" 'vc-git-stash-snapshot)))
+    (let ((gbl-vc-git-branch-map (make-sparse-keymap)))
+      (define-key map "B" gbl-vc-git-branch-map)
+      (define-key gbl-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
+      (define-key gbl-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
+      (define-key gbl-vc-git-branch-map "c" #'gbl-vc-git-checkout-remote) ; "checkout" remote
+      (define-key gbl-vc-git-branch-map "l" #'vc-print-branch-log))
+    (let ((gbl-vc-git-stash-map (make-sparse-keymap)))
+      (define-key map "S" gbl-vc-git-stash-map)
+      (define-key gbl-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
+      (define-key gbl-vc-git-stash-map "s" 'vc-git-stash-snapshot)))
   (let ((map vc-git-stash-shared-map))
     (define-key map "a" 'vc-git-stash-apply-at-point)
     (define-key map "c" 'vc-git-stash) ; "create" named stash
@@ -128,50 +128,50 @@
     (define-key map (kbd "F") #'vc-update)
     (define-key map (kbd "P") #'vc-push)))
 
-(use-package prot-vc
+(use-package gbl-vc
   :ensure nil
   :config
-  (setq prot-vc-log-limit 100)
-  (setq prot-vc-log-bulk-action-limit 50)
-  (setq prot-vc-git-log-edit-show-commits t)
-  (setq prot-vc-git-log-edit-show-commit-count 10)
-  (setq prot-vc-shell-output "*prot-vc-output*")
-  (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
+  (setq gbl-vc-log-limit 100)
+  (setq gbl-vc-log-bulk-action-limit 50)
+  (setq gbl-vc-git-log-edit-show-commits t)
+  (setq gbl-vc-git-log-edit-show-commit-count 10)
+  (setq gbl-vc-shell-output "*gbl-vc-output*")
+  (setq gbl-vc-patch-output-dirs (list "~/" "~/Desktop/"))
   (add-to-list 'log-edit-headers-alist '("Amend"))
 
   ;; This refashions log view and log edit buffers
-  (prot-vc-git-setup-mode 1)
+  (gbl-vc-git-setup-mode 1)
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
-    (define-key map (kbd "C-x v i") #'prot-vc-git-log-insert-commits)
-    (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
-    (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
-    (define-key map (kbd "C-x v g") #'prot-vc-git-grep)
-    (define-key map (kbd "C-x v G") #'prot-vc-git-log-grep)
-    (define-key map (kbd "C-x v a") #'prot-vc-git-patch-apply)
-    (define-key map (kbd "C-x v c") #'prot-vc-git-patch-create-dwim)
-    (define-key map (kbd "C-x v s") #'prot-vc-git-show)
-    (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
-    (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file)
-    (define-key map (kbd "C-x v R") #'prot-vc-git-reset))
+    (define-key map (kbd "C-x v i") #'gbl-vc-git-log-insert-commits)
+    (define-key map (kbd "C-x v p") #'gbl-vc-project-or-dir)
+    (define-key map (kbd "C-x v SPC") #'gbl-vc-custom-log)
+    (define-key map (kbd "C-x v g") #'gbl-vc-git-grep)
+    (define-key map (kbd "C-x v G") #'gbl-vc-git-log-grep)
+    (define-key map (kbd "C-x v a") #'gbl-vc-git-patch-apply)
+    (define-key map (kbd "C-x v c") #'gbl-vc-git-patch-create-dwim)
+    (define-key map (kbd "C-x v s") #'gbl-vc-git-show)
+    (define-key map (kbd "C-x v r") #'gbl-vc-git-find-revision)
+    (define-key map (kbd "C-x v B") #'gbl-vc-git-blame-region-or-file)
+    (define-key map (kbd "C-x v R") #'gbl-vc-git-reset))
   (let ((map vc-git-log-edit-mode-map))
-    (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
-    (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits)
-    ;; Also done by `prot-vc-git-setup-mode', but I am putting it here
+    (define-key map (kbd "C-C C-n") #'gbl-vc-git-log-edit-extract-file-name)
+    (define-key map (kbd "C-C C-i") #'gbl-vc-git-log-insert-commits)
+    ;; Also done by `gbl-vc-git-setup-mode', but I am putting it here
     ;; as well for visibility.
-    (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-    (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
-    (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
-    (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
-    (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
-    (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
+    (define-key map (kbd "C-c C-c") #'gbl-vc-git-log-edit-done)
+    (define-key map (kbd "C-c C-a") #'gbl-vc-git-log-edit-toggle-amend)
+    (define-key map (kbd "M-p") #'gbl-vc-git-log-edit-previous-comment)
+    (define-key map (kbd "M-n") #'gbl-vc-git-log-edit-next-comment)
+    (define-key map (kbd "M-s") #'gbl-vc-git-log-edit-complete-comment)
+    (define-key map (kbd "M-r") #'gbl-vc-git-log-edit-complete-comment))
   (let ((map log-view-mode-map))
-    (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
-    (define-key map (kbd "a") #'prot-vc-git-patch-apply)
-    (define-key map (kbd "c") #'prot-vc-git-patch-create-dwim)
-    (define-key map (kbd "R") #'prot-vc-git-log-reset)
-    (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
+    (define-key map (kbd "<C-tab>") #'gbl-vc-log-view-toggle-entry-all)
+    (define-key map (kbd "a") #'gbl-vc-git-patch-apply)
+    (define-key map (kbd "c") #'gbl-vc-git-patch-create-dwim)
+    (define-key map (kbd "R") #'gbl-vc-git-log-reset)
+    (define-key map (kbd "w") #'gbl-vc-log-kill-hash)))
 
 ;;; Interactive and powerful git front-end (Magit)
 
@@ -225,10 +225,10 @@
 
   ;; Tweak those for safer identification and removal
   (setq ediff-combination-pattern
-        '("<<<<<<< prot-ediff-combine Variant A" A
-          ">>>>>>> prot-ediff-combine Variant B" B
-          "####### prot-ediff-combine Ancestor" Ancestor
-          "======= prot-ediff-combine End"))
+        '("<<<<<<< gbl-ediff-combine Variant A" A
+          ">>>>>>> gbl-ediff-combine Variant B" B
+          "####### gbl-ediff-combine Ancestor" Ancestor
+          "======= gbl-ediff-combine End"))
 
   ;; TODO automate process in a robust way, or at least offer a good key
   ;; binding.
@@ -240,6 +240,6 @@ left behind by `smerge-ediff' when combining the output of two
 diffs.  While this could be automated via a hook, I am not yet
 sure this is a good approach."
     (interactive)
-    (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
+    (flush-lines ".*gbl-ediff.*" (point-min) (point-max) nil)))
 
 (provide 'gbl-emacs-git)

@@ -119,6 +119,8 @@
       ?\s-k
       ?\s-j
 
+      ?\s- 
+
       ?\s-J
       ?\s-K
       ?\s-H
@@ -200,9 +202,9 @@
 
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))))
 
-  (exwm-input-set-key (kbd "<s-tab>") 'evil-window-next)
-  (exwm-input-set-key (kbd "s-SPC") 'evil-window-vsplit)
-  (exwm-input-set-key (kbd "<s-return>") 'evil-window-split)
+  (exwm-input-set-key (kbd "<s-tab>") 'other-window)
+  (exwm-input-set-key (kbd "s-v") 'split-window-right)
+  (exwm-input-set-key (kbd "<s-return>") 'split-window-below)
 
   (gbl/launcher "qutebrowser" "")
   (gbl/launcher "alacritty" "")

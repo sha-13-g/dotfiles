@@ -1,4 +1,4 @@
-;;; prot-bookmark.el --- Bookmark extras for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-bookmark.el --- Bookmark extras for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -33,15 +33,15 @@
 
 ;;; Code:
 
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-bookmark ()
+(defgroup gbl-bookmark ()
   "Bookmark extras for my dotemacs."
   :group 'matching)
 
 ;;;; Extend Bookmark menu font-lock
 
-(defface prot-bookmark-url
+(defface gbl-bookmark-url
   '((((class color) (min-colors 88) (background light))
      :foreground "#0000c0")
     (((class color) (min-colors 88) (background dark))
@@ -49,7 +49,7 @@
     (t :foreground "blue"))
   "Face for URL bookmarks.")
 
-(defface prot-bookmark-pdf
+(defface gbl-bookmark-pdf
   '((((class color) (min-colors 88) (background light))
      :foreground "#7f1010")
     (((class color) (min-colors 88) (background dark))
@@ -57,7 +57,7 @@
     (t :foreground "red"))
   "Face for PDF bookmarks.")
 
-(defface prot-bookmark-directory
+(defface gbl-bookmark-directory
   '((((class color) (min-colors 88) (background light))
      :foreground "#0f3d8c")
     (((class color) (min-colors 88) (background dark))
@@ -68,33 +68,33 @@
 ;; TODO 2021-09-08: We should be able to filter out bookmarks from the
 ;; likes of Info and VC-Dir which set a file path even though they are
 ;; not really intended to be visited as files.
-(defconst prot-bookmark-keywords
-  `((,(concat "\\(.*\\)" " " prot-common-url-regexp)
-     (1 '(bold prot-bookmark-url) t)
-     (2 'prot-bookmark-url t))
+(defconst gbl-bookmark-keywords
+  `((,(concat "\\(.*\\)" " " gbl-common-url-regexp)
+     (1 '(bold gbl-bookmark-url) t)
+     (2 'gbl-bookmark-url t))
     ("\\(.*\\)\\( [~/].*\\.pdf\\)"
-     (1 '(bold prot-bookmark-pdf) t)
-     (2 'prot-bookmark-pdf t))
+     (1 '(bold gbl-bookmark-pdf) t)
+     (2 'gbl-bookmark-pdf t))
     ("\\(.*\\)\\( [~/].*/$\\)"
-     (1 '(bold prot-bookmark-directory) t)
-     (2 'prot-bookmark-directory t))
+     (1 '(bold gbl-bookmark-directory) t)
+     (2 'gbl-bookmark-directory t))
     ("\\(.*org.*last-stored.*\\)"
      (1 'shadow t)))
   "Extra font-lock patterns for the Bookmark menu.")
 
 ;;;###autoload
-(define-minor-mode prot-bookmark-extra-keywords
+(define-minor-mode gbl-bookmark-extra-keywords
   "Apply extra font-lock rules to bookmark list buffers."
   :init-value nil
   :global t
-  (if prot-bookmark-extra-keywords
+  (if gbl-bookmark-extra-keywords
       (progn
         (font-lock-flush (point-min) (point-max))
-        (font-lock-add-keywords nil prot-bookmark-keywords nil)
-        (add-hook 'bookmark-bmenu-mode-hook #'prot-bookmark-extra-keywords))
-    (font-lock-remove-keywords nil prot-bookmark-keywords)
-    (remove-hook 'bookmark-bmenu-mode-hook #'prot-bookmark-extra-keywords)
+        (font-lock-add-keywords nil gbl-bookmark-keywords nil)
+        (add-hook 'bookmark-bmenu-mode-hook #'gbl-bookmark-extra-keywords))
+    (font-lock-remove-keywords nil gbl-bookmark-keywords)
+    (remove-hook 'bookmark-bmenu-mode-hook #'gbl-bookmark-extra-keywords)
     (font-lock-flush (point-min) (point-max))))
 
-(provide 'prot-bookmark)
-;;; prot-bookmark.el ends here
+(provide 'gbl-bookmark)
+;;; gbl-bookmark.el ends here

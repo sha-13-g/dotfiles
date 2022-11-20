@@ -1,4 +1,4 @@
-;;; prot-spell.el --- Spelling-related extensions for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-spell.el --- Spelling-related extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,38 +34,38 @@
 
 ;;; Code:
 
-(defgroup prot-spell ()
+(defgroup gbl-spell ()
   "Extensions for ispell and flyspell."
   :group 'ispell)
 
-(defcustom prot-spell-dictionaries
+(defcustom gbl-spell-dictionaries
   '(("EN English" . "en")
     ("EL Ελληνικά" . "el")
     ("FR Français" . "fr")
     ("ES Espanõl" . "es"))
   "Alist of strings with descriptions and dictionary keys.
-Used by `prot-spell-change-dictionary'."
+Used by `gbl-spell-change-dictionary'."
   :type 'alist
-  :group 'prot-spell)
+  :group 'gbl-spell)
 
-(defvar prot-spell--dictionary-hist '()
-  "Input history for `prot-spell-change-dictionary'.")
+(defvar gbl-spell--dictionary-hist '()
+  "Input history for `gbl-spell-change-dictionary'.")
 
-(defun prot-spell--dictionary-prompt ()
-  "Helper prompt to select from `prot-spell-dictionaries'."
-  (let ((def (car prot-spell--dictionary-hist)))
+(defun gbl-spell--dictionary-prompt ()
+  "Helper prompt to select from `gbl-spell-dictionaries'."
+  (let ((def (car gbl-spell--dictionary-hist)))
     (completing-read
      (format "Select dictionary [%s]: " def)
-     (mapcar #'car prot-spell-dictionaries)
-     nil t nil 'prot-spell--dictionary-hist def)))
+     (mapcar #'car gbl-spell-dictionaries)
+     nil t nil 'gbl-spell--dictionary-hist def)))
 
 ;;;###autoload
-(defun prot-spell-change-dictionary (dictionary)
-  "Select a DICTIONARY from `prot-spell-dictionaries'."
+(defun gbl-spell-change-dictionary (dictionary)
+  "Select a DICTIONARY from `gbl-spell-dictionaries'."
   (interactive
-   (list (prot-spell--dictionary-prompt)))
-  (let* ((key (cdr (assoc dictionary prot-spell-dictionaries)))
-         (desc (car (assoc dictionary prot-spell-dictionaries))))
+   (list (gbl-spell--dictionary-prompt)))
+  (let* ((key (cdr (assoc dictionary gbl-spell-dictionaries)))
+         (desc (car (assoc dictionary gbl-spell-dictionaries))))
     (ispell-change-dictionary key)
     (message "Switched dictionary to %s" (propertize desc 'face 'bold))))
 
@@ -74,12 +74,12 @@ Used by `prot-spell-change-dictionary'."
 (autoload 'ispell-word "ispell")
 
 ;;;###autoload
-(defun prot-spell-spell-dwim (beg end)
+(defun gbl-spell-spell-dwim (beg end)
   "Spellcheck between BEG END, current word, or select dictionary.
 
 Use `flyspell-region' on the active region.  With point over a
 word and no active region invoke `ispell-word'.  Else call
-`prot-spell-change-dictionary'."
+`gbl-spell-change-dictionary'."
   (interactive "r")
   (cond
    ((use-region-p)
@@ -87,7 +87,7 @@ word and no active region invoke `ispell-word'.  Else call
    ((thing-at-point 'word)
     (call-interactively 'ispell-word))
    (t
-    (call-interactively 'prot-spell-change-dictionary))))
+    (call-interactively 'gbl-spell-change-dictionary))))
 
-(provide 'prot-spell)
-;;; prot-spell.el ends here
+(provide 'gbl-spell)
+;;; gbl-spell.el ends here

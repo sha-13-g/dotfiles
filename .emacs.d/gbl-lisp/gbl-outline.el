@@ -1,4 +1,4 @@
-;;; prot-outline.el --- Extend outline.el for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-outline.el --- Extend outline.el for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -38,16 +38,16 @@
 ;;; Code:
 
 (require 'outline)
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-outline ()
+(defgroup gbl-outline ()
   "Tweaks for Outline mode."
   :group 'outline)
 
 ;;;; Commands
 
 ;;;###autoload
-(defun prot-outline-move-major-heading-down (&optional arg)
+(defun gbl-outline-move-major-heading-down (&optional arg)
   "Move Outline major heading down one or, optionally, ARG times.
 A major heading is one that has subheadings."
   (interactive "p")
@@ -57,7 +57,7 @@ A major heading is one that has subheadings."
     (forward-line (or arg 1))))
 
 ;;;###autoload
-(defun prot-outline-move-major-heading-up (&optional arg)
+(defun gbl-outline-move-major-heading-up (&optional arg)
   "Move Outline major heading up one or, optionally, ARG times.
 A major heading is one that has subheadings."
   (interactive "p")
@@ -67,13 +67,13 @@ A major heading is one that has subheadings."
     (forward-line (- (or arg 1)))))
 
 ;;;###autoload
-(defun prot-outline-narrow-to-subtree ()
+(defun gbl-outline-narrow-to-subtree ()
   "Narrow to current Outline subtree."
   (interactive)
   (let ((start)
         (end)
         (point (point)))
-    (when (and (prot-common-line-regexp-p 'empty)
+    (when (and (gbl-common-line-regexp-p 'empty)
                (not (eobp)))
       (forward-char 1))
     (when (or (outline-up-heading 1)
@@ -88,27 +88,27 @@ A major heading is one that has subheadings."
 
 ;;;; Minor mode setup
 
-(defcustom prot-outline-headings-per-mode
+(defcustom gbl-outline-headings-per-mode
   '((emacs-lisp-mode . ";\\{3,\\}+ [^\n]"))
   "Alist of major modes with `outline-regexp' values."
   :type '(alist :key-type symbol :value-type string)
-  :group 'prot-outline)
+  :group 'gbl-outline)
 
-(defcustom prot-outline-major-modes-blocklist
+(defcustom gbl-outline-major-modes-blocklist
   '(org-mode outline-mode markdown-mode)
   "Major modes where Outline-minor-mode should not be enabled."
   :type '(repeat symbol)
-  :group 'prot-outline)
+  :group 'gbl-outline)
 
 ;;;###autoload
-(defun prot-outline-minor-mode-safe ()
+(defun gbl-outline-minor-mode-safe ()
   "Test to set variable `outline-minor-mode' to non-nil."
   (interactive)
-  (let* ((blocklist prot-outline-major-modes-blocklist)
+  (let* ((blocklist gbl-outline-major-modes-blocklist)
          (mode major-mode)
-         (headings (alist-get mode prot-outline-headings-per-mode)))
+         (headings (alist-get mode gbl-outline-headings-per-mode)))
     (when (derived-mode-p (car (member mode blocklist)))
-      (error "Don't use `prot-outline-minor-mode' with `%s'" mode))
+      (error "Don't use `gbl-outline-minor-mode' with `%s'" mode))
     (if (null outline-minor-mode)
         (progn
           (when (derived-mode-p mode)
@@ -118,5 +118,5 @@ A major heading is one that has subheadings."
       (outline-minor-mode -1)
       (message "Disabled `outline-minor-mode'"))))
 
-(provide 'prot-outline)
-;;; prot-outline.el ends here
+(provide 'gbl-outline)
+;;; gbl-outline.el ends here

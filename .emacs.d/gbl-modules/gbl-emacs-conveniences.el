@@ -7,8 +7,7 @@
 ;;            debug-on-quit nil)
 
 (use-package general
-  :diminish t
-  :config (general-evil-setup t))
+  :diminish t)
 
 (use-package devdocs)
 

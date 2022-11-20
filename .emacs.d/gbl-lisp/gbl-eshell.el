@@ -1,4 +1,4 @@
-;;; prot-eshell.el --- Extensions to Eshell for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-eshell.el --- Extensions to Eshell for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -38,32 +38,32 @@
 (require 'esh-mode)
 (require 'em-dirs)
 (require 'em-hist)
-(require 'prot-common)
+(require 'gbl-common)
 
 ;;;; Customisation options
 
-(defgroup prot-eshell ()
+(defgroup gbl-eshell ()
   "Extensions for Eshell and related libraries."
   :group 'shell)
 
-(defcustom prot-eshell-output-buffer "*Exported Eshell output*"
+(defcustom gbl-eshell-output-buffer "*Exported Eshell output*"
   "Name of buffer with the last output of Eshell command.
-Used by `prot-eshell-export'."
+Used by `gbl-eshell-export'."
   :type 'string
-  :group 'prot-eshell)
+  :group 'gbl-eshell)
 
-(defcustom prot-eshell-output-delimiter "* * *"
-  "Delimiter for successive `prot-eshell-export' outputs.
+(defcustom gbl-eshell-output-delimiter "* * *"
+  "Delimiter for successive `gbl-eshell-export' outputs.
 This is formatted internally to have newline characters before
 and after it."
   :type 'string
-  :group 'prot-eshell)
+  :group 'gbl-eshell)
 
 ;;;; Commands
 
 (autoload 'ffap-file-at-point "ffap.el")
 
-(defmacro prot-eshell-ffap (name doc &rest body)
+(defmacro gbl-eshell-ffap (name doc &rest body)
   "Make `find-file-at-point' commands for Eshell.
 NAME is how the function is called.  DOC is the function's
 documentation string.  BODY is the set of arguments passed to the
@@ -75,34 +75,34 @@ documentation string.  BODY is the set of arguments passed to the
          ,@body
        (user-error "No file at point"))))
 
-(prot-eshell-ffap
- prot-eshell-ffap-insert
+(gbl-eshell-ffap
+ gbl-eshell-ffap-insert
  "Insert (cat) contents of file at point."
  (progn
    (goto-char (point-max))
    (insert (format "cat %s" file))
    (eshell-send-input)))
 
-(prot-eshell-ffap
- prot-eshell-ffap-kill-save
+(gbl-eshell-ffap
+ gbl-eshell-ffap-kill-save
  "Add to kill-ring the absolute path of file at point."
  (progn
    (kill-new (format "%s/%s" (eshell/pwd) file))
    (message "Copied full path of %s" file)))
 
-(prot-eshell-ffap
- prot-eshell-ffap-find-file
+(gbl-eshell-ffap
+ gbl-eshell-ffap-find-file
  "Run `find-file' for file at point (ordinary file or dir).
 Recall that this will produce a `dired' buffer if the file is a
 directory."
  (find-file file))
 
-(prot-eshell-ffap
- prot-eshell-ffap-dired-jump
+(gbl-eshell-ffap
+ gbl-eshell-ffap-dired-jump
  "Jump to the parent directory of the file at point."
  (dired (file-name-directory file)))
 
-(defun prot-eshell--command-prompt-output ()
+(defun gbl-eshell--command-prompt-output ()
   "Capture last command prompt and its output."
   (let ((beg (save-excursion
                (goto-char (eshell-beginning-of-input))
@@ -111,47 +111,47 @@ directory."
     (buffer-substring-no-properties beg (eshell-end-of-output)))))
 
 ;;;###autoload
-(defun prot-eshell-export ()
+(defun gbl-eshell-export ()
   "Produce a buffer with output of the last Eshell command.
-If `prot-eshell-output-buffer' does not exist, create it.  Else
+If `gbl-eshell-output-buffer' does not exist, create it.  Else
 append to it, while separating multiple outputs with
-`prot-eshell-output-delimiter'."
+`gbl-eshell-output-delimiter'."
   (interactive)
-  (let ((eshell-output (prot-eshell--command-prompt-output)))
-    (with-current-buffer (get-buffer-create prot-eshell-output-buffer)
+  (let ((eshell-output (gbl-eshell--command-prompt-output)))
+    (with-current-buffer (get-buffer-create gbl-eshell-output-buffer)
       (goto-char (point-max))
       (unless (eq (point-min) (point-max))
-        (insert (format "\n%s\n\n" prot-eshell-output-delimiter)))
+        (insert (format "\n%s\n\n" gbl-eshell-output-delimiter)))
       (goto-char (point-at-bol))
       (insert eshell-output)
       (switch-to-buffer-other-window (current-buffer)))))
 
 ;;;###autoload
-(defun prot-eshell-redirect-to-buffer (buffer)
+(defun gbl-eshell-redirect-to-buffer (buffer)
   "Complete the syntax for appending Eshell output to BUFFER."
   (interactive
    (list (read-buffer "Redirect to buffer: ")))
   (insert (format " >>> #<%s>" buffer)))
 
-(defconst prot-eshell--highlight-faces
+(defconst gbl-eshell--highlight-faces
   '(hi-yellow hi-blue hi-pink hi-green hi-salmon hi-aquamarine)
   "List of faces to highlight output.")
 
 ;; ;; NOTE 2022-01-06: Deprecated in favour of the simpler method of
-;; ;; rotating the list: `prot-common-rotate-list-of-symbol'.  Try it with:
+;; ;; rotating the list: `gbl-common-rotate-list-of-symbol'.  Try it with:
 ;; ;;
 ;; ;; (format "%s -- %s"
-;; ;;         (prot-common-rotate-list-of-symbol 'prot-eshell--highlight-faces)
-;; ;;         prot-eshell--highlight-faces)
+;; ;;         (gbl-common-rotate-list-of-symbol 'gbl-eshell--highlight-faces)
+;; ;;         gbl-eshell--highlight-faces)
 ;;
-;; (defvar prot-eshell--highlight-last-face nil
+;; (defvar gbl-eshell--highlight-last-face nil
 ;;   "Last used face used for highlighting output.")
 ;; 
-;; (defun prot-eshell--highlight-random-face ()
+;; (defun gbl-eshell--highlight-random-face ()
 ;;   "Return random face except last used.
-;; For use in `prot-eshell-narrow-output-highlight-regexp'."
-;;   (let* ((faces prot-eshell--highlight-faces)
-;;          (last prot-eshell--highlight-last-face)
+;; For use in `gbl-eshell-narrow-output-highlight-regexp'."
+;;   (let* ((faces gbl-eshell--highlight-faces)
+;;          (last gbl-eshell--highlight-last-face)
 ;;          (remaining (when last (remove last faces)))
 ;;          (length (1- (length faces)))
 ;;          (n (random length))
@@ -162,29 +162,29 @@ append to it, while separating multiple outputs with
 ;;      ((eq face last)
 ;;       (setq remaining (remove face remaining))
 ;;       (setq face (car remaining))))
-;;     (setq prot-eshell--highlight-last-face face)
+;;     (setq gbl-eshell--highlight-last-face face)
 ;;     face))
 
-(defvar prot-eshell--output-highlight-history '()
-  "History of `prot-eshell-narrow-output-highlight-regexp'.")
+(defvar gbl-eshell--output-highlight-history '()
+  "History of `gbl-eshell-narrow-output-highlight-regexp'.")
 
 ;;;###autoload
-(defun prot-eshell-narrow-output-highlight-regexp (regexp)
+(defun gbl-eshell-narrow-output-highlight-regexp (regexp)
   "Narrow to last command output and highlight REGEXP."
   (interactive
-   (list (read-regexp "Regexp to highlight" nil 'prot-eshell--output-highlight-history)))
+   (list (read-regexp "Regexp to highlight" nil 'gbl-eshell--output-highlight-history)))
   (narrow-to-region (eshell-beginning-of-output)
                     (eshell-end-of-output))
   (goto-char (point-min))
-  (highlight-regexp regexp (prot-common-rotate-list-of-symbol 'prot-eshell--highlight-faces))
+  (highlight-regexp regexp (gbl-common-rotate-list-of-symbol 'gbl-eshell--highlight-faces))
   (message "%s to last output and highlighted '%s'"
            (propertize "Narrowed" 'face 'bold)
            (propertize regexp 'face 'italic)))
 
 ;; Copied on 2022-01-04 10:32 +0200 from Sean Whitton's `spw/eshell-cd'.
-;; I had to change the symbol to use the prot-eshell prefix for lexical
+;; I had to change the symbol to use the gbl-eshell prefix for lexical
 ;; binding.  Sean's dotfiles: <https://git.spwhitton.name/dotfiles>.
-(defun prot-eshell--cd (dir)
+(defun gbl-eshell--cd (dir)
   "Routine to cd into DIR."
   (delete-region eshell-last-output-end (point-max))
   (when (> eshell-last-output-end (point))
@@ -193,7 +193,7 @@ append to it, while separating multiple outputs with
   (eshell-send-input))
 
 ;;;###autoload
-(defun prot-eshell-complete-recent-dir (dir &optional arg)
+(defun gbl-eshell-complete-recent-dir (dir &optional arg)
   "Switch to a recent Eshell directory.
 
 When called interactively, DIR is selected with completion from
@@ -207,30 +207,30 @@ open the directory in a `dired' buffer."
         (completing-read "Switch to recent dir: " dirs nil t)
       (user-error "There is no Eshell history for recent directories"))
     current-prefix-arg))
-  (prot-eshell--cd dir)
+  (gbl-eshell--cd dir)
   ;; UPDATE 2022-01-04 10:48 +0200: The idea for `dired-other-window'
   ;; was taken from Sean Whitton's `spw/eshell-cd-recent-dir'.  Check
   ;; Sean's dotfiles: <https://git.spwhitton.name/dotfiles>.
   (when arg
     (dired-other-window dir)))
 
-(defvar prot-eshell--complete-history-prompt-history '()
-  "History of `prot-eshell-narrow-output-highlight-regexp'.")
+(defvar gbl-eshell--complete-history-prompt-history '()
+  "History of `gbl-eshell-narrow-output-highlight-regexp'.")
 
-(defun prot-eshell--complete-history-prompt ()
+(defun gbl-eshell--complete-history-prompt ()
   "Prompt with completion for history element.
-Helper function for `prot-eshell-complete-history'."
+Helper function for `gbl-eshell-complete-history'."
   (if-let ((hist (ring-elements eshell-history-ring)))
       (completing-read "Input from history: "
                        hist nil t nil
-                       'prot-eshell--complete-history-prompt-history)
+                       'gbl-eshell--complete-history-prompt-history)
     (user-error "There is no Eshell history")))
 
 ;;;###autoload
-(defun prot-eshell-complete-history (elt)
+(defun gbl-eshell-complete-history (elt)
   "Insert ELT from Eshell history using completion."
   (interactive
-   (list (prot-eshell--complete-history-prompt)))
+   (list (gbl-eshell--complete-history-prompt)))
   (insert elt))
 
 (autoload 'cl-remove-if-not "cl-seq")
@@ -238,7 +238,7 @@ Helper function for `prot-eshell-complete-history'."
 ;; TODO 2022-01-01: Maybe we can rewrite this using `find' and then
 ;; processing the output.
 ;;;###autoload
-(defun prot-eshell-find-subdirectory-recursive ()
+(defun gbl-eshell-find-subdirectory-recursive ()
   "Recursive `eshell/cd' to subdirectory.
 This command has the potential for infinite recursion: use it
 wisely or prepare to call `eshell-interrupt-process'."
@@ -253,14 +253,14 @@ wisely or prepare to call `eshell-interrupt-process'."
                      (format "Find sub-dir from %s: "
                              (propertize dir 'face 'success))
                      dirs nil t)))
-    (prot-eshell--cd selection)))
+    (gbl-eshell--cd selection)))
 
 ;;;###autoload
-(defun prot-eshell-root-dir ()
+(defun gbl-eshell-root-dir ()
   "Switch to the root directory of the present project."
   (interactive)
   (if-let ((root (or (vc-root-dir) (locate-dominating-file "." ".git"))))
-      (prot-eshell--cd root)
+      (gbl-eshell--cd root)
     (user-error "Cannot find a project root here")))
 
 ;;;; Bookmark handler for bookmark.el
@@ -273,7 +273,7 @@ wisely or prepare to call `eshell-interrupt-process'."
 ;; Copied from the `eshell-conf.el' of JSDurand on 2021-09-17 17:47
 ;; +0300: <https://git.jsdurand.xyz/emacsd.git/tree/eshell-conf.el>.
 
-(defun prot-eshell-bookmark-jump (bookmark)
+(defun gbl-eshell-bookmark-jump (bookmark)
   "Handle Eshell BOOKMARK in my preferred way."
   (let ((handler (bookmark-get-handler bookmark))
         (location (bookmark-prop-get bookmark 'location))
@@ -293,7 +293,7 @@ wisely or prepare to call `eshell-interrupt-process'."
      ((and (stringp location)
            (not (string= location ""))
            (memq handler (list #'eshell-bookmark-jump
-                               #'prot-eshell-bookmark-jump)))
+                               #'gbl-eshell-bookmark-jump)))
       (let (reuse-p)
         (mapc
          (lambda (buffer)
@@ -315,7 +315,7 @@ wisely or prepare to call `eshell-interrupt-process'."
             (set-buffer buffer))))))
      ((user-error "Cannot jump to this bookmark")))))
 
-(advice-add #'eshell-bookmark-jump :override #'prot-eshell-bookmark-jump)
+(advice-add #'eshell-bookmark-jump :override #'gbl-eshell-bookmark-jump)
 
-(provide 'prot-eshell)
-;;; prot-eshell.el ends here
+(provide 'gbl-eshell)
+;;; gbl-eshell.el ends here

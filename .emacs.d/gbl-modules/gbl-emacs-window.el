@@ -286,7 +286,7 @@
 ;;   (add-hook 'after-init-hook #'winner-mode)
 
   ;; ;; NOTE 2021-07-31: Those are superseded by the commands
-  ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
+  ;; ;; `gbl-tab-winner-undo' and `gbl-tab-winner-redo' in gbl-tab.el
   ;; ;; (search this document).
   ;; (let ((map global-map))
   ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
@@ -309,7 +309,7 @@
 ;;     (define-key map (kbd "C-M-S-<down>") #'windmove-swap-states-down)
 ;;     (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 
-;;; Tabs for window layouts (tab-bar.el and prot-tab.el)
+;;; Tabs for window layouts (tab-bar.el and gbl-tab.el)
 ;; (use-package tab-bar
 ;;   (setq tab-bar-close-button-show nil)
 ;;   (setq tab-bar-close-last-tab-choice nil)
@@ -321,26 +321,26 @@
 ;;   (setq tab-bar-tab-hints nil)
 ;;   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
 ;; 
-;;   (tab-bar-mode -1)                     ; see `prot-tab-status-line'
+;;   (tab-bar-mode -1)                     ; see `gbl-tab-status-line'
 ;; 
-;;   ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
+;;   ;; Same concept as `winner-mode'.  See the `gbl-tab-winner-undo' and
 ;;   ;; its counterpart.
 ;;   (tab-bar-history-mode 1))
 ;; 
-;; (use-package prot-tab
-;;   (setq prot-tab-tab-select-num-threshold 3)
+;; (use-package gbl-tab
+;;   (setq gbl-tab-tab-select-num-threshold 3)
 ;;   (setq tab-bar-format                    ; Emacs 28
 ;;         '(tab-bar-format-tabs-groups
 ;;           tab-bar-format-align-right
 ;;           tab-bar-format-global))
 ;; 
-;;   (add-hook 'after-init-hook #'prot-tab-status-line)
+;;   (add-hook 'after-init-hook #'gbl-tab-status-line)
 ;; 
 ;;   (let ((map global-map))
-;;     (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
-;;     (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
-;;     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
-;;     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
+;;     (define-key map (kbd "C-x <right>") #'gbl-tab-winner-redo)
+;;     (define-key map (kbd "C-x <left>") #'gbl-tab-winner-undo)
+;;     (define-key map (kbd "<f8>") #'gbl-tab-status-line) ; unopinionated alternative: `gbl-tab-bar-toggle'
+;;     (define-key map (kbd "C-x t t") #'gbl-tab-select-tab-dwim)))
 ;; 
 ;; ;; This is only included as a reference.
 ;; (use-package tab-line

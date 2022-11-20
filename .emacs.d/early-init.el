@@ -4,6 +4,9 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs
+
+
+
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1"))
 
@@ -73,6 +76,7 @@
 
 (column-number-mode)
 (menu-bar--display-line-numbers-mode-relative)
+
 (setq global-prettify-symbols-mode t) ; Glyph support
 
 (setq-default

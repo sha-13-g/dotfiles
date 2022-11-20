@@ -1,4 +1,4 @@
-;;; prot-bongo.el --- Bongo extensions for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-ongo.el --- Bongo extensions for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -39,36 +39,36 @@
 (eval-when-compile (require 'subr-x))
 (eval-when-compile (require 'cl-lib))
 (require 'bongo nil t)
-(require 'prot-common)
+(require 'gbl-common)
 
-(defgroup prot-bongo ()
+(defgroup gbl-bongo ()
   "Personal extensions for Bongo."
   :group 'bongo)
 
-(defcustom prot-bongo-enabled-backends '(mpv vlc)
+(defcustom gbl-bongo-enabled-backends '(mpv vlc)
   "List of enabled backends.
 See `bongo-backends' for a list of available backends."
   :type 'list
-  :group 'prot-bongo)
+  :group 'gbl-bongo)
 
-(defcustom prot-bongo-playlist-section-delimiter (make-string 30 ?*)
+(defcustom gbl-bongo-playlist-section-delimiter (make-string 30 ?*)
   "Delimiter for inserted groups in Bongo playlist buffers.
 It is recommended to set this to a few character length, as it
 should be placed on its own line to demacrate groups of enqueued
 media."
   :type 'string
-  :group 'prot-bongo)
+  :group 'gbl-bongo)
 
-(defcustom prot-bongo-playlist-heading-delimiter "§"
+(defcustom gbl-bongo-playlist-heading-delimiter "§"
   "Delimiter for custom headings in Bongo playlist buffers.
 It is recommended to set this to a single character, as it will
 be complemented with the name of the enqueued item."
   :type 'string
-  :group 'prot-bongo)
+  :group 'gbl-bongo)
 
 (defvar bongo-default-directory)
 
-(defcustom prot-bongo-playlist-directory
+(defcustom gbl-bongo-playlist-directory
   (concat
    (file-name-as-directory bongo-default-directory)
    (file-name-as-directory "playlists"))
@@ -80,28 +80,28 @@ directory with music files).
 Make sure this is a valid path, as we will not make any attempt
 at creating it or running any other kind of check."
   :type 'string
-  :group 'prot-bongo)
+  :group 'gbl-bongo)
 
-(defcustom prot-bongo-last-inserted-file
-  (locate-user-emacs-file "prot-bongo-last-inserted")
+(defcustom gbl-bongo-last-inserted-file
+  (locate-user-emacs-file "gbl-bongo-last-inserted")
   "File to save the last insertion from Dired into the playlist."
   :type 'file
-  :group 'prot-bongo)
+  :group 'gbl-bongo)
 
 ;;;; Basic setup
 
 (defvar bongo-enabled-backends)
 
 ;;;###autoload
-(defun prot-bongo-enabled-backends (&optional negation)
-  "Assign variable `prot-bongo-enabled-backends' to Bongo.
+(defun gbl-bongo-enabled-backends (&optional negation)
+  "Assign variable `gbl-bongo-enabled-backends' to Bongo.
 With optional NEGATION, undo this assignment."
   (if negation
       (progn
         (setq bongo-enabled-backends nil)
-        (remove-hook 'bongo-mode-hook #'prot-bongo-enabled-backends))
-    (setq bongo-enabled-backends prot-bongo-enabled-backends)
-    (add-hook 'bongo-mode-hook #'prot-bongo-enabled-backends)))
+        (remove-hook 'bongo-mode-hook #'gbl-bongo-enabled-backends))
+    (setq bongo-enabled-backends gbl-bongo-enabled-backends)
+    (add-hook 'bongo-mode-hook #'gbl-bongo-enabled-backends)))
 
 ;; The original idea for the advice setup to hide the Bongo comment
 ;; headers comes from the Emacs configuration of Nicolas De Jaeghere:
@@ -112,67 +112,67 @@ With optional NEGATION, undo this assignment."
 (declare-function bongo-playlist-mode "bongo")
 (declare-function bongo-library-mode "bongo")
 
-(defun prot-bongo-playlist-buffer-no-banner ()
+(defun gbl-bongo-playlist-buffer-no-banner ()
   "Set up a Bongo playlist buffer without its header commentary.
 To be advised as override for `bongo-default-playlist-buffer'.
 
-To actually enable this, evaluate `prot-bongo-remove-headers'."
+To actually enable this, evaluate `gbl-bongo-remove-headers'."
   (with-current-buffer (get-buffer-create bongo-default-playlist-buffer-name)
     (unless (derived-mode-p 'bongo-playlist-mode)
       (bongo-playlist-mode))
     (current-buffer)))
 
-(defun prot-bongo-library-buffer-no-banner ()
+(defun gbl-bongo-library-buffer-no-banner ()
   "Set up a Bongo library buffer without its header commentary.
 To be advised as override for `bongo-default-library-buffer'.
 
-To actually enable this, evaluate `prot-bongo-remove-headers'."
+To actually enable this, evaluate `gbl-bongo-remove-headers'."
   (with-current-buffer (get-buffer-create bongo-default-library-buffer-name)
     (unless (derived-mode-p 'bongo-library-mode)
       (bongo-library-mode))
     (current-buffer)))
 
 ;;;###autoload
-(defun prot-bongo-remove-headers (&optional negation)
+(defun gbl-bongo-remove-headers (&optional negation)
   "Remove comment headers from Bongo buffers.
 With optional NEGATION undo the changes."
   (if negation
       (progn
-        (advice-remove 'bongo-default-playlist-buffer #'prot-bongo-playlist-buffer-no-banner)
-        (advice-remove 'bongo-default-library-buffer #'prot-bongo-library-buffer-no-banner))
-    (advice-add 'bongo-default-playlist-buffer :override #'prot-bongo-playlist-buffer-no-banner)
-    (advice-add 'bongo-default-library-buffer :override #'prot-bongo-library-buffer-no-banner)))
+        (advice-remove 'bongo-default-playlist-buffer #'gbl-bongo-playlist-buffer-no-banner)
+        (advice-remove 'bongo-default-library-buffer #'gbl-bongo-library-buffer-no-banner))
+    (advice-add 'bongo-default-playlist-buffer :override #'gbl-bongo-playlist-buffer-no-banner)
+    (advice-add 'bongo-default-library-buffer :override #'gbl-bongo-library-buffer-no-banner)))
 
 ;;;; Custom delimiters for headings and sections
 
 (declare-function bongo-insert-comment-text "bongo")
 
-(defun prot-bongo-playlist-heading (title &optional description)
+(defun gbl-bongo-playlist-heading (title &optional description)
   "Insert `bongo' comment with TITLE and DESCRIPTION.
 Use this to add a custom heading for the enqueued media items."
   (bongo-insert-comment-text
    (format "%s %s%s\n"
-           prot-bongo-playlist-heading-delimiter
+           gbl-bongo-playlist-heading-delimiter
            title
            (if description (concat " " description) ""))))
 
-(defun prot-bongo-playlist-section ()
-  "Make `prot-bongo-playlist-section-delimiter' comment."
+(defun gbl-bongo-playlist-section ()
+  "Make `gbl-bongo-playlist-section-delimiter' comment."
   (bongo-insert-comment-text
-   (format "\n%s\n\n" prot-bongo-playlist-section-delimiter)))
+   (format "\n%s\n\n" gbl-bongo-playlist-section-delimiter)))
 
 ;;;; Motions and actions for custom sections
 
 ;; REVIEW: there probably is a better way to parametrise move-buf and
 ;; move-point so that one key checks for appropriate forward or backward
 ;; motions, but this is okay right now.
-(defmacro prot-bongo-playlist-motion (fn desc rx move-buf move-point)
+(defmacro gbl-bongo-playlist-motion (fn desc rx move-buf move-point)
   "Produce interactive commands to navigate custom bongo delimiters.
 
 FN is the resulting interactive function's name.  DESC is its doc
 string.  RX is the regular expression that matches the custom
-bongo playlist delimiter (see `prot-bongo-playlist-delimiter' and
-`prot-bongo-playlist-heading').
+bongo playlist delimiter (see `gbl-bongo-playlist-delimiter' and
+`gbl-bongo-playlist-heading').
 
 MOVE-BUF is a motion across an arbitrary number of lines.
 Currently it assumes (though does test) either
@@ -188,46 +188,46 @@ motions should go in pairs, in the order they are presented here."
          (goto-char (funcall ,move-point))
          (funcall ,move-buf section nil t)))))
 
-(prot-bongo-playlist-motion
-  prot-bongo-playlist-heading-next
+(gbl-bongo-playlist-motion
+  gbl-bongo-playlist-heading-next
   "Move to next `bongo' playlist custom heading."
-  (format "^.*%s.*$" prot-bongo-playlist-heading-delimiter)
+  (format "^.*%s.*$" gbl-bongo-playlist-heading-delimiter)
   're-search-forward
   'point-at-eol)
 
-(prot-bongo-playlist-motion
-  prot-bongo-playlist-heading-previous
+(gbl-bongo-playlist-motion
+  gbl-bongo-playlist-heading-previous
   "Move to previous `bongo' playlist custom heading."
-  (format "^.*%s.*$" prot-bongo-playlist-heading-delimiter)
+  (format "^.*%s.*$" gbl-bongo-playlist-heading-delimiter)
   're-search-backward
   'point-at-bol)
 
-(defun prot-bongo--section-delimiter-string ()
-  "Format regexp for `prot-bongo-playlist-section-delimiter'."
-  (let* ((string prot-bongo-playlist-section-delimiter)
+(defun gbl-bongo--section-delimiter-string ()
+  "Format regexp for `gbl-bongo-playlist-section-delimiter'."
+  (let* ((string gbl-bongo-playlist-section-delimiter)
          (char (regexp-quote (substring string 0 1))))
     (format "^%s+$" char)))
 
-(prot-bongo-playlist-motion
-  prot-bongo-playlist-section-next
+(gbl-bongo-playlist-motion
+  gbl-bongo-playlist-section-next
   "Move to next `bongo' playlist custom section delimiter."
-  (prot-bongo--section-delimiter-string)
+  (gbl-bongo--section-delimiter-string)
   're-search-forward
   'point-at-eol)
 
-(prot-bongo-playlist-motion
-  prot-bongo-playlist-section-previous
+(gbl-bongo-playlist-motion
+  gbl-bongo-playlist-section-previous
   "Move to previous `bongo' playlist custom section delimiter."
-  (prot-bongo--section-delimiter-string)
+  (gbl-bongo--section-delimiter-string)
   're-search-backward
   'point-at-bol)
 
 ;;;###autoload
-(defun prot-bongo-playlist-mark-section ()
+(defun gbl-bongo-playlist-mark-section ()
   "Mark `bongo' playlist section, delimited by custom markers.
-The marker is `prot-bongo-playlist-delimiter'."
+The marker is `gbl-bongo-playlist-delimiter'."
   (interactive)
-  (let ((section (prot-bongo--section-delimiter-string)))
+  (let ((section (gbl-bongo--section-delimiter-string)))
     (search-forward-regexp section nil t)
     (push-mark nil t)
     (forward-line -1)
@@ -242,24 +242,24 @@ The marker is `prot-bongo-playlist-delimiter'."
 (declare-function bongo-kill "bongo")
 
 ;;;###autoload
-(defun prot-bongo-playlist-kill-section ()
+(defun gbl-bongo-playlist-kill-section ()
   "Kill `bongo' playlist-section at point.
 This operates on a custom delimited section of the buffer.  See
-`prot-bongo-playlist-kill-section'."
+`gbl-bongo-playlist-kill-section'."
   (interactive)
-  (prot-bongo-playlist-mark-section)
+  (gbl-bongo-playlist-mark-section)
   (bongo-kill))
 
 ;;;; Imenu setup for custom sections
 
-(defvar prot-bongo-playlist-setup-hook nil
+(defvar gbl-bongo-playlist-setup-hook nil
   "Hook that runs after inserting items to the Bongo playlist.
 See, for example, `prot/bongo-playlist-insert-playlist-file' or
 `prot/bongo-dired-insert-files'.")
 
-(defun prot-bongo--playlist-imenu-heading ()
+(defun gbl-bongo--playlist-imenu-heading ()
   "Return the text of the custom `bongo' playlist heading."
-  (let* ((string prot-bongo-playlist-heading-delimiter)
+  (let* ((string gbl-bongo-playlist-heading-delimiter)
          (char (substring string 0 1)))
     (nth 1
          (split-string
@@ -267,7 +267,7 @@ See, for example, `prot/bongo-playlist-insert-playlist-file' or
           (concat char " ")))))
 
 ;;;###autoload
-(defun prot-bongo-imenu-setup (&optional negation)
+(defun gbl-bongo-imenu-setup (&optional negation)
   "Set up `imenu' bindings for the Bongo playlist buffer.
 With optional NEGATION, remove them."
   (if negation
@@ -275,12 +275,12 @@ With optional NEGATION, remove them."
         (dolist (local '(imenu-prev-index-position-function
                          imenu-extract-index-name-function))
           (kill-local-variable local))
-        (remove-hook 'prot-bongo-playlist-setup-hook #'prot-bongo-imenu-setup))
-    (add-hook 'prot-bongo-playlist-setup-hook #'prot-bongo-imenu-setup)
+        (remove-hook 'gbl-bongo-playlist-setup-hook #'gbl-bongo-imenu-setup))
+    (add-hook 'gbl-bongo-playlist-setup-hook #'gbl-bongo-imenu-setup)
     (setq-local imenu-prev-index-position-function
-                'prot-bongo-playlist-heading-previous)
+                'gbl-bongo-playlist-heading-previous)
     (setq-local imenu-extract-index-name-function
-                'prot-bongo--playlist-imenu-heading)))
+                'gbl-bongo--playlist-imenu-heading)))
 
 ;;;; Commands
 
@@ -290,7 +290,7 @@ With optional NEGATION, remove them."
 (declare-function bongo-player-infoset "bongo" (player))
 
 ;;;###autoload
-(defun prot-bongo-show ()
+(defun gbl-bongo-show ()
   "Echo Bongo track without elapsed time format.
 This is a simplified variant of `bongo-show'."
   (interactive)
@@ -314,7 +314,7 @@ This is a simplified variant of `bongo-show'."
 (declare-function bongo-stop "bongo")
 
 ;;;###autoload
-(defun prot-bongo-playlist-play-random ()
+(defun gbl-bongo-playlist-play-random ()
   "Play random `bongo' track and determine further conditions."
   (interactive)
   (unless (bongo-playlist-buffer)
@@ -330,7 +330,7 @@ This is a simplified variant of `bongo-show'."
 (defvar bongo-next-action)
 
 ;;;###autoload
-(defun prot-bongo-playlist-random-toggle ()
+(defun gbl-bongo-playlist-random-toggle ()
   "Toggle `bongo-random-playback-mode' in playlist buffers."
   (interactive)
   (if (eq bongo-next-action 'bongo-play-random-or-stop)
@@ -338,7 +338,7 @@ This is a simplified variant of `bongo-show'."
     (bongo-random-playback-mode)))
 
 ;;;###autoload
-(defun prot-bongo-playlist-reset ()
+(defun gbl-bongo-playlist-reset ()
   "Stop playback and reset Bongo playlist.
 To reset the playlist is to undo the marks produced by non-nil
 `bongo-mark-played-tracks'."
@@ -348,7 +348,7 @@ To reset the playlist is to undo the marks produced by non-nil
     (bongo-reset-playlist)))
 
 ;;;###autoload
-(defun prot-bongo-playlist-terminate ()
+(defun gbl-bongo-playlist-terminate ()
   "Stop playback and clear the entire `bongo' playlist buffer.
 Contrary to the standard `bongo-erase-buffer', this also removes
 the currently playing track."
@@ -357,29 +357,29 @@ the currently playing track."
     (bongo-stop)
     (bongo-erase-buffer)))
 
-(defvar prot-bongo--playlist-history '()
-  "Input history of `prot-bongo-playlist-insert-playlist-file'.")
+(defvar gbl-bongo--playlist-history '()
+  "Input history of `gbl-bongo-playlist-insert-playlist-file'.")
 
-(defun prot-bongo--playlist-prompt ()
-  "Prompt for a file in `prot-bongo-playlist-directory'.
-Helper function for `prot-bongo-playlist-insert-playlist-file'."
-  (let* ((path prot-bongo-playlist-directory)
+(defun gbl-bongo--playlist-prompt ()
+  "Prompt for a file in `gbl-bongo-playlist-directory'.
+Helper function for `gbl-bongo-playlist-insert-playlist-file'."
+  (let* ((path gbl-bongo-playlist-directory)
          (dotless directory-files-no-dot-files-regexp)
          (playlists (mapc
                      #'abbreviate-file-name
                      (directory-files path nil dotless))))
     (completing-read-multiple
      "Add playlist: " playlists
-     #'prot-common-crm-exclude-selected-p
-     t nil 'prot-bongo--playlist-history)))
+     #'gbl-common-crm-exclude-selected-p
+     t nil 'gbl-bongo--playlist-history)))
 
 (declare-function bongo-insert-playlist-contents "bongo")
 
 ;;;###autoload
-(defun prot-bongo-playlist-insert-playlist-file ()
+(defun gbl-bongo-playlist-insert-playlist-file ()
   "Insert contents of playlist file to a `bongo' playlist.
 Upon insertion, playback starts immediately, in accordance with
-`prot-bongo-play-random'.
+`gbl-bongo-play-random'.
 
 The available options at the completion prompt are pre-configured
 files that contain absolute filesystem paths of directories or
@@ -391,45 +391,45 @@ To insert multiple playlists complete the first, then type a
 character that matches `crm-separator' to complete the second,
 and so on.
 
-Also see `prot-bongo-dired-make-playlist-file'."
+Also see `gbl-bongo-dired-make-playlist-file'."
   (interactive)
-  (let ((path prot-bongo-playlist-directory))
+  (let ((path gbl-bongo-playlist-directory))
     (unless (file-directory-p path)
       (error "'%s' is not an existing directory" path))
     (let ((choice
            (if (bongo-playlist-buffer-p (current-buffer))
-               (prot-bongo--playlist-prompt)
+               (gbl-bongo--playlist-prompt)
              (user-error "Not in a `bongo' playlist buffer"))))
       (mapc (lambda (x)
               (save-excursion
                 (goto-char (point-max))
-                (prot-bongo-playlist-heading x "playlist file")
+                (gbl-bongo-playlist-heading x "playlist file")
                 (bongo-insert-playlist-contents
                  (format "%s%s" path x))
-                (prot-bongo-playlist-section)))
+                (gbl-bongo-playlist-section)))
             choice)
-      (prot-bongo-playlist-play-random)
-      (run-hooks 'prot-bongo-playlist-setup-hook))))
+      (gbl-bongo-playlist-play-random)
+      (run-hooks 'gbl-bongo-playlist-setup-hook))))
 
 ;;;; Setup for track changing
 
-(defvar prot-bongo-playlist-change-track-hook nil
+(defvar gbl-bongo-playlist-change-track-hook nil
   "Hook that runs after `bongo' switches to a new track.")
 
-(defun prot-bongo-playlist-run-hook-change-track (&rest _)
-  "Run `prot-bongo-playlist-run-hook-change-track'.
+(defun gbl-bongo-playlist-run-hook-change-track (&rest _)
+  "Run `gbl-bongo-playlist-run-hook-change-track'.
 This is meant to be loaded after the relevant `bongo' functions
 that change tracks, such as `bongo-play-next-or-stop' and
 `bongo-play-random-or-stop'."
-  (run-hooks 'prot-bongo-playlist-change-track-hook))
+  (run-hooks 'gbl-bongo-playlist-change-track-hook))
 
 (dolist (fn '(bongo-play-next-or-stop bongo-play-random-or-stop))
-  (advice-add fn :after #'prot-bongo-playlist-run-hook-change-track))
+  (advice-add fn :after #'gbl-bongo-playlist-run-hook-change-track))
 
 ;;;###autoload
-(defun prot-bongo-playlist-recenter ()
+(defun gbl-bongo-playlist-recenter ()
   "Recenter `bongo' playlist buffer while in a live window.
-Add to `prot-bongo-playlist-change-track-hook'."
+Add to `gbl-bongo-playlist-change-track-hook'."
   (with-current-buffer (bongo-playlist-buffer)
     (bongo-recenter)))
 
@@ -442,7 +442,7 @@ Add to `prot-bongo-playlist-change-track-hook'."
 (autoload 'dired-get-marked-files "bongo")
 (autoload 'dired-next-line "bongo")
 
-(defmacro prot-bongo-dired-library (name doc val)
+(defmacro gbl-bongo-dired-library (name doc val)
   "Create Bongo library function NAME with DOC and VAL."
   (declare (indent defun))
   `(defun ,name ()
@@ -451,8 +451,8 @@ Add to `prot-bongo-playlist-change-track-hook'."
                            (file-truename default-directory))
        (bongo-dired-library-mode ,val))))
 
-(prot-bongo-dired-library
-  prot-bongo-dired-library-enable
+(gbl-bongo-dired-library
+  gbl-bongo-dired-library-enable
   "Set `bongo-dired-library-mode' when accessing ~/Music.
 
 Add this to `dired-mode-hook'.  Upon activation, the directory
@@ -463,87 +463,87 @@ normal, making this a superior alternative to a purpose-specific
 library buffer.
 
 Note, though, that this will interfere with `wdired-mode'.  See
-`prot-bongo-dired-library-disable'."
+`gbl-bongo-dired-library-disable'."
   1)
 
-(prot-bongo-dired-library
-  prot-bongo-dired-library-disable
+(gbl-bongo-dired-library
+  gbl-bongo-dired-library-disable
   "Disable `bongo-dired-library-mode' when accessing ~/Music.
 This should be added to `wdired-mode-hook'.  For more, refer to
-`prot-bongo-dired-library-enable'."
+`gbl-bongo-dired-library-enable'."
   -1)
 
-(advice-add 'wdired-finish-edit :after #'prot-bongo-dired-library-enable)
+(advice-add 'wdired-finish-edit :after #'gbl-bongo-dired-library-enable)
 
 (autoload 'dired-x-guess-file-name-at-point "dired-x")
 
-(defvar prot-bongo--dired-last-inserted nil
-  "Last input of `prot-bongo-dired-insert'.")
+(defvar gbl-bongo--dired-last-inserted nil
+  "Last input of `gbl-bongo-dired-insert'.")
 
 ;; FIXME 2021-08-27: Fails when file does not exist.
-(defun prot-bongo--save-last-inserted-file ()
-  "Save `prot-bongo--dired-last-inserted' to a file.
-The file is specified by `prot-bongo-last-inserted-file'."
-  (let ((state (delete-dups prot-bongo--dired-last-inserted))
-        (file prot-bongo-last-inserted-file))
+(defun gbl-bongo--save-last-inserted-file ()
+  "Save `gbl-bongo--dired-last-inserted' to a file.
+The file is specified by `gbl-bongo-last-inserted-file'."
+  (let ((state (delete-dups gbl-bongo--dired-last-inserted))
+        (file gbl-bongo-last-inserted-file))
     (cond
      ((unless state
-        (setq prot-bongo--dired-last-inserted
-              (delete-dups (prot-common-read-data file)))))
+        (setq gbl-bongo--dired-last-inserted
+              (delete-dups (gbl-common-read-data file)))))
      (t (when file
           (with-temp-file file
             (insert (concat ";; Auto-generated file;"
                             " don't edit -*- mode: lisp-data -*-\n"))
             (pp state (current-buffer))))))))
 
-(defun prot-bongo--dired-insert-files (&optional last-inserted crm)
+(defun gbl-bongo--dired-insert-files (&optional last-inserted crm)
   "Add files in a `dired' buffer to the `bongo' playlist.
 With optional LAST-INSERTED try to add the last list of files or
 directories.
 
 With optional CRM use `completing-read-multiple' to select paths
 from the history of inserted entries."
-  (prot-bongo--save-last-inserted-file)
-  (let* ((data prot-bongo--dired-last-inserted)
+  (gbl-bongo--save-last-inserted-file)
+  (let* ((data gbl-bongo--dired-last-inserted)
          (media (cond
                  (crm
                   (completing-read-multiple
                    "Select from recent picks: "
-                   (delete-dups (flatten-tree prot-bongo--dired-last-inserted))
+                   (delete-dups (flatten-tree gbl-bongo--dired-last-inserted))
                    nil t))
                  ((if (and data last-inserted)
                       (car data)
                     (dired-get-marked-files))))))
-    (cl-pushnew media prot-bongo--dired-last-inserted)
+    (cl-pushnew media gbl-bongo--dired-last-inserted)
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
               (if (file-directory-p x)
                   (progn
-                    (prot-bongo-playlist-heading (file-name-base x))
+                    (gbl-bongo-playlist-heading (file-name-base x))
                     (bongo-insert-directory-tree x))
                 (bongo-insert-file x)))
             media)
-      (prot-bongo-playlist-section)
-      (run-hooks 'prot-bongo-playlist-setup-hook))
+      (gbl-bongo-playlist-section)
+      (run-hooks 'gbl-bongo-playlist-setup-hook))
     (with-current-buffer (bongo-library-buffer)
       (dired-next-line 1)))
-  (prot-bongo--save-last-inserted-file))
+  (gbl-bongo--save-last-inserted-file))
 
 ;;;###autoload
-(defun prot-bongo-dired-insert (&optional arg)
+(defun gbl-bongo-dired-insert (&optional arg)
   "Add `dired' item at point or marked ones to Bongo playlist.
 
 The playlist buffer is created, if necessary, while some other
-tweaks are introduced.  See `prot-bongo--dired-insert-files' as
-well as `prot-bongo-playlist-play-random'.
+tweaks are introduced.  See `gbl-bongo--dired-insert-files' as
+well as `gbl-bongo-playlist-play-random'.
 
 Meant to work while inside a `dired' buffer that doubles as a
-library buffer (see `prot-bongo-dired-library-enable').
+library buffer (see `gbl-bongo-dired-library-enable').
 
 With optional prefix ARG (\\[universal-argument]) ignore the file
 at point or any marked items and just try to insert what was last
-added using this command (see `prot-bongo--dired-last-inserted').
+added using this command (see `gbl-bongo--dired-last-inserted').
 If no record exists for the last choice of this sort, then either
 the marked items or the file at point will be selected instead."
   (interactive "P")
@@ -551,16 +551,16 @@ the marked items or the file at point will be selected instead."
     (unless (bongo-playlist-buffer-p)
       (bongo-playlist-buffer))
     (pcase (prefix-numeric-value arg)
-      (16 (prot-bongo--dired-insert-files t t))
-      (4 (prot-bongo--dired-insert-files t))
-      (_ (prot-bongo--dired-insert-files)))
-    (prot-bongo-playlist-play-random)))
+      (16 (gbl-bongo--dired-insert-files t t))
+      (4 (gbl-bongo--dired-insert-files t))
+      (_ (gbl-bongo--dired-insert-files)))
+    (gbl-bongo-playlist-play-random)))
 
 ;;;###autoload
-(defun prot-bongo-dired-make-playlist-file ()
+(defun gbl-bongo-dired-make-playlist-file ()
   "Add `dired' marked items to playlist file using completion.
 
-Files are stored in `prot-bongo-playlist-directory'.  These are
+Files are stored in `gbl-bongo-playlist-directory'.  These are
 meant to reference filesystem paths: one path per line.  They
 ease the task of playing media from closely related directory
 trees, without having to interfere with the user's directory
@@ -574,10 +574,10 @@ available, the item at point will be used instead.
 Selecting a non-existent file at the prompt will create a new
 entry whose name matches the minibuffer input.
 
-Also see `prot-bongo-playlist-insert-playlist-file'."
+Also see `gbl-bongo-playlist-insert-playlist-file'."
   (interactive)
   (let* ((dotless directory-files-no-dot-files-regexp)
-         (pldir prot-bongo-playlist-directory)
+         (pldir gbl-bongo-playlist-directory)
          (playlists (mapcar
                      'abbreviate-file-name
                      (directory-files pldir nil dotless)))
@@ -615,5 +615,5 @@ Also see `prot-bongo-playlist-insert-playlist-file'."
       (save-buffer)
       (kill-buffer))))
 
-(provide 'prot-bongo)
-;;; prot-bongo.el ends here
+(provide 'gbl-bongo)
+;;; gbl-bongo.el ends here

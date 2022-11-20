@@ -6,14 +6,22 @@
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
-alias l='exa -l --icons'
-alias la='exa -la --icons'
+alias l='exa --icons'
+alias la='exa -a --icons'
+alias ll='exa -la --icons'
+alias lla='exa -la --icons'
 
 alias p='sudo pacman -S'
 alias ps='sudo pacman -sS'
 alias py='sudo pacman -Sy'
 alias pr='sudo pacman -R'
 alias puy='sudo pacman -Suy'
+
+alias t='tmux'
+alias ta='tmux a'
+alias tas='tmux a -t'
+alias ts='tmux ls'
+alias tk='tmux kill-session'
 
 alias y='yay -S '
 alias yy='yay -Sy'
@@ -28,11 +36,14 @@ alias c='cp -rv'
 alias sc='sudo cp -rv'
 
 alias f='sudo fdisk -l'
+alias lb='lsblk'
 
 alias gc='git clone'
 alias gs='git status'
 alias gp='git push'
 alias gP='git pull'
+alias gi='git init'
+alias gS='git stash'
 
 # alias z='z.sh'
 

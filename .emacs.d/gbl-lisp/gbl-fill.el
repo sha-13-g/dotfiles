@@ -1,4 +1,4 @@
-;;; prot-fill.el --- Minor fill-mode tweaks for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-fill.el --- Minor fill-mode tweaks for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
@@ -34,39 +34,39 @@
 
 ;;; Code:
 
-(defgroup prot-fill ()
+(defgroup gbl-fill ()
   "Tweak for filling paragraphs."
   :group 'fill)
 
-(defcustom prot-fill-default-column 72
+(defcustom gbl-fill-default-column 72
   "Default width for `fill-column'."
   :type 'integer
-  :group 'prot-fill)
+  :group 'gbl-fill)
 
-(defcustom prot-fill-prog-mode-column 80
+(defcustom gbl-fill-prog-mode-column 80
   "`prog-mode' width for `fill-column'.
-Also see `prot-fill-default-column'."
+Also see `gbl-fill-default-column'."
   :type 'integer
-  :group 'prot-fill)
+  :group 'gbl-fill)
 
-(defun prot-fill--fill-prog ()
+(defun gbl-fill--fill-prog ()
   "Set local value of `fill-column' for programming modes.
 Meant to be called via `prog-mode-hook'."
-  (setq-local fill-column prot-fill-prog-mode-column))
+  (setq-local fill-column gbl-fill-prog-mode-column))
 
 ;;;###autoload
-(define-minor-mode prot-fill-fill-mode
+(define-minor-mode gbl-fill-fill-mode
   "Set up fill-mode and relevant variable."
   :init-value nil
   :global t
-  (if prot-fill-fill-mode
+  (if gbl-fill-fill-mode
       (progn
-        (setq-default fill-column prot-fill-default-column)
-        (add-hook 'prog-mode-hook #'prot-fill--fill-prog)
+        (setq-default fill-column gbl-fill-default-column)
+        (add-hook 'prog-mode-hook #'gbl-fill--fill-prog)
         (add-hook 'text-mode-hook #'turn-on-auto-fill))
     (setq-default fill-column 70)
-    (remove-hook 'prog-mode-hook #'prot-fill--fill-prog)
+    (remove-hook 'prog-mode-hook #'gbl-fill--fill-prog)
     (remove-hook 'text-mode-hook #'turn-on-auto-fill)))
 
-(provide 'prot-fill)
-;;; prot-fill.el ends here
+(provide 'gbl-fill)
+;;; gbl-fill.el ends here

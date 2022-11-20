@@ -7,4 +7,5 @@ xss-lock -- slock &
 
 setxkbmap -layout 'fr' -variant 'us-azerty' -option 'ctrl:swapcaps' 
 
-exec dbus-launch --exit-with-session emacs -mm --debug-init -l ~/.emacs.d/desktop.el
+emacs --daemon --debug-init -f exwm-enable
+exec dbus-launch --exit-with-session  emacsclient -c 

@@ -1,4 +1,4 @@
-;;; prot-tab.el --- Tab bar (tab-bar.el) extras for my dotemacs -*- lexical-binding: t -*-
+;;; gbl-tab.el --- Tab bar (tab-bar.el) extras for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
@@ -40,29 +40,29 @@
 
 (require 'tab-bar)
 
-(defgroup prot-tab ()
+(defgroup gbl-tab ()
   "Extensions for tab-bar.el."
   :group 'tab-bar)
 
-(defcustom prot-tab-tab-select-num-threshold 3
+(defcustom gbl-tab-tab-select-num-threshold 3
   "Minimum number of tabs to prompt for numeric selection.
-This is used by `prot-tab-select-tab-dwim' to determine whether
+This is used by `gbl-tab-select-tab-dwim' to determine whether
 it should prompt for completion, or to ask for just a tab number
 to switch to.  If the number of open tabs is greater than this
 variable's value, then the command will prompt for a number."
   :type 'integer
-  :group 'prot-tab)
+  :group 'gbl-tab)
 
 ;;;; General commands
 
-(defun prot-tab--tab-bar-tabs ()
+(defun gbl-tab--tab-bar-tabs ()
   "Return a list of `tab-bar' tabs, minus the current one."
   (mapcar (lambda (tab)
             (alist-get 'name tab))
           (tab-bar--tabs-recent)))
 
 ;;;###autoload
-(defun prot-tab-select-tab-dwim (&optional arg)
+(defun gbl-tab-select-tab-dwim (&optional arg)
   "Do-What-I-Mean function for getting to a `tab-bar' tab.
 If no other tab exists, or with optional prefix argument
 ARG (\\[universal-argument]), create one and switch to it.
@@ -70,37 +70,37 @@ ARG (\\[universal-argument]), create one and switch to it.
 If there is one other tab (so two in total) switch to it without
 further questions.
 
-If the tabs are more than `prot-tab-tab-select-num-threshold',
+If the tabs are more than `gbl-tab-tab-select-num-threshold',
 show numeric hints (`tab-bar-tab-hints') and prompt for a number
 to switch to.  Else prompt for full text completion."
   (interactive "P")
-  (let ((tabs (prot-tab--tab-bar-tabs)))
+  (let ((tabs (gbl-tab--tab-bar-tabs)))
     (cond
      ((or arg (null tabs))
       (tab-new))
      ((length= tabs 1)
       (tab-next))
-     ((length> tabs (1- prot-tab-tab-select-num-threshold))
+     ((length> tabs (1- gbl-tab-tab-select-num-threshold))
       (let ((tab-bar-tab-hints t)
             (bar tab-bar-mode))
         (unwind-protect
             (progn
               (unless bar
-                (prot-tab-bar-toggle 1))
+                (gbl-tab-bar-toggle 1))
               (tab-bar-select-tab
                (read-number "Go to tab NUM: ")))
           (unless bar
-            (prot-tab-bar-toggle -1)))))
+            (gbl-tab-bar-toggle -1)))))
      (t
       (tab-bar-switch-to-tab
        (completing-read "Select tab: " tabs nil t))))))
 
 ;;;###autoload
-(define-minor-mode prot-tab-bar-toggle
+(define-minor-mode gbl-tab-bar-toggle
   "Toggle `tab-bar' presentation."
   :init-value nil
   :global t
-  (if (or prot-tab-bar-toggle
+  (if (or gbl-tab-bar-toggle
           (not (bound-and-true-p tab-bar-mode)))
       (progn
         (setq tab-bar-show t)
@@ -114,7 +114,7 @@ to switch to.  Else prompt for full text completion."
 (declare-function winner-redo "winner")
 
 ;;;###autoload
-(defun prot-tab-winner-undo ()
+(defun gbl-tab-winner-undo ()
   "Go to previous window layout in the history.
 When Tab-Bar-Mode and Tab-Bar-History-Mode are active, use
 history that is specific to the current tab.  Else try to call
@@ -133,7 +133,7 @@ otherwise."
       (user-error "No `tab-bar-history-mode' or `winner-mode' active"))))
 
 ;;;###autoload
-(defun prot-tab-winner-redo ()
+(defun gbl-tab-winner-redo ()
   "Go to next window layout in the history.
 When Tab-Bar-Mode and Tab-Bar-History-Mode are active, use
 history that is specific to the current tab.  Else try to call
@@ -153,28 +153,28 @@ otherwise."
 
 ;;;; Status line
 
-(declare-function prot-notmuch-mail-indicator "prot-notmuch")
+(declare-function gbl-notmuch-mail-indicator "gbl-notmuch")
 
 ;;;###autoload
-(define-minor-mode prot-tab-status-line
+(define-minor-mode gbl-tab-status-line
   "Make Tab bar a status line and configure the extras.
 Hide the mode lines and change their colors."
   :global t
-  :group 'prot-tab
-  (if prot-tab-status-line
+  :group 'gbl-tab
+  (if gbl-tab-status-line
       (progn
         (setq tab-bar-show t)
         (tab-bar-mode 1)
         (tab-bar-history-mode 1)
         (display-time-mode 1)
-        (when (featurep 'prot-notmuch)
-          (prot-notmuch-mail-indicator 1)))
+        (when (featurep 'gbl-notmuch)
+          (gbl-notmuch-mail-indicator 1)))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
     (tab-bar-history-mode -1)
     (display-time-mode -1)
-    (when (featurep 'prot-notmuch)
-      (prot-notmuch-mail-indicator -1))))
+    (when (featurep 'gbl-notmuch)
+      (gbl-notmuch-mail-indicator -1))))
 
-(provide 'prot-tab)
-;;; prot-tab.el ends here
+(provide 'gbl-tab)
+;;; gbl-tab.el ends here
