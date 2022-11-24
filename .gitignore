@@ -1,0 +1,7 @@
+.emacs./auto-save-list
+.emacs.d/elpa
+.emacs.d/emojis
+.emacs.d/transient
+*.elc
+package-*.el
+*.*~*
