@@ -1,1 +1,1 @@
-("~/Documents/org/" "~/Git_repos/dotfiles/" "~/Git_repos/spotify/")
+("~/Git_repos/dotfiles/" "~/Documents/org/" "~/Git_repos/spotify/")
