@@ -207,7 +207,8 @@
   (exwm-input-set-key (kbd "<s-return>") 'split-window-below)
 
   (gbl/launcher "qutebrowser" "")
-  (gbl/launcher "alacritty" ""))
+  (gbl/launcher "alacritty" "")
+  (exwm-enable))
   ;; (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")
   ;; (gbl/run-in-bg "nm-applet")

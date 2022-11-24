@@ -1,11 +1,10 @@
 #!/usr/bin/bash
+xhost +SI:localuser:$USER
+xss-lock -- slock &
 
 exec picom &
 exec nitrogen --restore &
 
-xss-lock -- slock &
+setxkbmap -layout 'fr' -variant -model 'pc105' 'us-azerty' -option 'ctrl:swapcaps' 
 
-setxkbmap -layout 'fr' -variant 'us-azerty' -option 'ctrl:swapcaps' 
-
-emacs --daemon --debug-init -f exwm-enable
-exec dbus-launch --exit-with-session  emacsclient -c 
+exec dbus-launch --exit-with-session emacs --debug-init

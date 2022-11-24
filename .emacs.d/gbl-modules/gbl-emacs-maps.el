@@ -16,7 +16,7 @@
 
 ;; (global-set-key (kbd "s-u") 'universal-argument)
 
-(global-set-key (kbd "M-:") 'evil-ex)
+(global-set-key (kbd "M-:") 'eval-expression)
 
 (global-set-key (kbd "C-s-f") 'gbl/maximize-window)
 (global-set-key (kbd "C-s-b") 'gbl/balance-window)
@@ -178,20 +178,21 @@
 
 (general-define-key  :prefix gbl/leader
  "f" '(:ignore t :which-key "Files")
- "f d" '((lambda () (interactive) (dired "~/git_repos/dotfiles/")) :which-key "Dotfiles")
+ "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
  "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Dotfiles")
- "f F" '((lambda () (interactive) (find-file "~/.emacs.d/desktop.el")) :which-key "Desktop")
+ "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
- "f c" '((lambda () (interactive) (dired "~/.config/")) :which-key "Configs")
- "f b" '((lambda () (interactive) (dired "~/documents/books/")) :which-key "Books")
- "f q" '((lambda () (interactive) (find-file "~/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
- "f f" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :which-key "Emacs init.el")
- "f g" '((lambda () (interactive) (dired "~/git_repos/")) :which-key "Git repos")
+ "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
+ "f b" '((lambda () (interactive) (dired "~/Documents/books/")) :which-key "Books")
+ "f q" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
+ "f f" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/init.el")) :which-key "Emacs init.el")
+ "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")
  "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
- "f m" '((lambda () (interactive) (dired "~/.emacs.d/gbl-modules/")) :which-key "Emacs Modules")
+ "f m" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Emacs Modules")
+  ;; "f" '(:ignore t :which-key "Files")
  "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org Files")
- "f e" '((lambda () (interactive) (dired "~/.emacs.d/")) :which-key "Emacs Directory")
- "f p" '((lambda () (interactive) (dired "~/documents/personal/")) :which-key "Personal Directory"))
+ "f e" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.emacs.d/")) :which-key "Emacs Directory")
+ "f p" '((lambda () (interactive) (dired "~/Documents/personal/")) :which-key "Personal Directory"))
 
 (defhydra gbl/hydra-window-resizer(:timeout 4)
   "This hydra define a set on function that resize a window"

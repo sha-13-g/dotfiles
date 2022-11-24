@@ -8,6 +8,18 @@
     ("μινιβθφφερ" "μικροαποσβεστήρας" nil :count 0)
    ))
 
+(define-abbrev-table 'message-mode-abbrev-table
+  '(
+    ("abest" "All the best,
+Prot" nil :count 0)
+    ("allthebest" "All the best,
+Protesilaos (or simply \"Prot\")" nil :count 0)
+    ("bestregards" "Best regards,
+Protesilaos (or simply \"Prot\")" nil :count 0)
+    ("bregards" "Best regards,
+Prot" nil :count 0)
+   ))
+
 (define-abbrev-table 'text-mode-abbrev-table
   '(
     ("Emacs27" "Emacs 27" nil :count 0)

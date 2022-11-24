@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=exwm
 Comment=Emacs X Window Manager
-Exec=exwm
-Type=Applicatin
+Exec=sh ~/Git_repos/dotfiles/.emacs.d/exwm/exwm
+Type=Application

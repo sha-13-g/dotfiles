@@ -39,6 +39,7 @@
 
 (setq frame-resize-pixelwise t)
 
+(setq ring-bell-function 'ignore)
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 
