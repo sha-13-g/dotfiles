@@ -188,9 +188,18 @@
  "f f" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/init.el")) :which-key "Emacs init.el")
  "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")
  "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
- "f m" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Emacs Modules")
-  ;; "f" '(:ignore t :which-key "Files")
- "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org Files")
+ "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org files")
+
+ "f m" '(:ignore t :which-key "Files")
+ "f m m" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-maps.el")) :which-key "Maps")
+ "f m d" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-dired.el")) :which-key "Dired Config")
+ "f m M" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-magit.el")) :which-key "Magit Config")
+ "f m D" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Exwm Config")
+ "f m u" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-utils.el")) :which-key "Usefull Command")
+ "f m c" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-conveniences.el")) :which-key "Conveniences")
+ "f m l" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-langs.el")) :which-key "Dev Config")
+ "f m o" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-org.el")) :which-key "Org Config")
+ 
  "f e" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.emacs.d/")) :which-key "Emacs Directory")
  "f p" '((lambda () (interactive) (dired "~/Documents/personal/")) :which-key "Personal Directory"))
 

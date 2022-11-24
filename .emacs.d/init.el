@@ -58,13 +58,13 @@
 
 ;; Defining some fonts
 (set-face-attribute 'default nil
-					:font "JetBrains Mono 10" ; Monospaced coding font
+					:font "Source Code Pro 10" ; Monospaced coding font
 					:weight 'medium)
 (set-face-attribute 'variable-pitch nil ; Non tech font
 					:font "Cantarell"
 					:height 110)
 (set-face-attribute 'fixed-pitch nil
-					:font "JetBrains Mono 10"
+					:font "Source Code Pro 10"
 					:weight 'medium)
 
 
@@ -75,7 +75,7 @@
 
 ;; Extra font settings
 (setq-default line-spacing 0.03)
-(add-to-list 'default-frame-alist '(font . "JetBrains Mono-10")) ; Emacsclient does not accept fonts by default
+(add-to-list 'default-frame-alist '(font . "Source Code Pro-10"))
 
 (add-hook 'prog-mode-hook #'electric-pair-mode)
 (setq electric-pair-preserve-balance nil)
