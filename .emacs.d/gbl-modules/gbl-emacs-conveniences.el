@@ -131,6 +131,7 @@
   :init
   (setq dashboard-center-content t
 		dashboard-banner-logo-title "Welcome Brice Ganfina"
+        dashboard-startup-banner "~/Git_repos/dotfiles/bg/flat_icons/saturn-resize.png"
 		dashbord-set-heading-items t
 		dashboard-set-file-icons t
 		dashboard-items '((recents  . 5)

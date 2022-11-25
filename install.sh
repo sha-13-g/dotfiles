@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man xdg-s
+sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man mpv
 
 git config --global user.name "Ganfina Brice"
 git config --global user.email "ganfinab@gmail.com"

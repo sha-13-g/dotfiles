@@ -14,22 +14,8 @@
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-  ;; Set faces for heading levels
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.1)
-                  (org-level-3 . 1.05)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Fira Code" :weight 'regular :height (cdr face)))
-
-    (setq org-capture-templates
-      `(("t" "Tasks / Projects")
-        ("tt" "Task" entry (file+olp "/home/gbl13/Documents/org/gtd.org" "Things To Get Done")
-             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+  
+    
   
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
@@ -58,6 +44,11 @@
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "/home/gbl13/Documents/org/gtd.org" "Things To Get Done")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+    
   ;; Set faces for heading levels
   (dolist (face '((org-level-1 . 1.2)
                   (org-level-2 . 1.1)
@@ -67,7 +58,7 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Hack Nerd Font" :weight 'regular :height (cdr face)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)

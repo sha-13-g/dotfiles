@@ -50,7 +50,7 @@
   "Commands that split the current window & select the next buffer"
   (interactive)
   (split-window-right)
-  (other-window)
+  (other-window 1)
   (next-buffer))
 
 (defun gbl/dired-mode (arg)
@@ -61,7 +61,7 @@
   "Commands that split the current window & select the next buffer"
   (interactive)
   (split-window-right)
-  (other-window)
+  (other-window 1)
   (previous-buffer))
 
 (defun gbl/maximaze-other-window()

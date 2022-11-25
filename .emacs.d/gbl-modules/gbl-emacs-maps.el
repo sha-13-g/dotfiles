@@ -46,7 +46,7 @@
 
 (global-set-key (kbd "s-e") 'dired-jump)
 (global-set-key (kbd "s-E") 'sudo-edit)
-(global-set-key (kbd "s-s") 'gbl/scratch-buffer)
+;; (global-set-key (kbd "s-s") 'gbl/scratch-buffer)
 
 (global-set-key (kbd "C-s-g") 'gbl/get-token)
 
@@ -181,6 +181,7 @@
  "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
  "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Dotfiles")
  "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
+ "f s" '(gbl/scratch-buffer :wich-key "Scratch Buffer")
  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
  "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
  "f b" '((lambda () (interactive) (dired "~/Documents/books/")) :which-key "Books")

@@ -3,7 +3,7 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-refile-last-stored"
- (filename . "~/documents/org/formation/org-mode.org")
+ (filename . "~/Documents/org/formation/org-mode.org")
  (front-context-string . "** Second Layer ")
  (rear-context-string . "ng\nSome content\n")
  (position . 3861))

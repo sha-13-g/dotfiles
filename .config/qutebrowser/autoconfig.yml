@@ -15,8 +15,8 @@ settings:
         <Alt+j>: run-with-count 5 scroll down
         <Alt+k>: run-with-count 5 scroll up
         B: hint links spawn mpv {hint-url}
-        aMG: https://mail.google.com/mail/u/0/#inbox
-        aMg: https://mail.proton.me/u/1/inbox
+        aMG: open https://mail.google.com/mail/u/0/#inbox
+        aMg: open https://mail.proton.me/u/1/inbox
         aSf: open https://facebook.com/
         aSl: open  https://linkedin.com/
         aSr: open https://reddit.com/
