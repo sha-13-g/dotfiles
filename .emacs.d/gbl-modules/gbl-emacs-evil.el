@@ -23,8 +23,6 @@
 		evil-split-window-below t) ; when h-splitting a window select bottom window
   :config
   (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
   ;; use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
@@ -41,13 +39,10 @@
   :config
   (evil-collection-init))
 
-(use-package evil-easymotion
-  :config (evilem-default-keybindings "SPC"))
+(use-package evil-org)
 
 (use-package evil-surround
   :config
   (global-evil-surround-mode))
-
-(use-package evil-tutor)
 
 (provide 'gbl-emacs-evil)

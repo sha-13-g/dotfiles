@@ -11,12 +11,12 @@
 		   (dired-auto-revert-buffer #'dired-directory-changed-p)
 		   (dired-mouse-drag-files))
   :config
-  (define-key dired-mode-map	(kbd "h") 'dired-single-up-directory)
-  (define-key dired-mode-map (kbd "l") 'dired-find-alternate-file))
+  (evil-collection-define-key 'normal 'dired-mode-map
+    (kbd "h") 'dired-single-up-directory
+    (kbd "l") 'dired-find-alternate-file))
 
 (use-package peep-dired
   :diminish t)
-
 
 (use-package dired-aux
   :ensure nil

@@ -141,7 +141,7 @@
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
 (require 'gbl-emacs-desktop)
-;; (require 'gbl-emacs-evil)
+(require 'gbl-emacs-evil)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-dired)
 (require 'gbl-emacs-langs)

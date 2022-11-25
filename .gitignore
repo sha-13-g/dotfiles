@@ -2,6 +2,9 @@
 .emacs.d/elpa
 .emacs.d/emojis
 .emacs.d/transient
+.config/gtk*
+.config/G*
+.config/mime*
 *.elc
 package-*.el
 *.eld

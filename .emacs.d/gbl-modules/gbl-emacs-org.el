@@ -9,45 +9,24 @@
 
 (use-package org-modern)
 
-(defun efs/org-font-setup ()
-  ;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  
-    
-  
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
-
 (use-package org
   :ensure nil
   :hook (org-mode . org-indent-mode)
   :config
 
-  (define-key org-mode-map (kbd "H") #'org-shiftleft)
-  (define-key org-mode-map (kbd "L") #'org-shiftright)
-  (define-key org-mode-map (kbd "J") #'org-shiftup)
-  (define-key org-mode-map (kbd "K") #'org-shiftdown)  
+  (evil-collection-define-key 'normal 'org-mode-map
+    (kbd "H") #'org-shiftleft
+    (kbd "L") #'org-shiftright
+    (kbd "J") #'org-shiftup
+    (kbd "K") #'org-shiftdown)
+
+  (setq org-refile-targets
+        '(("~/Documents/org/archive.org" :maxlevel . 1)
+          ("~/Documents/org/gtd.org" :maxlevel . 1)))
 
     (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-(setq org-capture-templates
-      `(("t" "Tasks / Projects")
-        ("tt" "Task" entry (file+olp "/home/gbl13/Documents/org/gtd.org" "Things To Get Done")
-             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)))
     
   ;; Set faces for heading levels
   (dolist (face '((org-level-1 . 1.2)

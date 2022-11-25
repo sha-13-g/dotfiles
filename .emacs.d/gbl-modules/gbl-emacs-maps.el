@@ -14,7 +14,8 @@
 (global-set-key (kbd "TAB") 'my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
 
-;; (global-set-key (kbd "s-u") 'universal-argument)
+(global-set-key (kbd "s-u") 'universal-argument)
+(define-key universal-argument-map (kbd "s-u") #'universal-argument-more)
 
 (global-set-key (kbd "M-:") 'eval-expression)
 
