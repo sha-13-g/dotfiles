@@ -1,32 +1,39 @@
 #!/usr/bin/bash
 
-sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man mpv
+mkdir -p ~/Git_repos/
+mv ~/dotfiles ~/Git_repos
+(cd ~/Git_repos && git clone https://aur.archlinux.org/yay)
+(cd ~/Git_repos/yay && makepkg -si)
+(cd ~/Git_repos/ && git clone --recurse-submodules https://github.com/fairyglade/ly)
+(cd ~/Git_repos/ly/ && make && make install installsystemd)
+
+
+sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man mpv ttf-sourcecodepro-nerd ttf-hack-nerd
 
 git config --global user.name "Ganfina Brice"
 git config --global user.email "ganfinab@gmail.com"
 
-mkdir -p git_repos/
 
-git clone https://aur.archlinux.org/yay
-(cd git_repos/yay && makepkg -si)
+#(cd ~/Documents && git clone https://github.com/sha-13-g/org)
 
-yay -Sy ly youtubedl-gui
+#systemctl start networkmanager.service
+#systemctl enable ly.service
+#systemctl disable getty@tty2.service
+
+rm -rvf ~/.bashrc
+rm -rvf ~/.bash_profile 
+
+sudo ln -sv ~/Git_repos/dotfiles/.emacs.d/exwm/exwm.desktop /usr/share/xsessions/
+sudo ln -sv ~/Git_repos/dotfiles/.bashrc ~/
+sudo ln -sv ~/Git_repos/dotfiles/.bash_profile ~/
+sudo ln -sv ~/Git_repos/dotfiles/.config/ ~/.config
+sudo ln -sv ~/Git_repos/dotfiles/.emacs.d/ .emacs.d
+sudo ln -sv ~/Git_repos/dotfiles/.xinitrc ~/
+
 systemctl enable ly.service
-sudo npm install -g typescript-languages-servers
-
-(cd git_repos/ && git clone https://github.com/sha-13-g/org)
-
-systemctl start NetworkManager.service
-systemctl enable ly.service
-systemctl disable getty@tty2.service
-
-sudo ln -s ~/Git_repos/dotfiles/.emacs.d/exwm/exwm.desktop /usr/share/xsessions/
-sudo ln -s ~/Git_repos/dotfiles/.emacs.d/exwm/exwm /usr/bin/
-sudo ln -s ~/Git_repos/dotfiles/etc/X11/xorg.conf.d/00-keyboard.conf /etc/X11/xorg.conf.d/
-sudo ln -s ~/Git_repos/dotfiles/.bashrc ~/
-sudo ln -s ~/Git_repos/dotfiles/.config/ ~/.config
-sudo ln -s ~/Git_repos/dotfiles/.emacs.d/ .emacs.d
-
-sudo cp -v /etc/X11/xinit/xinitrc ~/.xinitrc
 
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
+
+yay -sy ly youtubedl-gui
+#systemctl enable ly.service
+sudo npm install -g typescript-languages-servers
