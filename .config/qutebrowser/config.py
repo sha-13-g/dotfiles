@@ -647,8 +647,8 @@ c.colors.tabs.selected.even.fg = '#f8f8f2'
 c.colors.tabs.selected.even.bg = '#282a36'
 
 # Bindings for normal mode
-config.bind('<Alt+j>', 'run-with-count 5 scroll down')
-config.bind('<Alt+k>', 'run-with-count 5 scroll up')
+config.bind('<Alt+f>', 'run-with-count 5 scroll down')
+config.bind('<Alt+e>', 'run-with-count 5 scroll up')
 config.bind('B', 'hint links spawn mpv {hint-url}')
 config.bind('aMG', 'open https://mail.google.com/mail/u/0/#inbox')
 config.bind('aMg', 'open https://mail.proton.me/u/1/inbox')

@@ -40,6 +40,7 @@
 ;;; CSS (css-mode)
 (use-package css-mode
   :ensure nil
+  :hook '((css-mode . eglot-ensure))
   :config
   (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
