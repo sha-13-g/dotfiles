@@ -221,6 +221,7 @@
 (add-hook 'web-mode-hook 'emmet-mode)
 
 (use-package web-mode
+  :hook '((web-mode . eglot-ensure))
   :mode (("\\.html\\'" . web-mode)
 		 ("\\.phtml\\'" . web-mode)
 		 ("\\.tpl\\.php\\'" . web-mode)
@@ -275,6 +276,11 @@
 
 (use-package eglot
   :hook ((python-mode . eglot-ensure)
-         (js2-mode . eglot-ensure)))
+         (js2-mode . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+               '(web-mode . ("vscode-html-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(css-mode . ("vscode-css-language-server" "--stdio"))))
 
 (provide 'gbl-emacs-langs)

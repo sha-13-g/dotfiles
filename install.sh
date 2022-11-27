@@ -35,6 +35,7 @@ systemctl enable ly.service
 
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 
-yay -sy ly youtubedl-gui
+yay -S chromium-widevine
 #systemctl enable ly.service
-sudo npm install -g typescript-languages-servers
+npm install -g typescript-language-server typescript
+npm i -g vscode-langservers-extracted
