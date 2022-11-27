@@ -8,11 +8,12 @@ mv ~/dotfiles ~/Git_repos
 (cd ~/Git_repos/ly/ && make && make install installsystemd)
 
 
-sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man mpv ttf-sourcecodepro-nerd ttf-hack-nerd
+sudo pacman -S cantarell-fonts ttf-fira-code ttf-jetbrains-mono cmake nodejs npm pyqt5  networkmanager intel-ucode alsa-utils polkit picom nitrogen alacritty z xorg-apps xorg-server arandr alsa-utils exa apache nginx youtube-dl xdg-utils alsa xdg-user-dirs xdg-utils lxsession man mpv ttf-sourcecodepro-nerd ttf-hack-nerd firefox firefox slock xss-lock
 
 git config --global user.name "Ganfina Brice"
 git config --global user.email "ganfinab@gmail.com"
 
+xdg-user-dirs-update
 
 #(cd ~/Documents && git clone https://github.com/sha-13-g/org)
 

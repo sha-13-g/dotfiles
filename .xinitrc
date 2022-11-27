@@ -51,7 +51,9 @@ fi
 
 
 xhost +SI:localuser:$USER
+
 xss-lock -- slock &
+
 lxpolkit &
 xrdb ~/Git_repos/dotfiles/.emacs.d/exwm/Xresources 
 
