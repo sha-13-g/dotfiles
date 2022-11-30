@@ -23,6 +23,10 @@ alias tas='tmux a -t'
 alias ts='tmux ls'
 alias tk='tmux kill-session'
 
+alias nw='nmcli dev wifi'
+alias nc='nmcli dev wifi con'
+alias ns='nmcli dev status'
+
 alias y='yay -S '
 alias yy='yay -Sy'
 alias yr='yay -R'

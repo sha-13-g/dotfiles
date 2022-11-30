@@ -22,7 +22,7 @@ settings:
         aSr: open https://reddit.com/
         aSt: open  https://twitter.com/
         aT: open  https://twitch.tv/
-        aY: open https://youtube.com/
+        aY: open -t https://youtube.com/
         ag: open https://github.com/
         amn: open https://manganato.com/
         amr: open https://mangareader.to/home

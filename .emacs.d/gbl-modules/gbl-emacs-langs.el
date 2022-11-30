@@ -52,74 +52,10 @@
   :config
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
-;;; Paragraphs and fill-mode (gbl-fill.el)
-;; (use-package gbl-fill
-;;   :ensure nil
-;;   :config
-;;   (setq gbl-fill-default-column 72)
-;;   (setq gbl-fill-prog-mode-column 72)  ; Set this to another value if you want
-;;   ;; Those variables come from various sources, though they feel part of the
-;;   ;; same conceptual framework.
-;;   (setq sentence-end-double-space t)
-;;   (setq sentence-end-without-period nil)
-;;   (setq colon-double-space nil)
-;;   (setq use-hard-newlines nil)
-;;   (setq adaptive-fill-mode t)
-;;   (gbl-fill-fill-mode 1)
-;;   (add-hook 'after-init-hook #'column-number-mode))
-
-;;; Comments (newcomment.el and gbl-comment.el)
-;; (use-package newcomment                 ;
-;;   :ensure nil
-;;   :config
-;;   (setq comment-empty-lines t)
-;;   (setq comment-fill-column nil)
-;;   (setq comment-multi-line t)
-;;   (setq comment-style 'multi-line)
-;;   (let ((map global-map))
-;;     (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
-    ;; (define-key map (kbd "M-;") #'comment-indent)))
-
-;; (use-package gbl-comment
-;;   :ensure nil
-;;   :config
-;;   (setq gbl-comment-comment-keywords
-;;         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-;;   (setq gbl-comment-timestamp-format-concise "%F")
-;;   (setq gbl-comment-timestamp-format-verbose "%F %T %z")
-;;   (let ((map global-map))
-;;     (define-key map (kbd "C-;") #'gbl-comment-comment-dwim)
-;;     (define-key map (kbd "C-x C-;") #'gbl-comment-timestamp-keyword)))
-
-;;; Configure 'electric' behaviour
 
 (use-package plantuml-mode
   :config
   (setq org-plantuml-jar-path (expand-file-name "~/downloads/plantuml.jar")))
-
-;; (use-package electric
-;;   :ensure nil
-;;   :config
-;;   (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
-;;   (setq electric-pair-preserve-balance t)
-;;   (setq electric-pair-pairs
-;;         '((8216 . 8217)
-;;           (8220 . 8221)
-;;           (171 . 187)))
-;;   (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-;;   (setq electric-pair-skip-whitespace nil)
-;;   (setq electric-pair-skip-whitespace-chars '(9 10 32))
-;;   (setq electric-quote-context-sensitive t)
-;;   (setq electric-quote-paragraph t)
-;;   (setq electric-quote-string nil)
-;;   (setq electric-quote-replace-double t)
-;;   (electric-pair-mode -1)
-;;   (electric-quote-mode -1)
-;;   ;; I don't like auto indents in Org and related.  They are okay for
-;;   ;; programming.
-;;   (electric-indent-mode -1)
-;;   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
-;;; Parentheses (show-paren-mode)
 
 (use-package paren
   :ensure nil
@@ -135,28 +71,6 @@
 (setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
-
-;;; Flyspell and gbl-spell.el (spell check)
-;; (use-package flyspell
-;;   :ensure nil
-;;   :config
-;;   (setq flyspell-issue-message-flag nil)
-;;   (setq flyspell-issue-welcome-flag nil)
-;;   (setq ispell-program-name "aspell")
-;;   (setq ispell-dictionary "en_GB")
-;;   (define-key flyspell-mode-map (kbd "C-;") nil))
-
-;; (use-package gbl-spell
-;;   :ensure nil
-;;   :config
-;;   (setq gbl-spell-dictionaries
-;;         '(("EN English" . "en")
-;;           ("EL Ελληνικά" . "el")
-;;           ("FR Français" . "fr")
-;;           ("ES Espanõl" . "es")))
-;;   (let ((map global-map))
-;;     (define-key map (kbd "M-$") #'gbl-spell-spell-dwim)
-;;     (define-key map (kbd "C-M-$") #'gbl-spell-change-dictionary)))
 
 ;;; Flymake
 (use-package flymake
@@ -181,18 +95,6 @@
     (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
     (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
-
-;;; Flymake + Shellcheck
-;;(use-package flymake-shellcheck                      ;;
-;;  (add-hook 'sh-mode-hook 'flymake-shellcheck-load)) ;;
-                                        ;
-;;; Flymake + Proselint
-;; (use-package flymake-proselint
-  ;; (add-hook 'text-mode-hook #'flymake-proselint-setup))
-
-;;; Elisp packaging requirements
-;; (use-package package-lint-flymake
-  ;; (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 
 ;;; Eldoc (elisp live documentation feedback)
 (use-package eldoc
@@ -258,25 +160,23 @@
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode)))
 
 (use-package tide
-  :after (typescript-mode company flymake)
+  :ensure t
+  :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)))
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 
 (use-package js2-mode
-  :hook ((js2-mode . js2-imenu-extras-mode))
+  :hook ((js2-mode . js2-imenu-extras-mode)
+         (js2-mode . (lambda ()
+                       (unless (or (file-exists-p "makefile")
+                                   (file-exists-p "Makefile"))
+                         (setq-local compile-command
+                                     (concat "node "
+                                             (if buffer-file-name
+                                                 (shell-quote-argument (buffer-file-name)))))))))
   :config
   (add-to-list 'auto-mode-alist '("\\.js[ms]?\\'" . js2-mode)))
-
-
-
-(add-hook 'js2-mode-hook
-       (lambda ()
-	 (unless (or (file-exists-p "makefile")
-		     (file-exists-p "Makefile"))
-           (setq-local compile-command
-		(concat "node "
-			(if buffer-file-name
-			  (shell-quote-argument (buffer-file-name))))))))
 
 (add-hook 'python-mode-hook
        (lambda ()
