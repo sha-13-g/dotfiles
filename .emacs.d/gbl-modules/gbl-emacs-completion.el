@@ -1,18 +1,15 @@
 ;;; Orderless completion style (and gbl-orderless.el)
 (use-package company
-  :bind
-  (:map company-active-map
+  :hook '((prog-mode . company-mode)
+          (eglot-ensure . company-mode))
+  :bind (:map company-active-map
 		("<tab>" . company-complete-selection)
 		("C-j" . company-select-next-or-abort)
 		("C-k" . company-select-previous-or-abort))
-  ;; (:map lsp-mode-map
-  ;; 		("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0)
-  (company-show-quick-access t)
-  :config
-  (global-company-mode))
+  (company-show-quick-access t))
 
 ;; Cleaner Aesthetic with Company-box
 (use-package company-box

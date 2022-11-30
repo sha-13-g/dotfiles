@@ -70,12 +70,12 @@
   (global-set-key (kbd "s-l") #'windmove-right))
 
 
-(defvar gbl/dictionary-leader
-  "This is the dictionary leader")
+(defvar gbl/dictionary-leader "C-c d"
+  "Dictionary leader key")
 
-;; (general-define-key :prefix gbl/dictionary-leader
-;;                     "s" '(dictionary-search :wich-key "Search word")
-;;                     "t" '(gts-do-translate :wich-key "Translate word"))
+(general-define-key :prefix gbl/dictionary-leader
+                    "s" '(dictionary-search :wich-key "Search word")
+                    "t" '(gts-do-translate :wich-key "Translate word"))
 
 (general-define-key  :prefix gbl/leader
                      "SPC l" '(gbl/load-light-theme :which-key "Light theme")

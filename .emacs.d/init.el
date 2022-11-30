@@ -31,6 +31,12 @@
 (add-to-list 'default-frame-alist `(alpha . ,gbl/frame-transparency-v))
 
 
+(desktop-save-mode 1)
+(add-to-list 'desktop-path (concat (expand-file-name user-emacs-directory) "desktop/"))
+
+
+(setq tab-bar-select-tab-modifiers "<control>")
+
 (dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
   (put c 'disabled nil))
 
