@@ -1,6 +1,5 @@
 ;;; Orderless completion style (and gbl-orderless.el)
 (use-package company
-  :hook (prog-mode . company-mode)
   :bind
   (:map company-active-map
 		("<tab>" . company-complete-selection)
@@ -11,7 +10,9 @@
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0)
-  (company-show-quick-access t))
+  (company-show-quick-access t)
+  :config
+  (global-company-mode))
 
 ;; Cleaner Aesthetic with Company-box
 (use-package company-box

@@ -59,6 +59,7 @@
     ("spotify" (exwm-workspace-move-window 4))
     ("firefox" (exwm-workspace-move-window 2))
     ("Alacritty" (exwm-workspace-move-window 0))
+    ("kitty" (exwm-workspace-move-window 0))
     ("TelegramDesktop" (exwm-workspace-move-window 8))
     ("Gimp" (exwm-workspace-move-window 3))
     ("figma-linux" (exwm-workspace-move-window 3))
@@ -175,9 +176,9 @@
 		  ;; ([?\s-m] . exwm-layout-toggle-mode-line)
 
           ;; Launch applications via shell command
-		  ([?\s-d] . (lambda () (interactive) (gbl/launcher "launcher" "")))
+		  ;; ([?\s-d] . (lambda () (interactive) (gbl/launcher "launcher" "")))
 
-          ([?\s-~] . (lambda (command)
+          ([?\s-d] . (lambda (command)
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
@@ -205,9 +206,13 @@
   (exwm-input-set-key (kbd "<s-tab>") 'other-window)
   (exwm-input-set-key (kbd "s-v") 'split-window-right)
   (exwm-input-set-key (kbd "<s-return>") 'split-window-below)
+  (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'desktop-environment-volume-decrement)
+  (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'desktop-environment-volume-increment)
+  ;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'split-window-below)
+  ;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'split-window-below)
 
   (gbl/launcher "qutebrowser" "")
-  (gbl/launcher "alacritty" "")
+  (gbl/launcher "kitty" "")
   (exwm-enable))
   ;; (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")
