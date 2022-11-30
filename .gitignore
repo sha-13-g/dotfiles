@@ -2,6 +2,11 @@
 .emacs.d/elpa
 .emacs.d/emojis
 .emacs.d/transient
+.emacs.d/recentf
+.emacs.d/org-cl*
+.emacs.d/*.eld
+.emacs.d/abb*
+.emacs.d/save*
 .config/gtk*
 .config/G*
 .config/mime*
