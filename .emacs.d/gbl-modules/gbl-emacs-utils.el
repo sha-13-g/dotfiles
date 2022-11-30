@@ -26,6 +26,15 @@
 ;;   (interactive)
 ;;  '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)
 
+(defun gbl/mark-buffer ()
+  "Mark the all in the current buffer"
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (call-interactively #'set-mark-command)
+    (goto-char (point-max))
+    (call-interactively #'evil-indent)))
+
 (defun gbl/get-token ()
   (interactive)
   (save-excursion

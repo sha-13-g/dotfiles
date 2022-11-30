@@ -69,9 +69,17 @@
 (with-eval-after-load 'desktop-environment
   (global-set-key (kbd "s-l") #'windmove-right))
 
+
+(defvar gbl/dictionary-leader
+  "This is the dictionary leader")
+
+;; (general-define-key :prefix gbl/dictionary-leader
+;;                     "s" '(dictionary-search :wich-key "Search word")
+;;                     "t" '(gts-do-translate :wich-key "Translate word"))
+
 (general-define-key  :prefix gbl/leader
- "SPC l" '(gbl/load-light-theme :which-key "Light theme")
- "SPC d" '(gbl/load-dark-theme :which-key "Dark theme"))
+                     "SPC l" '(gbl/load-light-theme :which-key "Light theme")
+                     "SPC d" '(gbl/load-dark-theme :which-key "Dark theme"))
 
 (general-define-key  :keymaps 'override :prefix gbl/leader
 	   gbl/leader	'(execute-extended-command :which-key "M-x")
@@ -180,9 +188,11 @@
 (general-define-key  :prefix gbl/leader
  "f" '(:ignore t :which-key "Files")
  "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
- "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Dotfiles")
+ "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Translate")
  "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
+
  "f s" '(gbl/scratch-buffer :wich-key "Scratch Buffer")
+
  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
  "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
  "f b" '((lambda () (interactive) (dired "~/Documents/books/")) :which-key "Books")
@@ -191,6 +201,8 @@
  "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")
  "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
  "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org files")
+
+ "f D" '(:ignore t :which-key "Files")
 
  "f m" '(:ignore t :which-key "Files")
  "f m m" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-maps.el")) :which-key "Maps")

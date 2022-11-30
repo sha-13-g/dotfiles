@@ -1,6 +1,16 @@
 ;;; Dired file manager and gbl-dired.el extras
+
+(defun gbl/dired-delete-backup-files ()
+  "Delete flag back-up files"
+  (interactive)
+  (dired-flag-backup-files)
+  (dired-do-flagged-delete t))
+
 (use-package dired
   :ensure nil
+  :bind (:map dired-mode-map
+		("C-c f d" . gbl/dired-delete-backup-files))
+
   :hook ((dired-mode . dired-hide-details-mode)
 		 (dired-mode . hl-line-mode))
   :custom ((dired-recursive-copies 'always)
@@ -14,6 +24,7 @@
   (evil-collection-define-key 'normal 'dired-mode-map
     (kbd "h") 'dired-single-up-directory
     (kbd "l") 'dired-find-alternate-file))
+
 
 (use-package peep-dired
   :diminish t)
