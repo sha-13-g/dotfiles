@@ -647,8 +647,8 @@ c.colors.tabs.selected.even.fg = '#f8f8f2'
 c.colors.tabs.selected.even.bg = '#282a36'
 
 # Bindings for normal mode
-config.bind('<Alt+f>', 'run-with-count 5 scroll down')
 config.bind('<Alt+e>', 'run-with-count 5 scroll up')
+config.bind('<Alt+f>', 'run-with-count 5 scroll down')
 config.bind('B', 'hint links spawn mpv {hint-url}')
 config.bind('aMG', 'open https://mail.google.com/mail/u/0/#inbox')
 config.bind('aMg', 'open https://mail.proton.me/u/1/inbox')
@@ -661,7 +661,8 @@ config.bind('aY', 'open https://youtube.com/')
 config.bind('ag', 'open https://github.com/')
 config.bind('amn', 'open https://manganato.com/')
 config.bind('amr', 'open https://mangareader.to/home')
-config.bind('amw', 'open https://manhwatop.com/')
+config.bind('amt', 'open https://manhwatop.com/')
+config.bind('amw', 'open https://www.webtoons.com/en/')
 config.bind('as', 'open https://open.spotify.com/')
 config.bind('at', 'open https://twitch.tv')
 config.bind('aur', 'open https://aur.archlinux.org/')

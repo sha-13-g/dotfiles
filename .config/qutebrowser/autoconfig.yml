@@ -12,8 +12,8 @@ settings:
         <Ctrl+j>: completion-item-focus next
         <Ctrl+k>: completion-item-focus prev
       normal:
-        <Alt+j>: run-with-count 5 scroll down
-        <Alt+k>: run-with-count 5 scroll up
+        <Alt+e>: run-with-count 5 scroll up
+        <Alt+f>: run-with-count 5 scroll down
         B: hint links spawn mpv {hint-url}
         aMG: open https://mail.google.com/mail/u/0/#inbox
         aMg: open https://mail.proton.me/u/1/inbox
@@ -26,7 +26,8 @@ settings:
         ag: open https://github.com/
         amn: open https://manganato.com/
         amr: open https://mangareader.to/home
-        amw: open https://manhwatop.com/
+        amt: open https://manhwatop.com/
+        amw: open https://www.webtoons.com/en/
         as: open https://open.spotify.com/
         at: open https://twitch.tv
         aur: open https://aur.archlinux.org/
