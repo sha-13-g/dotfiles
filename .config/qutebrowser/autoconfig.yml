@@ -32,6 +32,7 @@ settings:
         at: open https://twitch.tv
         aur: open https://aur.archlinux.org/
         ay: open https://youtube.com/
+        az: open https://libgen.li/
         cs: config-source
         d: null
         dd: tab-close

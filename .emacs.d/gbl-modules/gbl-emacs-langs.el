@@ -17,10 +17,6 @@
 
 ;; (use-package systemd)
 
-(use-package lorem-ipsum
-  :config
-  (lorem-ipsum-use-default-bindings))
-
 (use-package yasnippet
   :init
   (yas-global-mode 1)
