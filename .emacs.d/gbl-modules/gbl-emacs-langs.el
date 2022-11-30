@@ -252,10 +252,22 @@
 (use-package dap-mode
   :diminish)
 
-(use-package js2-mode
-  :hook ((js2-mode . js2-imenu-extras-mode)))
+(use-package typescript-mode
+  :hook '((typescript-mode . eglot-ensure))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode)))
 
-(add-to-list 'auto-mode-alist '("\\.js[ms]?\\'" . js2-mode))
+(use-package tide
+  :after (typescript-mode company flymake)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)))
+
+(use-package js2-mode
+  :hook ((js2-mode . js2-imenu-extras-mode))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js[ms]?\\'" . js2-mode)))
+
+
 
 (add-hook 'js2-mode-hook
        (lambda ()
