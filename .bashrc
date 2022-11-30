@@ -8,7 +8,7 @@
 alias ls='ls --color=auto'
 alias l='exa --icons'
 alias la='exa -a --icons'
-alias ll='exa -la --icons'
+alias ll='exa -l --icons'
 alias lla='exa -la --icons'
 
 alias p='sudo pacman -S'
