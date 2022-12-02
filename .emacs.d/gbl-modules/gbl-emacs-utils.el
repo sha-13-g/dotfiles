@@ -53,7 +53,7 @@
     (call-interactively 'set-mark-command)
     (end-of-visual-line)
     (call-interactively 'kill-ring-save)
-    (gbl/kill-buffer-slipt-window)))
+    (kill-buffer (current-buffer))))
 
 
 (defun gbl/scratch-buffer ()
