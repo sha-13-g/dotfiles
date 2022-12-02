@@ -58,6 +58,7 @@
     ("Spotify" (exwm-workspace-move-window 4))
     ("spotify" (exwm-workspace-move-window 4))
     ("firefox" (exwm-workspace-move-window 2))
+    ("hakuneko-desktop" (exwm-workspace-move-window 5))
     ("Alacritty" (exwm-workspace-move-window 0))
     ("kitty" (exwm-workspace-move-window 0))
     ("TelegramDesktop" (exwm-workspace-move-window 8))
@@ -212,7 +213,7 @@
   ;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'split-window-below)
 
   (gbl/launcher "qutebrowser" "")
-  (gbl/launcher "kitty" "")
+  (gbl/launcher "alacritty" "")
   (exwm-enable))
   ;; (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")

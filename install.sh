@@ -35,5 +35,5 @@ sudo ln -sv ~/Git_repos/dotfiles/.xinitrc ~/
 
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 
-yay -S chromium-widevine xdman
+yay -S chromium-widevine xdman hakuneko-desktop
 npm install -g typescript-language-server typescript vscode-langservers-extracted

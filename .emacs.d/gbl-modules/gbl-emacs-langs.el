@@ -71,6 +71,7 @@
 ;;; Flymake
 (use-package flymake
   :ensure nil
+  :hook ((prog-mode . flymake-mode)) 
   :config
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)

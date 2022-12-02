@@ -42,11 +42,13 @@
   :after vertico
   :bind (;; C-c bindings (mode-specifiC-map)
          ("C-c h" . consult-history)
+         ("C-c g" . consult-grep)
+         ("C-c f" . consult-find)
          ("C-c m" . consult-mode-command)
          ("C-c M" . consult-minor-mode-menu)
          ("C-c o" . consult-outline)
          ("C-c i" . consult-imenu)
-         ("C-c f" . consult-flymake)
+         ("C-c F" . consult-flymake)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
@@ -99,34 +101,12 @@
    consult--source-bookmark consult--source-file-register
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key (kbd "M-.")
-   :preview-key '(:debounce 0.4 any))
+   :preview-key '(:debounce 0.4 any)))
 
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; (kbd "C-+")
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-)
-
-;; (use-package vertico-posframe
-;;   :init (vertico-posframe-mode 1)
-;;   :config (setq vertico-posframe-parameters
-;;                 '((left . 0))))
+(use-package vertico-posframe
+  :init (vertico-posframe-mode 1)
+  :config (setq vertico-posframe-parameters
+                '((left . 0.1))))
 
 
 (use-package marginalia
