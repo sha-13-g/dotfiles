@@ -334,7 +334,8 @@ c.tabs.indicator.width = 1
 # the search engine name to the search term, e.g. `:open google
 # qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'i': 'https://duckduckgo.com/?q={}&iar=images&iax=images&ia=images', 'vic': 'https://la.wikipedia.org/w/index.php?search={}&title=Specialis%3AQuaerere', 'r': 'https://reddit.com/r/{}', 'tpb': 'http://thepiratebay.org/search/{}', 'andr': 'https://developer.android.com/develop/index.html?q={}', 'gh': 'https://github.com/search?q={}', 'man': 'https://manganato.com/search/story/{}', 'ud': 'https://www.urbandictionary.com/define.php?term={}&utm_source=search-action', 'ddg': 'https://duckduckgo.com/?q={}&t=ha&iar=images', 'aw': 'https://wiki.archlinux.org/index.php?title=Special%3ASearch&search={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'tw': 'https://https://www.twitch.tv/search?term={}', 'go': 'https://www.google.com/search?q={}', 'w': 'https://www.wikipedia.org/search-redirect.php?family=wikipedia&language=en&search={}&language=en&go=Go', 'sk': 'https://www.skytorrents.in/search/all/ed/1/?l=en-us&q={}', 'whl': 'https://alpha.wallhaven.cc/search?q={}&categories=111&purity=100&sorting=views&order=desc', 'zl': 'https://b-ok.africa/s/{}', 'whh': 'https://alpha.wallhaven.cc/search?q={}&categories=111&purity=100&atleast=2560x1440&sorting=views&order=desc&page=2'}
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'i': 'https://duckduckgo.com/?q={}&iar=images&iax=images&ia=images', 'vic': 'https://la.wikipedia.org/w/index.php?search={}&title=Specialis%3AQuaerere', 'r': 'https://reddit.com/r/{}', 'tpb': 'http://thepiratebay.org/search/{}', 'andr': 'https://developer.android.com/develop/index.html?q={}', 'gh': 'https://github.com/search?q={}', 'man': 'https://manganato.com/search/story/{}', 'ud': 'https://www.urbandictionary.com/define.php?term={}&utm_source=search-action', 'ddg': 'https://duckduckgo.com/?q={}&t=ha&iar=images', 'aw': 'https://wiki.archlinux.org/index.php?title=Special%3ASearch&search={}', 'yt': 'https://www.youtube.com/results?search_query={}', 'tw': 'https://https://www.twitch.tv/search?term={}', 'go': 'https://www.google.com/search?q={}', 'w': 'https://www.wikipedia.org/search-redirect.php?family=wikipedia&language=en&search={}&language=en&go=Go', 'sk': 'https://www.skytorrents.in/search/all/ed/1/?l=en-us&q={}', 'whl': 'https://alpha.wallhaven.cc/search?q={}&categories=111&purity=100&sorting=views&order=desc', 'zl': 'https://b-ok.africa/s/{}', 'whh': 'https://alpha.wallhaven.cc/search?q={}&categories=111&purity=100&atleast=2560x1440&sorting=views&order=desc&page=2',
+                       'lg': 'https://libgen.li/index.php?req={}&columns%5B%5D=t&columns%5B%5D=a&columns%5B%5D=s&columns%5B%5D=y&columns%5B%5D=p&columns%5B%5D=i&objects%5B%5D=f&objects%5B%5D=e&objects%5B%5D=s&objects%5B%5D=a&objects%5B%5D=p&objects%5B%5D=w&topics%5B%5D=l&topics%5B%5D=c&topics%5B%5D=f&topics%5B%5D=a&topics%5B%5D=m&topics%5B%5D=r&topics%5B%5D=s&res=25&covers=on&filesuns=all'}
 
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.
@@ -647,8 +648,8 @@ c.colors.tabs.selected.even.fg = '#f8f8f2'
 c.colors.tabs.selected.even.bg = '#282a36'
 
 # Bindings for normal mode
-config.bind('<Alt+e>', 'run-with-count 5 scroll up')
-config.bind('<Alt+f>', 'run-with-count 5 scroll down')
+config.bind('<Alt+e>', 'run-with-count 8 scroll up')
+config.bind('<Alt+f>', 'run-with-count 8 scroll down')
 config.bind('B', 'hint links spawn mpv {hint-url}')
 config.bind('aMG', 'open https://mail.google.com/mail/u/0/#inbox')
 config.bind('aMg', 'open https://mail.proton.me/u/1/inbox')
@@ -667,6 +668,7 @@ config.bind('as', 'open https://open.spotify.com/')
 config.bind('at', 'open https://twitch.tv')
 config.bind('aur', 'open https://aur.archlinux.org/')
 config.bind('ay', 'open https://youtube.com/')
+config.bind('az', 'open https://libgen.li/')
 config.bind('cs', 'config-source')
 config.unbind('d')
 config.bind('dd', 'tab-close')

@@ -5,6 +5,17 @@
 ;; (defub gbl/sudo-edit ()
 ;;   "Commands that "
 ;;   (interactive))
+(defhydra gbl/hydra-tab-bar(:timeout 10)
+  "This hydra define a set of tab-bar operation"
+  ("h" (tab-previous) "Goto Previous Tab")
+  ("l" (tab-next) "Goto Next Tab")
+  ("r" (call-interactively #'tab-rename) "Rename Tab")
+  ("n" (tab-new) "Create New Tab")
+  ("c" (tab-close) "Close The Current Tab")
+  ("m" (call-interactively #'tab-move) "Move Tab Forward")
+  ("M" (call-interactively #'tab-move-to) "Move Tab To")
+  ("g" (call-interactively #'tab-group) "Add Tab to Group")
+  ("q" nil "Quit" :exit t))
 
 (defun gbl/capitalize-first-char (&optional string)
   "Capitalize only the first character of the input STRING."
@@ -30,10 +41,9 @@
   "Mark the all in the current buffer"
   (interactive)
   (save-excursion
-    (goto-char (point-min))
-    (call-interactively #'set-mark-command)
+    (push-mark (point-min) nil t)
     (goto-char (point-max))
-    (call-interactively #'evil-indent)))
+    (call-interactively #'indent-region)))
 
 (defun gbl/get-token ()
   (interactive)
@@ -84,7 +94,7 @@
   (interactive)
   (let* ((pos (frame-position))
          (pos-x (car pos))
-          (pos-y (cdr pos)))
+         (pos-y (cdr pos)))
 
     (exwm-floating-move (- pos-x) (- pos-y))))
 
@@ -93,7 +103,7 @@
   (interactive)
   (let* ((pos (frame-position))
          (pos-x (car pos))
-          (pos-y (cdr pos)))
+         (pos-y (cdr pos)))
 
     (exwm-floating-move)))
 
@@ -101,22 +111,22 @@
   "Command to launch the app in PROGRAM with PROGRAM-ARGS."
   (interactive)
   (if (equal program-args "")
-	  (start-process-shell-command program nil program)
-	(start-process "" nil program program-args)))
+      (start-process-shell-command program nil program)
+    (start-process "" nil program program-args)))
 
 (defun gbl/window-split-toggle ()
   "Toggle between horizontal and vertical split with two windows."
   (interactive)
   (if (> (length (window-list)) 2)
-	  (error "Can't toggle with more than 2 windows!")
-	(let ((func (if (window-full-height-p)
-					#'split-window-vertically
-				  #'split-window-horizontally)))
-	  (delete-other-windows)
-	  (funcall func)
-	  (save-selected-window
-		(other-window 1)
-		(switch-to-buffer (other-buffer))))))
+      (error "Can't toggle with more than 2 windows!")
+    (let ((func (if (window-full-height-p)
+                    #'split-window-vertically
+                  #'split-window-horizontally)))
+      (delete-other-windows)
+      (funcall func)
+      (save-selected-window
+        (other-window 1)
+        (switch-to-buffer (other-buffer))))))
 
 (defun my-insert-tab-char ()
   "Insert a tab char. (ASCII 9, \t)"
@@ -131,17 +141,17 @@
 (defun gbl/hide-minor-modes ()
   "A function that shortten minor mode to a character."
   (interactive)
- (dolist (minor-mode minor-mode-list)
-  (diminish minor-mode)))
+  (dolist (minor-mode minor-mode-list)
+    (diminish minor-mode)))
 
 (defun gbl/toggle-transparency ()
   "Toggle the transparency of the current frame."
   (interactive)
   (if (equal gbl/frame-transparency-v '(70 . 70))
-	  (set-frame-parameter (selected-frame) 'alpha 
-						   (setq gbl/frame-transparency-v '(100 . 100)))
-	(set-frame-parameter (selected-frame) 'alpha
-						 (setq gbl/frame-transparency-v '(70 . 70)))))
+      (set-frame-parameter (selected-frame) 'alpha 
+                           (setq gbl/frame-transparency-v '(100 . 100)))
+    (set-frame-parameter (selected-frame) 'alpha
+                         (setq gbl/frame-transparency-v '(70 . 70)))))
 
 (defun gbl/kill-buffer-slipt-window ()
   "a function for delete slip window and kill the buffer."
@@ -158,7 +168,7 @@ folder, otherwise delete a character backward"
       (if (string-match-p "/." (minibuffer-contents))
           (zap-up-to-char (- arg) ?/)
         (delete-minibuffer-contents))
-      (delete-backward-char arg)))
+    (delete-backward-char arg)))
 
 (defun gbl/shutdown ()
   (interactive)

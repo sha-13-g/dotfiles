@@ -151,16 +151,16 @@
   :diminish)
 
 (use-package typescript-mode
-  :hook '((typescript-mode . eglot-ensure))
+  :hook ((typescript-mode . eglot-ensure))
   :config
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode)))
 
 (use-package tide
-  :ensure t
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+ :ensure t
+ :after (typescript-mode company flycheck)
+ :hook ((typescript-mode . tide-setup)
+        (typescript-mode . tide-hl-identifier-mode)
+        (before-save . tide-format-before-save)))
 
 (use-package js2-mode
   :hook ((js2-mode . js2-imenu-extras-mode)

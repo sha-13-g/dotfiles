@@ -60,6 +60,8 @@
 (setq package-quickstart t)
 
 ;; Init hooks
+;; (desktop-save-mode 1)
+;; (add-to-list 'desktop-path (concat (expand-file-name "~/Git_repos/dotfiles/.emacs.d/")  "desktop/"))
 
 ;; Disable GUI elements
 (display-time-mode 1)

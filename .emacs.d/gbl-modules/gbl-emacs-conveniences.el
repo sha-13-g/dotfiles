@@ -16,6 +16,14 @@
 
 (use-package devdocs)
 
+(use-package tab-bar
+  :ensure nil
+  :bind (("C-c t m" . tab-bar-mode)
+         ("C-c t o" . gbl/hydra-tab-bar/body))
+  :config
+  (setq tab-bar-tab-hints t
+        tab-bar-show 1))
+
 (use-package go-translate
     :config
 

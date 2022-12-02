@@ -1,5 +1,3 @@
-
-
 ;; Setting up Package.el to work with MELP
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -30,12 +28,6 @@
 (set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency-v)
 (add-to-list 'default-frame-alist `(alpha . ,gbl/frame-transparency-v))
 
-
-(desktop-save-mode 1)
-(add-to-list 'desktop-path (concat (expand-file-name user-emacs-directory) "desktop/"))
-
-
-(setq tab-bar-select-tab-modifiers "<control>")
 
 (dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
   (put c 'disabled nil))
