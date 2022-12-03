@@ -18,9 +18,9 @@
 
 (use-package tab-bar
   :ensure nil
-  :bind (("C-c t m" . tab-bar-mode)
-         ("C-c t o" . gbl/hydra-tab-bar/body))
+  :bind (("C-c t" . gbl/hydra-tab-bar/body))
   :config
+  (tab-bar-mode 1)
   (setq tab-bar-tab-hints t
         tab-bar-show 1))
 
@@ -73,11 +73,11 @@
 
 (use-package projectile
     :config (projectile-mode)
-    :bind-keymap
-    ("C-c p" . projectile-command-map)
+    :bind-keymap (("C-c p" . projectile-command-map))
+    
     :init
-    (when (file-directory-p "~/Projects/Code")
-      (setq projectile-project-search-path '("~/Projects/Code")))
+    (when (file-directory-p "~/Documents/projects/")
+      (setq projectile-project-search-path '("~/Documents/projects/")))
     (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package smooth-scrolling

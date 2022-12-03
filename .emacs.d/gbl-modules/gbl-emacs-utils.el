@@ -5,17 +5,6 @@
 ;; (defub gbl/sudo-edit ()
 ;;   "Commands that "
 ;;   (interactive))
-(defhydra gbl/hydra-tab-bar(:timeout 10)
-  "This hydra define a set of tab-bar operation"
-  ("h" (tab-previous) "Goto Previous Tab")
-  ("l" (tab-next) "Goto Next Tab")
-  ("r" (call-interactively #'tab-rename) "Rename Tab")
-  ("n" (tab-new) "Create New Tab")
-  ("c" (tab-close) "Close The Current Tab")
-  ("m" (call-interactively #'tab-move) "Move Tab Forward")
-  ("M" (call-interactively #'tab-move-to) "Move Tab To")
-  ("g" (call-interactively #'tab-group) "Add Tab to Group")
-  ("q" nil "Quit" :exit t))
 
 (defun gbl/capitalize-first-char (&optional string)
   "Capitalize only the first character of the input STRING."
@@ -184,5 +173,67 @@ folder, otherwise delete a character backward"
   (cdr (car (cdr (cdr default-frame-alist))))
   (setcar '(1 . 1)))
 
+(defhydra gbl/hydra-window-resizer(:timeout 4)
+  "This hydra define a set on function that resize a window"
+  ("k" (shrink-window 2) "Shrink window vertically")
+  ("j" (enlarge-window 2) "Enlarge window vertically")
+  ("h" (shrink-window-horizontally 2) "Shrink window horizontally")
+  ("l" (enlarge-window-horizontally 2) "Enlarge window horizontally")
+
+  ("K" (exwm-layout-shrink-window 10) "Shrink window vertically")
+  ("J" (exwm-layout-enlarge-window 10) "Enlarge window vertically")
+  ("H" (exwm-layout-shrink-window-horizontally 10) "Shrink window horizontally")
+  ("L" (exwm-layout-enlarge-window-horizontally 10) "Enlarge window horizontally")
+  ("q" nil "Quit" :exit t))
+
+(defhydra hydra-text-scale (:timeout 4) ; Change the size of text
+  "scale text"
+  ("j" text-scale-increase "inc")
+  ("k" text-scale-decrease "dec")
+  ("q" nil "finished" :exit t))
+
+(defhydra hydra-cycle-buffers (:timeout 4) ; Cycle through buffers, killing uneccessary ones
+  "cycle buffers"
+  ("j" next-buffer "next")
+  ("k" previous-buffer "prev")
+  ("SPC" kill-current-buffer "kill")
+  ("q" nil "quit" :exit t))
+
+(defhydra gbl/hydra-window-move (:timeout 5)
+  "Hydra for window deplacement"
+  ("h" (exwm-floating-move -50 0) "Move back")
+  ("l" (exwm-floating-move +50 0) "Move forward")
+  ("j" (exwm-floating-move 0 +50) "Move down")
+  ("k" (exwm-floating-move 0 -50) "Move up")
+
+  ("H" (exwm-floating-move -200 0) "Move back")
+  ("L" (exwm-floating-move +200 0) "Move forward")
+  ("J" (exwm-floating-move 0 +200) "Move down")
+  ("K" (exwm-floating-move 0 -200) "Move up")
+  ("q" nil "Quit" :exit t))
+
+(defhydra hydra-volume-up (:timeout 4)
+  "Configure Volume"
+  ("j" desktop-environment-volume-decrement "down")
+  ("k" desktop-environment-volume-increment "up")
+  ("q" nil "quit" :exit t))
+
+(defhydra hydra-brightness-up (:timeout 4)
+  "Configure Brightness"
+  ("j" desktop-environment-brightness-increment "up")
+  ("k" desktop-environment-brightness-decrement "down")
+  ("q" nil "quit" :exit t))
+
+(defhydra gbl/hydra-tab-bar(:timeout 10)
+  "This hydra define a set of tab-bar operation"
+  ("h" (tab-previous) "Goto Previous Tab")
+  ("l" (tab-next) "Goto Next Tab")
+  ("r" (call-interactively #'tab-rename) "Rename Tab")
+  ("n" (tab-new) "Create New Tab")
+  ("c" (tab-close) "Close The Current Tab")
+  ("m" (call-interactively #'tab-move) "Move Tab Forward")
+  ("M" (call-interactively #'tab-move-to) "Move Tab To")
+  ("g" (call-interactively #'tab-group) "Add Tab to Group")
+  ("q" nil "Quit" :exit t))
 
 (provide 'gbl-emacs-utils)

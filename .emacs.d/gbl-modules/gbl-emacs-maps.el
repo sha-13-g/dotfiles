@@ -5,9 +5,6 @@
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
 (global-set-key (kbd "C-c C-x r") 'org-clock-report)
 
-;; (eval-after-load 'yassnippet
-    ;; (define-key yas-minor-mode-map (kbd "C-j") 'yas-expand)) ; 
-
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
 
@@ -218,61 +215,16 @@
  "f e" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.emacs.d/")) :which-key "Emacs Directory")
  "f p" '((lambda () (interactive) (dired "~/Documents/personal/")) :which-key "Personal Directory"))
 
-(defhydra gbl/hydra-window-resizer(:timeout 4)
-  "This hydra define a set on function that resize a window"
-  ("k" (shrink-window 2) "Shrink window vertically")
-  ("j" (enlarge-window 2) "Enlarge window vertically")
-  ("h" (shrink-window-horizontally 2) "Shrink window horizontally")
-  ("l" (enlarge-window-horizontally 2) "Enlarge window horizontally")
 
-  ("K" (exwm-layout-shrink-window 10) "Shrink window vertically")
-  ("J" (exwm-layout-enlarge-window 10) "Enlarge window vertically")
-  ("H" (exwm-layout-shrink-window-horizontally 10) "Shrink window horizontally")
-  ("L" (exwm-layout-enlarge-window-horizontally 10) "Enlarge window horizontally")
-  ("q" nil "Quit" :exit t))
 
-(defhydra hydra-text-scale (:timeout 4) ; Change the size of text
-  "scale text"
-  ("j" text-scale-increase "inc")
-  ("k" text-scale-decrease "dec")
-  ("q" nil "finished" :exit t))
-
-(defhydra hydra-cycle-buffers (:timeout 4) ; Cycle through buffers, killing uneccessary ones
-  "cycle buffers"
-  ("j" next-buffer "next")
-  ("k" previous-buffer "prev")
-  ("SPC" kill-current-buffer "kill")
-  ("q" nil "quit" :exit t))
 
 
 ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
 
-(defhydra gbl/hydra-window-move (:timeout 5)
-  "Hydra for window deplacement"
-  ("h" (exwm-floating-move -50 0) "Move back")
-  ("l" (exwm-floating-move +50 0) "Move forward")
-  ("j" (exwm-floating-move 0 +50) "Move down")
-  ("k" (exwm-floating-move 0 -50) "Move up")
-
-  ("H" (exwm-floating-move -200 0) "Move back")
-  ("L" (exwm-floating-move +200 0) "Move forward")
-  ("J" (exwm-floating-move 0 +200) "Move down")
-  ("K" (exwm-floating-move 0 -200) "Move up")
-  ("q" nil "Quit" :exit t))
 
 ;; This hydra function allows for control of volume
-(defhydra hydra-volume-up (:timeout 4)
-  "Configure Volume"
-  ("j" desktop-environment-volume-decrement "down")
-  ("k" desktop-environment-volume-increment "up")
-  ("q" nil "quit" :exit t))
 
 ;; This hydra function allows for control of brightness
-(defhydra hydra-brightness-up (:timeout 4)
-  "Configure Brightness"
-  ("j" desktop-environment-brightness-increment "up")
-  ("k" desktop-environment-brightness-decrement "down")
-  ("q" nil "quit" :exit t))
 
 
 (provide 'gbl-emacs-maps)
