@@ -71,7 +71,8 @@
 ;;; Flymake
 (use-package flymake
   :ensure nil
-  :hook ((prog-mode . flymake-mode)) 
+  :hook ((prog-mode . flymake-mode)
+         (flymake-mode . flymake-start)) 
   :config
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
@@ -164,7 +165,8 @@
         (before-save . tide-format-before-save)))
 
 (use-package js2-mode
-  :hook ((js2-mode . js2-imenu-extras-mode)
+  :hook ((js2-mode . eglot-ensure)
+         (js2-mode . js2-imenu-extras-mode)
          (js2-mode . (lambda ()
                        (unless (or (file-exists-p "makefile")
                                    (file-exists-p "Makefile"))

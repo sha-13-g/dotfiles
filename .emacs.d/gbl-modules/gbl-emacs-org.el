@@ -107,6 +107,11 @@
           ("PROJECT" . "blue")
           ("CANCELED" . org-done)))
 
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/Documents/org/gtd.org" "GTD")
+           "** TODO %?\n %i\n %a")
+          ("b" "Birthday" entry (file+headline "~/Documents/org/birthdays.org" "Birthdays")
+              "** %?\n %^{Birthday}t %i\n %a")))
   ;; Enforce all the sub tasks to be DONE for the parent to be
   ;; (setq org-enforce-todo-dependencies nil)
   (setq org-log-done 'note)

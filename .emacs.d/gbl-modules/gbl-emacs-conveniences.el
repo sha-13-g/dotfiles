@@ -16,13 +16,19 @@
 
 (use-package devdocs)
 
+(use-package denote
+  :config
+  (setq denote-file-type "text"))
+
 (use-package tab-bar
   :ensure nil
   :bind (("C-c t" . gbl/hydra-tab-bar/body))
   :config
-  (tab-bar-mode 1)
   (setq tab-bar-tab-hints t
-        tab-bar-show 1))
+        tab-bar-show 1)
+  (tab-bar-mode 1))
+  
+
 
 (use-package go-translate
     :config

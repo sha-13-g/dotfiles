@@ -3,7 +3,23 @@
 (global-set-key (kbd "C-c y l") 'consult-yasnippet)
 (global-set-key (kbd "C-c y d") 'yas-describe-tables)
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
+
 (global-set-key (kbd "C-c C-x r") 'org-clock-report)
+(global-set-key (kbd "C-c C-x ;") 'org-timer-set-timer)
+(global-set-key (kbd "C-c C-x _") 'org-timer-stop)
+
+(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c L") #'org-insert-link)
+
+
+(global-set-key (kbd "C-c n n") #'denote)
+(global-set-key (kbd "C-c n t") #'denote-type)
+(global-set-key (kbd "C-c n d") #'denote-date)
+(global-set-key (kbd "C-c n s") #'denote-subdirectory)
+(global-set-key (kbd "C-c n T") #'denote-template)
+(global-set-key (kbd "C-c n r") #'denote-rename-file)
 
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
@@ -15,6 +31,8 @@
 (define-key universal-argument-map (kbd "s-u") #'universal-argument-more)
 
 (global-set-key (kbd "M-:") 'eval-expression)
+(global-set-key (kbd "s-[") 'winner-undo)
+(global-set-key (kbd "s-]") 'winner-redo)
 
 (global-set-key (kbd "C-s-f") 'gbl/maximize-window)
 (global-set-key (kbd "C-s-b") 'gbl/balance-window)

@@ -3,8 +3,8 @@
   :ensure nil
   :config
   (setq auth-sources '("~/.authinfo.gpg"))
-  (setq user-full-name "Protesilaos Stavrou")
-  (setq user-mail-address "public@protesilaos.com"))
+  (setq user-full-name "Ganfina Brice")
+  (setq user-mail-address "ganfinab@protonmail.com"))
 
 (use-package mm-encode
   :ensure nil

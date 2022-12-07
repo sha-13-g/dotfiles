@@ -89,6 +89,8 @@
   ;; Set the default number of workspaces
   (setq exwm-workspace-number 9)
 
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
   ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-class-hook #'gbl/exwm-update-class)
 
@@ -183,17 +185,8 @@
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
           ;; Switch workspace
-          ([?\M-R] . exwm-input-release-keyboard)
+          ([?\s-r] . exwm-input-release-keyboard)
 
-		  ;; Move the current window to the i (1-9) workspace
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "M-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-move-window ,i))))
-                    (number-sequence 0 9))
-
-		  
           ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
@@ -207,19 +200,15 @@
   (exwm-input-set-key (kbd "<s-tab>") 'other-window)
   (exwm-input-set-key (kbd "s-v") 'split-window-right)
   (exwm-input-set-key (kbd "<s-return>") 'split-window-below)
-  (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'desktop-environment-volume-decrement)
-  (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'desktop-environment-volume-increment)
-  ;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'split-window-below)
-  ;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'split-window-below)
 
   (gbl/launcher "qutebrowser" "")
   (gbl/launcher "alacritty" "")
+  (gbl/run-in-bg "nm-applet")
+  (gbl/run-in-bg "blueman-applet")
   (exwm-enable))
   ;; (gbl/launcher "discord" "")
   ;; (gbl/run-in-bg "dunst")
-  ;; (gbl/run-in-bg "nm-applet")
   ;; (gbl/run-in-bg "pasystray")
-  ;; (gbl/run-in-bg "blueman-applet")
   ;; (gbl/launcher "mpv")
   
 

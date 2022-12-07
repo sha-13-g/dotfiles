@@ -178,9 +178,8 @@
 ;; There is no need to install the package, as transient.el is built
 ;; into Emacs.  By requiring it, I prevent the installation of the
 ;; package, which would be done by Magit.
-(use-package transient)
-:ensure nil
-:config
+(use-package transient
+:ensure nil)
 
 (use-package magit
   (setq magit-define-global-key-bindings nil)
@@ -209,9 +208,8 @@
         '(("~/Git/Projects" . 1))))
 
 ;;; Smerge and Ediff
-(use-package smerge-mode)
-:ensure nil
-:config
+(use-package smerge-mode
+:ensure nil)
 
 (use-package ediff
   :ensure nil

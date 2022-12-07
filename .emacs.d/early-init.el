@@ -84,7 +84,7 @@
 
 (setq-default
  delete-by-moving-to-trash t
- tab-width 4
+ tab-width 2
  window-combination-resize t ; When a new window is created, take space from all existing windows
  x-stretch-cursor t)
 (setq load-prefer-newer noninteractive)

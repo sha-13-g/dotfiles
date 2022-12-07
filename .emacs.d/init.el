@@ -43,7 +43,6 @@
 (require 'use-package)
 
 (setq use-package-always-ensure t) ; all use-package statements will include :ensure t by default
-
 (dolist (mode '(term-mode-hook
 				vterm-mode-hook
 				treemacs-mode-hook
@@ -76,7 +75,7 @@
 (add-to-list 'default-frame-alist '(font . "Source Code Pro-10"))
 
 (add-hook 'prog-mode-hook #'electric-pair-mode)
-(setq electric-pair-preserve-balance nil)
+(setq electric-pair-preserve-balance t)
 
 ;; Setting Transparency
 ;; Enabling usefull modes
@@ -135,6 +134,7 @@
 
 (require 'gbl-emacs-utils)
 (require 'gbl-emacs-conveniences)
+(require 'gbl-emacs-modeline)
 (require 'gbl-emacs-completion)
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
@@ -145,6 +145,7 @@
 (require 'gbl-emacs-langs)
 (require 'gbl-emacs-org)
 (require 'gbl-emacs-magit)
+(require 'gbl-emacs-email)
 ;; (require 'gbl-emacs-desktop)
 
 ;; setting up auto-package update so that packages are updated automatically

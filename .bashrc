@@ -28,8 +28,9 @@ alias nc='nmcli dev wifi con'
 alias ns='nmcli dev status'
 
 alias y='yay -S '
-alias yy='yay -Sy'
 alias yr='yay -R'
+alias yy='yay -Sy'
+alias ys='yay -sS'
 alias yuy='yay -Suy'
 
 alias m='mkdir -p'

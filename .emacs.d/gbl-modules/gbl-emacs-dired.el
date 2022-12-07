@@ -9,7 +9,7 @@
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-		("C-c f d" . gbl/dired-delete-backup-files))
+		("C-c D" . gbl/dired-delete-backup-files))
 
   :hook ((dired-mode . dired-hide-details-mode)
 		 (dired-mode . hl-line-mode))

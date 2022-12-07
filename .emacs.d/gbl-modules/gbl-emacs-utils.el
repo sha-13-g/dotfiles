@@ -38,7 +38,6 @@
   (interactive)
   (save-excursion
     (find-file "~/Documents/org/git_tokken")
-    (next-line)
     (call-interactively 'set-mark-command)
     (end-of-visual-line)
     (call-interactively 'kill-ring-save)
