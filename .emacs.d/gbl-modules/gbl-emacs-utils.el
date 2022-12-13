@@ -26,13 +26,19 @@
 ;;   (interactive)
 ;;  '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)
 
-(defun gbl/mark-buffer ()
+(defun gbl/indent-buffer ()
   "Mark the all in the current buffer"
   (interactive)
   (save-excursion
     (push-mark (point-min) nil t)
     (goto-char (point-max))
     (call-interactively #'indent-region)))
+
+(defun gbl/mark-buffer ()
+  "Mark the all in the current buffer"
+  (interactive)
+  (push-mark (point-min) nil t)
+  (goto-char (point-max)))
 
 (defun gbl/get-token ()
   (interactive)
@@ -43,6 +49,10 @@
     (call-interactively 'kill-ring-save)
     (kill-buffer (current-buffer))))
 
+(defun gbl/bongo-buffer ()
+  (interactive)
+  (get-buffer-create "*Bongo Playlist*")
+  (switch-to-buffer "*Bongo Playlist*"))
 
 (defun gbl/scratch-buffer ()
   (interactive)
@@ -116,10 +126,33 @@
         (other-window 1)
         (switch-to-buffer (other-buffer))))))
 
-(defun my-insert-tab-char ()
+(defun gbl/my-insert-tab-char ()
   "Insert a tab char. (ASCII 9, \t)"
   (interactive)
   (insert "\t"))
+
+(defhydra gbl/hydra-bongo(:timeout 10)
+  "This hydra define a set on function that resize a window"
+  ("s" (bongo-start/stop) "Bongo Start/Stop")
+  ("l" (bongo-next) "Bongo Next")
+  ("h" (bongo-previous) "Bongo Prev")
+  ("P" (bongo-playlist) "Bongo Playlist")
+
+  ("p" (bongo-pause/resume) "Bongo Pause/Resume")
+  ("r" (bongo-replay-current) "Bongo Replay Current")
+  ("H" (bongo-seek-backward-3) "Bongo Backward 3")
+  ("L" (bongo-seek-forward-3) "Bongo Forward 3")
+  ("a" (bongo-append-enqueue) "Bongo Append to queue")
+  ("q" nil "Quit" :exit t))
+
+(defun gbl/dired-bongo ()
+  (when (equal dired-directory "~/Music/")
+    (bongo-dired-library-mode 1)
+    (evil-emacs-state 0)))
+
+(defun gbl/bongo-playlist-mode()
+  (when (equal major-mode 'bongo-playlist-mode)
+      (evil-emacs-state 0)))
 
 (defun gbl/set-transparency (number)
   "Set frame transparency by (NUMBER . NUMBER)."

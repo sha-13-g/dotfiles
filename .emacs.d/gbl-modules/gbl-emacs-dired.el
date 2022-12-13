@@ -6,6 +6,9 @@
   (dired-flag-backup-files)
   (dired-do-flagged-delete t))
 
+(add-hook 'dired-after-readin-hook #'gbl/dired-bongo)
+(add-hook 'after-change-major-mode-hook #'gbl/dired-bongo)
+
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
@@ -150,6 +153,7 @@
 ;; Dired will have all-the-icons, same as in treemacs
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
+
 
 (use-package dired-single)
 

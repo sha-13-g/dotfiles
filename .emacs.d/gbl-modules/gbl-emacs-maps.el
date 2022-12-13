@@ -4,6 +4,8 @@
 (global-set-key (kbd "C-c y d") 'yas-describe-tables)
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
 
+(global-set-key (kbd "C-c b") 'gbl/hydra-bongo/body)
+
 (global-set-key (kbd "C-c C-x r") 'org-clock-report)
 (global-set-key (kbd "C-c C-x ;") 'org-timer-set-timer)
 (global-set-key (kbd "C-c C-x _") 'org-timer-stop)
@@ -24,7 +26,7 @@
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
 
-(global-set-key (kbd "TAB") 'my-insert-tab-char)
+(global-set-key (kbd "TAB") 'gbl/my-insert-tab-char)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ; Use ESC to quit prompts
 
 (global-set-key (kbd "s-u") 'universal-argument)
@@ -40,6 +42,7 @@
 
 (global-set-key (kbd "s-q") 'gbl/kill-buffer-slipt-window)
 (global-set-key (kbd "s-Q") 'delete-window)
+(global-set-key (kbd "s-o") 'delete-other-windows)
 
 
 (global-set-key (kbd "s-h") 'windmove-left)
@@ -130,27 +133,26 @@
 	   "w t" '(gbl/window-split-toggle :which-key "Window split toggle"))
 
 (general-define-key  :prefix gbl/super-leader
- "l"   '(:ignore t :which-key "Applications")
- "l b"   '(:ignore t :which-key "Browsers")
+ "b"   '(:ignore t :which-key "Browsers")
 
- "l b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
- "l b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
- "l b c" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
- "l d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
- "l T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
- "l t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
- "l v" '((lambda () (interactive) (gbl/launcher "vlc" "")) :which-key "VLC")
- "l m" '((lambda () (interactive) (gbl/launcher "hakuneko-desktop" "")) :which-key "MangaReader")
- "l s" '((lambda () (interactive) (gbl/launcher "spotify" "")) :which-key "Spotify")
- "l f" '((lambda () (interactive) (gbl/launcher "figma-linux" "")) :which-key "Figma")
- "l g" '((lambda () (interactive) (gbl/launcher "gimp" "")) :which-key "Gimp")
- "l P" '((lambda () (interactive) (gbl/launcher "pavucontrol" "")) :which-key "Pavucontrol")
+ "b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+ "b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
+ "b c" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
+ "d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
+ "T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
+ "t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
+ "v" '((lambda () (interactive) (gbl/launcher "vlc" "")) :which-key "VLC")
+ "m" '((lambda () (interactive) (gbl/launcher "hakuneko-desktop" "")) :which-key "MangaReader")
+ "s" '((lambda () (interactive) (gbl/launcher "spotify" "")) :which-key "Spotify")
+ "f" '((lambda () (interactive) (gbl/launcher "figma-linux" "")) :which-key "Figma")
+ "g" '((lambda () (interactive) (gbl/launcher "gimp" "")) :which-key "Gimp")
+ "P" '((lambda () (interactive) (gbl/launcher "pavucontrol" "")) :which-key "Pavucontrol")
 
- "l p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
- "l k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
+ "p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
+ "k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
 
- "l w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
- "l e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
+ "w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
+ "e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
 
 (general-define-key  :states '(normal visual) :keymaps 'override :prefix gbl/leader
  "d d" '(dired :which-key "Open dired")
@@ -204,10 +206,12 @@
 (general-define-key  :prefix gbl/leader
  "f" '(:ignore t :which-key "Files")
  "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
- "f T" '((lambda () (interactive) (gts-do-translate)) :which-key "Translate")
+ "f n" '((lambda () (interactive) (dired "~/Documents/notes/")) :which-key "Notes")
+ "f M" '((lambda () (interactive) (dired "~/Music/")) :which-key "Music")
  "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
 
  "f s" '(gbl/scratch-buffer :wich-key "Scratch Buffer")
+ "f B" '(gbl/bongo-buffer :wich-key "Bongo Buffer")
 
  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
  "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")

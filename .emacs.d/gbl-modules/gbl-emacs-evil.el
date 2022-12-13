@@ -27,7 +27,8 @@
   ;; use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  (evil-global-set-key 'normal "gb" #'gbl/mark-buffer)
+  (evil-global-set-key 'normal "gb" #'gbl/indent-buffer)
+  (evil-global-set-key 'normal "gG" #'gbl/mark-buffer)
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))

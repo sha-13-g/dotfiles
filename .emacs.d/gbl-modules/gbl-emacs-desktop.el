@@ -33,7 +33,7 @@
   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
 ;; (defun gbl/send-polybar-exwm-workspace ()
-  ;; (gbl/send-polybar-hook "exwm-workspace" 1))
+;; (gbl/send-polybar-hook "exwm-workspace" 1))
 
 (defun gbl/exwm-update-title ()
   (exwm-workspace-rename-buffer (gbl/capitalize-first-char (format "%s: %s"  exwm-class-name exwm-title))))
@@ -102,60 +102,67 @@
   ;; When EXWM finishes initialization, do some extra setup:
   (add-hook 'exwm-init-hook #'gbl/exwm-init-hook)
 
+
+  ;; (setq exwm-workspace-warp-cursor nil)
+
+  ;; ;; Window focus should follow the mouse pointer
+  ;; (setq mouse-autoselect-window nil
+  ;;       focus-follows-mouse nil)
+
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
-    '(?\C-x
-      ?\C-h
-      ?\C-c
-      ?\C-&
+        '(?\C-x
+          ?\C-h
+          ?\C-c
+          ?\C-&
 
-      ?\C--
-      ?\C-=
+          ?\C--
+          ?\C-=
 
-      ?\C-w
+          ?\C-w
 
-      ?\M-&
-      ?\M-x
-      ?\M-:
+          ?\M-&
+          ?\M-x
+          ?\M-:
 
-      ?\s-h
-      ?\s-l
-      ?\s-k
-      ?\s-j
+          ?\s-h
+          ?\s-l
+          ?\s-k
+          ?\s-j
 
-      ?\s- 
+          ?\s- 
 
-      ?\s-J
-      ?\s-K
-      ?\s-H
-      ?\s-L
+          ?\s-J
+          ?\s-K
+          ?\s-H
+          ?\s-L
 
-      ;; (kbd "<f8>")
+          ;; (kbd "<f8>")
 
-      ?\s-a
+          ?\s-a
 
-      ?\s-q
-      ?\s-Q
+          ?\s-q
+          ?\s-Q
 
-      ?\s-P
-      ?\s-N
+          ?\s-P
+          ?\s-N
 
-      ?\s-p
-      ?\s-n
+          ?\s-p
+          ?\s-n
 
-      ?\s-e
-	  
-      ?\s-f
-      ?\s-b
-      ?\s-B
+          ?\s-e
+	      
+          ?\s-f
+          ?\s-b
+          ?\s-B
 
 
-      ?\C-\M-h
-      ?\C-\M-l
-      ?\C-\M-k
-      ?\C-\M-j
+          ?\C-\M-h
+          ?\C-\M-l
+          ?\C-\M-k
+          ?\C-\M-j
 
-      ?\C-\ ))     ;; Ctrl+Spacev
+          ?\C-\ ))     ;; Ctrl+Spacev
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -206,10 +213,9 @@
   (gbl/run-in-bg "nm-applet")
   (gbl/run-in-bg "blueman-applet")
   (exwm-enable))
-  ;; (gbl/launcher "discord" "")
-  ;; (gbl/run-in-bg "dunst")
-  ;; (gbl/run-in-bg "pasystray")
-  ;; (gbl/launcher "mpv")
-  
+;; (gbl/launcher "discord" "")
+;; (gbl/run-in-bg "dunst")
+;; (gbl/run-in-bg "pasystray")
+;; (gbl/launcher "mpv")
 
 (provide 'gbl-emacs-desktop)
