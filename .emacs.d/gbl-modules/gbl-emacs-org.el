@@ -14,11 +14,11 @@
   :hook (org-mode . org-indent-mode)
   :config
 
-  (evil-collection-define-key 'normal 'org-mode-map
-    (kbd "H") #'org-shiftleft
-    (kbd "L") #'org-shiftright
-    (kbd "J") #'org-shiftup
-    (kbd "K") #'org-shiftdown)
+  ;; (evil-collection-define-key 'normal 'org-mode-map
+  ;;   (kbd "H") #'org-shiftleft
+  ;;   (kbd "L") #'org-shiftright
+  ;;   (kbd "J") #'org-shiftup
+  ;;   (kbd "K") #'org-shiftdown)
 
   (setq org-refile-targets
         '(("~/Documents/org/archive.org" :maxlevel . 1)

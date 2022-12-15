@@ -1,4 +1,4 @@
-;; Setting up Package.el to work with MELP
+ ;; Setting up Package.el to work with MELP
 (server-start)
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -42,7 +42,7 @@
 
 (require 'use-package)
 
-(setq use-package-always-ensure t) ; all use-package statements will include :ensure t by default
+(setq use-package-always-ensure t) ; use-package statements will include :ensure t by default
 (dolist (mode '(term-mode-hook
 				vterm-mode-hook
 				treemacs-mode-hook
@@ -139,18 +139,17 @@
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
 (require 'gbl-emacs-desktop)
-(require 'gbl-emacs-evil)
+;; (require 'gbl-emacs-evil)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-dired)
+(require 'gbl-emacs-eaf)
 (require 'gbl-emacs-langs)
 (require 'gbl-emacs-org)
 (require 'gbl-emacs-magit)
-;; (require 'gbl-emacs-bongo)
 (require 'gbl-emacs-email)
+;; (require 'gbl-emacs-bongo)
 (require 'gbl-emacs-shell)
 ;; (require 'gbl-emacs-desktop)
-
-(add-hook 'after-change-major-mode-hook #'gbl/bongo-playlist)
 
 ;; setting up auto-package update so that packages are updated automatically
 (use-package auto-package-update

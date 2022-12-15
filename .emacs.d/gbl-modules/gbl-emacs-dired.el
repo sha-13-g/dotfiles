@@ -7,7 +7,6 @@
   (dired-do-flagged-delete t))
 
 (add-hook 'dired-after-readin-hook #'gbl/dired-bongo)
-(add-hook 'after-change-major-mode-hook #'gbl/dired-bongo)
 
 (use-package dired
   :ensure nil
@@ -22,12 +21,10 @@
 		   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
 		   (dired-dwim-target t)
 		   (dired-auto-revert-buffer #'dired-directory-changed-p)
-		   (dired-mouse-drag-files))
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    (kbd "h") 'dired-single-up-directory
-    (kbd "l") 'dired-find-alternate-file))
-
+		   (dired-mouse-drag-files)))
+;; (evil-collection-define-key 'normal 'dired-mode-map
+;;     (kbd "h") 'dired-single-up-directory
+;;     (kbd "l") 'dired-find-alternate-file)
 
 (use-package peep-dired
   :diminish t)

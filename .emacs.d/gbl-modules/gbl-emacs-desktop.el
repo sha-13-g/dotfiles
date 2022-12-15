@@ -52,6 +52,7 @@
   (interactive)
   (pcase exwm-class-name
     ("qutebrowser" (exwm-workspace-move-window 2))
+    ("Tor Browser" (exwm-workspace-move-window 2))
     ("Arandr" (exwm-floating-toggle-floating))
     ("Google-chrome" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 6))
@@ -213,7 +214,7 @@
   (gbl/run-in-bg "nm-applet")
   (gbl/run-in-bg "blueman-applet")
   (exwm-enable))
-;; (gbl/launcher "discord" "")
+;; /launcher "discord" "")
 ;; (gbl/run-in-bg "dunst")
 ;; (gbl/run-in-bg "pasystray")
 ;; (gbl/launcher "mpv")

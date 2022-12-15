@@ -147,12 +147,10 @@
 
 (defun gbl/dired-bongo ()
   (when (equal dired-directory "~/Music/")
-    (bongo-dired-library-mode 1)
-    (evil-emacs-state 0)))
+    (bongo-dired-library-mode 1)))
 
 (defun gbl/bongo-playlist-mode()
-  (when (equal major-mode 'bongo-playlist-mode)
-      (evil-emacs-state 0)))
+  (when (equal major-mode 'bongo-playlist-mode)))
 
 (defun gbl/set-transparency (number)
   "Set frame transparency by (NUMBER . NUMBER)."
