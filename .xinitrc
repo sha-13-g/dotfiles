@@ -64,4 +64,4 @@ exec nitrogen --restore &
 
 setxkbmap -layout 'fr' -variant 'us-azerty' -model 'pc105' -option 'ctrl:swapcaps' 
 
-exec dbus-launch --exit-with-session emacs -mm --debug-init
+exec dbus-launch --exit-with-session emacs -mm --debug-init 

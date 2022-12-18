@@ -12,7 +12,9 @@
 ;;   (tab-bar-select-tab-modifiers "<control>")) ; Every seven days
 
 (use-package general
-    :diminish t)
+  :diminish t)
+
+;; (use-package aria2)
 
 (use-package devdocs)
 
@@ -25,7 +27,7 @@
   :bind (("C-c t" . gbl/hydra-tab-bar/body))
   :config
   (setq tab-bar-tab-hints t
-        tab-bar-show 1)
+        tab-bar-show 'never)
   (tab-bar-mode 1))
   
 

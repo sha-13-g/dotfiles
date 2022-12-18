@@ -8,20 +8,29 @@
 
 (add-hook 'dired-after-readin-hook #'gbl/dired-bongo)
 
+;; (use-package el-get)
+;; (push
+;;  `(:name aria2
+;;          :type git
+;;          :url "https://gitlab.com/ukaszg/aria2.git")
+;;  el-get-sources)
+
+;; (el-get 'sync '(aria2))
+
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-		("C-c D" . gbl/dired-delete-backup-files))
+		      ("C-c D" . gbl/dired-delete-backup-files))
 
-  :hook ((dired-mode . dired-hide-details-mode)
-		 (dired-mode . hl-line-mode))
-  :custom ((dired-recursive-copies 'always)
-		   (dired-recursive-deletes 'always)
-		   (delete-by-moving-to-trash t)
-		   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
-		   (dired-dwim-target t)
-		   (dired-auto-revert-buffer #'dired-directory-changed-p)
-		   (dired-mouse-drag-files)))
+              :hook ((dired-mode . dired-hide-details-mode)
+		             (dired-mode . hl-line-mode))
+              :custom ((dired-recursive-copies 'always)
+		               (dired-recursive-deletes 'always)
+		               (delete-by-moving-to-trash t)
+		               (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
+		               (dired-dwim-target t)
+		               (dired-auto-revert-buffer #'dired-directory-changed-p)
+		               (dired-mouse-drag-files)))
 ;; (evil-collection-define-key 'normal 'dired-mode-map
 ;;     (kbd "h") 'dired-single-up-directory
 ;;     (kbd "l") 'dired-find-alternate-file)
@@ -132,13 +141,13 @@
 
 ;; (use-package dired-hide-dotfiles
 ;;   :hook (dired-mode . dired-hide-dotfiles-mode)
-  ;; :config
-  ;; (evil-collection-define-key 'normal 'dired-mode-map
-    ;; "H" 'dired-hide-dotfiles-mode))
+;; :config
+;; (evil-collection-define-key 'normal 'dired-mode-map
+;; "H" 'dired-hide-dotfiles-mode))
 
 ;; (with-eval-after-load 'dired
-  ;; (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
-  ;; (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
+;; (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+;; (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
 
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps) ; Evil normalize keymap
 (setq dired-open-extentions '(("gif" . "sxiv") ;; When a gif is selected, it must be opened within sxiv.

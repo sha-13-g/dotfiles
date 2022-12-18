@@ -56,20 +56,19 @@
     ("Arandr" (exwm-floating-toggle-floating))
     ("Google-chrome" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 6))
-    ("Spotify" (exwm-workspace-move-window 4))
-    ("spotify" (exwm-workspace-move-window 4))
     ("firefox" (exwm-workspace-move-window 2))
+    ("Deluge" (exwm-workspace-move-window 7))
     ("hakuneko-desktop" (exwm-workspace-move-window 5))
     ("Alacritty" (exwm-workspace-move-window 0))
     ("kitty" (exwm-workspace-move-window 0))
-    ("TelegramDesktop" (exwm-workspace-move-window 8))
+    ("TelegramDesktop" (exwm-workspace-move-window 6))
     ("Gimp" (exwm-workspace-move-window 3))
     ("figma-linux" (exwm-workspace-move-window 3))
     ("Pavucontrol" (exwm-floating-toggle-floating))
     ("mpv" (exwm-workspace-move-window 4))
     ("ktouch" (exwm-workspace-move-window 5))
-    ("qBittorrent" (exwm-workspace-move-window 5))
-    ("VirtualBox Manager" (exwm-workspace-move-window 5))
+    ("qBittorrent" (exwm-workspace-move-window 7))
+    ("VirtualBox Manager" (exwm-workspace-move-window 7))
     ("vlc" (exwm-workspace-move-window 4))))
 
 (use-package desktop-environment
@@ -90,8 +89,7 @@
   ;; Set the default number of workspaces
   (setq exwm-workspace-number 9)
 
-  (require 'exwm-systemtray)
-  (exwm-systemtray-enable)
+
   ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-class-hook #'gbl/exwm-update-class)
 
@@ -103,7 +101,8 @@
   ;; When EXWM finishes initialization, do some extra setup:
   (add-hook 'exwm-init-hook #'gbl/exwm-init-hook)
 
-
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
   ;; (setq exwm-workspace-warp-cursor nil)
 
   ;; ;; Window focus should follow the mouse pointer
@@ -209,11 +208,13 @@
   (exwm-input-set-key (kbd "s-v") 'split-window-right)
   (exwm-input-set-key (kbd "<s-return>") 'split-window-below)
 
-  (gbl/launcher "qutebrowser" "")
-  (gbl/launcher "alacritty" "")
-  (gbl/run-in-bg "nm-applet")
-  (gbl/run-in-bg "blueman-applet")
+
   (exwm-enable))
+
+(gbl/launcher "qutebrowser" "")
+(gbl/launcher "alacritty" "")
+(gbl/run-in-bg "nm-applet")
+(gbl/run-in-bg "blueman-applet")
 ;; /launcher "discord" "")
 ;; (gbl/run-in-bg "dunst")
 ;; (gbl/run-in-bg "pasystray")

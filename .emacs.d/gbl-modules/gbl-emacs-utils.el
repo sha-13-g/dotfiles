@@ -6,6 +6,24 @@
 ;;   "Commands that "
 ;;   (interactive))
 
+(defun gbl/scroll-half-page-down()
+  (interactive)
+  (forward-line 20)
+  (recenter nil nil))
+
+
+(defun gbl/scroll-half-page-up()
+  (interactive)
+  (forward-line -20)
+  (recenter nil nil))
+
+(defun gbl/dired-mark-regexp()
+  (interactive)
+  (call-interactively #'dired-mark-files-regexp)
+  (dired-toggle-marks)
+  (dired-do-kill-lines))
+
+
 (defun gbl/capitalize-first-char (&optional string)
   "Capitalize only the first character of the input STRING."
   (when (and string (> (length string) 0))
@@ -25,6 +43,13 @@
 ;; (defun gbl/get-token ()
 ;;   (interactive)
 ;;  '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)
+(defun gbl/bongo-go-music ()
+  (interactive)
+  (bongo)
+  (gbl/kill-buffer-slipt-window)
+  (tab-new)
+  (tab-rename "Music")
+  (dired "~/Music/"))
 
 (defun gbl/indent-buffer ()
   "Mark the all in the current buffer"
@@ -52,12 +77,14 @@
 (defun gbl/bongo-buffer ()
   (interactive)
   (get-buffer-create "*Bongo Playlist*")
-  (switch-to-buffer "*Bongo Playlist*"))
+  (switch-to-buffer "*Bongo Playlist*")
+  (bongo-playlist-mode))
 
 (defun gbl/scratch-buffer ()
   (interactive)
   (get-buffer-create "*scratch*")
-  (switch-to-buffer "*scratch*"))
+  (switch-to-buffer "*scratch*")
+  (lisp-interaction-mode))
 
 (defun gbl/balance-window ()
   (interactive)
@@ -137,6 +164,8 @@
   ("l" (bongo-next) "Bongo Next")
   ("h" (bongo-previous) "Bongo Prev")
   ("P" (bongo-playlist) "Bongo Playlist")
+  ("b" (gbl/bongo-buffer) "Bongo Buffer")
+  ("g" (gbl/bongo-go-music) "Bongo go Music")
 
   ("p" (bongo-pause/resume) "Bongo Pause/Resume")
   ("r" (bongo-replay-current) "Bongo Replay Current")
@@ -148,6 +177,7 @@
 (defun gbl/dired-bongo ()
   (when (equal dired-directory "~/Music/")
     (bongo-dired-library-mode 1)))
+
 
 (defun gbl/bongo-playlist-mode()
   (when (equal major-mode 'bongo-playlist-mode)))
@@ -250,8 +280,8 @@ folder, otherwise delete a character backward"
 
 (defhydra hydra-brightness-up (:timeout 4)
   "Configure Brightness"
-  ("j" desktop-environment-brightness-increment "up")
-  ("k" desktop-environment-brightness-decrement "down")
+  ("k" desktop-environment-brightness-increment "up")
+  ("j" desktop-environment-brightness-decrement "down")
   ("q" nil "quit" :exit t))
 
 (defhydra gbl/hydra-tab-bar(:timeout 10)
@@ -259,6 +289,7 @@ folder, otherwise delete a character backward"
   ("h" (tab-previous) "Goto Previous Tab")
   ("l" (tab-next) "Goto Next Tab")
   ("r" (call-interactively #'tab-rename) "Rename Tab")
+  ("s" (call-interactively #'tab-switch) "Rename Tab")
   ("n" (tab-new) "Create New Tab")
   ("c" (tab-close) "Close The Current Tab")
   ("m" (call-interactively #'tab-move) "Move Tab Forward")

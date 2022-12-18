@@ -5,6 +5,7 @@
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
 
 (global-set-key (kbd "C-c b") 'gbl/hydra-bongo/body)
+(global-set-key (kbd "C-c s") 'gbl/scratch-buffer)
 
 (global-set-key (kbd "C-c C-x r") 'org-clock-report)
 (global-set-key (kbd "C-c C-x ;") 'org-timer-set-timer)
@@ -15,6 +16,8 @@
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c L") #'org-insert-link)
 
+(global-set-key (kbd "C-S-j") #'gbl/scroll-half-page-down)
+(global-set-key (kbd "C-S-k") #'gbl/scroll-half-page-up)
 
 (global-set-key (kbd "C-c n n") #'denote)
 (global-set-key (kbd "C-c n t") #'denote-type)
@@ -22,6 +25,8 @@
 (global-set-key (kbd "C-c n s") #'denote-subdirectory)
 (global-set-key (kbd "C-c n T") #'denote-template)
 (global-set-key (kbd "C-c n r") #'denote-rename-file)
+
+(define-key dired-mode-map (kbd "C-c M-m") #'gbl/dired-mark-regexp)
 
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
@@ -210,10 +215,7 @@
  "f M" '((lambda () (interactive) (dired "~/Music/")) :which-key "Music")
  "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
 
- "f s" '(gbl/scratch-buffer :wich-key "Scratch Buffer")
- "f B" '(gbl/bongo-buffer :wich-key "Bongo Buffer")
-
- "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
+  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
  "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
  "f b" '((lambda () (interactive) (dired "~/Documents/books/")) :which-key "Books")
  "f q" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")

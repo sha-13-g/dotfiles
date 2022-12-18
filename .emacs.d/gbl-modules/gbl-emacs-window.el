@@ -45,9 +45,9 @@
 
 				  ("\\*Help*"
 				   (display-buffer-in-side-window)
-				   (window-width . 0.5)
+				   (window-width . 0.3)
 				   (side . right)
-				   (slot . -1))
+				   (slot . 1))
                   
                   ("\\*Proced*"
                    (display-buffer-in-side-window)

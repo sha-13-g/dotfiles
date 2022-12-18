@@ -3,9 +3,9 @@
   :hook '((prog-mode . company-mode)
           (eglot-ensure . company-mode))
   :bind (:map company-active-map
-		("<tab>" . company-complete-selection)
-		("C-j" . company-select-next-or-abort)
-		("C-k" . company-select-previous-or-abort))
+		      ("<tab>" . company-complete-selection)
+		      ("C-j" . company-select-next-or-abort)
+		      ("C-k" . company-select-previous-or-abort))
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0)
@@ -64,7 +64,7 @@
          :map minibuffer-local-map
          ("s-s" . consult-history))                ;; orig. previous-matching-history-element
 
-:hook (completion-list-mode . consult-preview-at-point-mode)
+  :hook (completion-list-mode . consult-preview-at-point-mode)
 
   ;; The :init configuration is always executed (Not lazy)
   :init
@@ -72,7 +72,7 @@
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
+  (setq register-preview-delay 0
         register-preview-function #'consult-register-format)
 
   ;; Optionally tweak the register preview window.
@@ -83,6 +83,12 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
 
+  (setq consult-async-input-debounce 0)
+  (setq consult-async-input-throttle 0)
+  (setq consult-async-refresh-delay 0)
+  (setq consult-line-start-from-top t)
+  (setq consult-async-min-input 1)
+  (setq consult-find-args "find .")
   ;; Configure other variables and modes in the :config section,
   ;; after lazily loading the package.
   :config
@@ -95,13 +101,13 @@
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
-   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-theme :preview-key '(:debounce 0 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-file-register
    consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key (kbd "M-.")
-   :preview-key '(:debounce 0.4 any)))
+   :preview-key '(:debounce 0 any)))
 
 (use-package vertico-posframe
   :init (vertico-posframe-mode 1)
