@@ -12,6 +12,7 @@
   (recenter nil nil))
 
 
+
 (defun gbl/scroll-half-page-up()
   (interactive)
   (forward-line -20)
@@ -46,10 +47,16 @@
 (defun gbl/bongo-go-music ()
   (interactive)
   (bongo)
-  (gbl/kill-buffer-slipt-window)
+  (kill-buffer)
   (tab-new)
   (tab-rename "Music")
   (dired "~/Music/"))
+
+(defun gbl/go-to-books()
+  (interactive)
+  (tab-new)
+  (tab-rename "Books")
+  (dired "~/Documents/books/"))
 
 (defun gbl/indent-buffer ()
   "Mark the all in the current buffer"

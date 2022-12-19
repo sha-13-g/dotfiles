@@ -1,8 +1,10 @@
-;; Some convenient maps
+; Some convenient maps
 
 (global-set-key (kbd "C-c y l") 'consult-yasnippet)
 (global-set-key (kbd "C-c y d") 'yas-describe-tables)
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
+
+(global-set-key (kbd "C-c w") 'eaf-open-browser)
 
 (global-set-key (kbd "C-c b") 'gbl/hydra-bongo/body)
 (global-set-key (kbd "C-c s") 'gbl/scratch-buffer)
@@ -100,6 +102,7 @@
                     "s" '(dictionary-search :wich-key "Search word")
                     "t" '(gts-do-translate :wich-key "Translate word"))
 
+()
 (general-define-key  :prefix gbl/leader
                      "SPC l" '(gbl/load-light-theme :which-key "Light theme")
                      "SPC d" '(gbl/load-dark-theme :which-key "Dark theme"))
@@ -217,7 +220,7 @@
 
   "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
  "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
- "f b" '((lambda () (interactive) (dired "~/Documents/books/")) :which-key "Books")
+ "f b" '(gbl/go-to-books :wich-key "Books")
  "f q" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
  "f f" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/init.el")) :which-key "Emacs init.el")
  "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")

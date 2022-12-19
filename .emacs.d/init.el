@@ -1,4 +1,4 @@
- ;; Setting up Package.el to work with MELP
+;; Setting up Package.el to work with MELP
 (server-start)
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -21,9 +21,10 @@
 ;;   (load bootstrap-file nil 'nomessage))
 
 ;;Variable definition
-    (defvar gbl/leader "s-SPC")
-    (defvar gbl/super-leader "s-a")
-    (defvar gbl/frame-transparency-v '(90 . 90))
+(defvar gbl/leader "s-SPC")
+(defvar gbl/leader-space "SPC")
+(defvar gbl/super-leader "s-a")
+(defvar gbl/frame-transparency-v '(90 . 90))
 
 
 (set-frame-parameter (selected-frame) 'alpha gbl/frame-transparency-v)
@@ -46,7 +47,7 @@
 (dolist (mode '(term-mode-hook
 				vterm-mode-hook
 				treemacs-mode-hook
-				;elfeed-search-mode-hook
+                                        ;elfeed-search-mode-hook
 				elfeed-show-mode-hook
 				eww-mode-hook
 				eshell-mode-hook))
@@ -69,6 +70,9 @@
 					:slant 'italic)
 (set-face-attribute 'font-lock-keyword-face nil
 					:weight 'medium)
+
+
+(use-package autothemer)
 
 ;; Extra font settings
 (setq-default line-spacing 0.03)
@@ -94,7 +98,7 @@
 
 (setq redisplay-dont-pause t)
 (setq fast-but-imprecise-scrolling nil ; Turn off, always
-	  ;jit-lock-defer-time 0.01
+                                        ;jit-lock-defer-time 0.01
 	  jit-lock-defer-time 0)
 
 
@@ -185,13 +189,14 @@
 
 	(disable-theme 'doom-dracula)
 	(load-theme 'doom-solarized-light t)
-	(setq-default input-block "#F9F2D9"))
-  (gbl/load-dark-theme))
+	(setq-default input-block "#F9F2D9")))
 
+(load-theme 'catppuccin-mocha)
 ;; Adding upport for emojis and icons
 (use-package all-the-icons)
 
 (use-package ef-themes)
+
 
 (use-package emojify
   :hook (after-init . global-emojify-mode))
@@ -206,8 +211,8 @@
   :diminish t)
 
 (use-package catppuccin-theme
- :config
- (setq catppuccin-height-title1 1.5))
+  :config
+  (setq catppuccin-height-title1 1.5))
 ;;;; Completion
 
 ;; Installing vertico
@@ -266,7 +271,7 @@
   (setq shell-file-name "/bin/bash" ; Bash by default
 		vterm-max-scrollback 5000))
 
-; Elfeed, RSS Newsreader for emacs
+                                        ; Elfeed, RSS Newsreader for emacs
 (use-package elfeed
   :config
   (setq elfeed-search-feed-face ":foreground #fff :weight bold"
@@ -482,38 +487,38 @@
 ;; 	  '("pdflatex -interaction nonstopmode -output-directory %o %f"))
 
 ;; Emacs Mail
-;(use-package mu4e
-;  :ensure nil
-;  :load-path /usr/share/emacs/site-lisp/mu4e/
-;  :defer 20
-;  :config
-;  (setq mu4e-change-filenames-when-moving t) ; Refresh mail using isync every 10 minutes
-;
-;  ;; Refresh mail using isync every 10 mins
-;  (setq mu4e-update-interval (* 10 60)
-;		mu4e-get-mail-command "mbsync 0a"
-;		mu4e-maildir "~/Mail")
-;  
-;  (setq mu4e-drafts-folder "/[Gmail]/Drafts"
-;		mu4e-sent-folder "/[Gmail]/Sent Mail"
-;		mu4e-refile-folder "/[Gmail]/All Mail"
-;		mu4e-trash-folder "/[Gmail]/Trash")
-;
-;  ;; Quick Access to the following folders:
-;  (setq mu4e-maildir-shortcuts
-;		'((:maildir "/Inbox"				:key ?i)
-;		  (:maildir "/[Gmail]/Sent Mail"	:key ?s)
-;		  (:maildir "/[Gmail]/Trash"		:key ?t)
-;		  (:maildir "/[Gmail]/Drafts"		:key ?d)
-;		  (:maildir "/[Gmail]/All Mail"		:key ?a)))
-;
-;  ;; You can create bookmarked queries:
-;  (setq mu4e-bookmarks
-;		'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?i)
-;		  (:name "Today's messages" :query "date:today..now" :key ?t)
-;		  (:name "Last 7 days" :query "date:6d..now" :hide-unread t :key ?w)
-;		  (:name "Messages with images" :query "mime:image/*" :key ?p)))
-;
-;  (mu4e t))
+                                        ;(use-package mu4e
+                                        ;  :ensure nil
+                                        ;  :load-path /usr/share/emacs/site-lisp/mu4e/
+                                        ;  :defer 20
+                                        ;  :config
+                                        ;  (setq mu4e-change-filenames-when-moving t) ; Refresh mail using isync every 10 minutes
+                                        ;
+                                        ;  ;; Refresh mail using isync every 10 mins
+                                        ;  (setq mu4e-update-interval (* 10 60)
+                                        ;		mu4e-get-mail-command "mbsync 0a"
+                                        ;		mu4e-maildir "~/Mail")
+                                        ;  
+                                        ;  (setq mu4e-drafts-folder "/[Gmail]/Drafts"
+                                        ;		mu4e-sent-folder "/[Gmail]/Sent Mail"
+                                        ;		mu4e-refile-folder "/[Gmail]/All Mail"
+                                        ;		mu4e-trash-folder "/[Gmail]/Trash")
+                                        ;
+                                        ;  ;; Quick Access to the following folders:
+                                        ;  (setq mu4e-maildir-shortcuts
+                                        ;		'((:maildir "/Inbox"				:key ?i)
+                                        ;		  (:maildir "/[Gmail]/Sent Mail"	:key ?s)
+                                        ;		  (:maildir "/[Gmail]/Trash"		:key ?t)
+                                        ;		  (:maildir "/[Gmail]/Drafts"		:key ?d)
+                                        ;		  (:maildir "/[Gmail]/All Mail"		:key ?a)))
+                                        ;
+                                        ;  ;; You can create bookmarked queries:
+                                        ;  (setq mu4e-bookmarks
+                                        ;		'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?i)
+                                        ;		  (:name "Today's messages" :query "date:today..now" :key ?t)
+                                        ;		  (:name "Last 7 days" :query "date:6d..now" :hide-unread t :key ?w)
+                                        ;		  (:name "Messages with images" :query "mime:image/*" :key ?p)))
+                                        ;
+                                        ;  (mu4e t))
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'set-goal-column 'disabled nil)
