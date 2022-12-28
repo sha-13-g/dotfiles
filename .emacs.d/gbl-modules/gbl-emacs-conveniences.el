@@ -151,8 +151,9 @@
 (use-package dashboard										  
     :init
   (setq dashboard-center-content t
-        dashboard-banner-logo-title "Welcome Brice Ganfina"
+        dashboard-banner-logo-title "I WILL BE THE FASTEST AND THE GREATEST SOFTWARE ENGENEER"
         dashboard-startup-banner "~/Git_repos/dotfiles/bg/flat_icons/saturn-resize.png"
+		dashboard-footer "I CAN DO IT, I'M CAPABLE OF THAT!!!\nI WILL DO IT, BECAUSE I'M A WINNER!!!\nI MUST DO IT, BECAUSE MY MAMAN IS COUNTING ON ME, MY GRAND PARENT ARE COUNTING ON ME.\nI CAN'T LOOSE"
         dashbord-set-heading-items t
         dashboard-set-file-icons t
         dashboard-items '((recents  . 5)

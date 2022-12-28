@@ -1,10 +1,8 @@
-; Some convenient maps
-
 (global-set-key (kbd "C-c y l") 'consult-yasnippet)
 (global-set-key (kbd "C-c y d") 'yas-describe-tables)
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
 
-(global-set-key (kbd "C-c w") 'eaf-open-browser)
+(global-set-key (kbd "C-c w") 'gbl/search-web)
 
 (global-set-key (kbd "C-c b") 'gbl/hydra-bongo/body)
 (global-set-key (kbd "C-c s") 'gbl/scratch-buffer)
@@ -29,6 +27,7 @@
 (global-set-key (kbd "C-c n r") #'denote-rename-file)
 
 (define-key dired-mode-map (kbd "C-c M-m") #'gbl/dired-mark-regexp)
+(define-key dired-mode-map (kbd "C-c C-<return>") #'(lambda () (interactive) (gbl/dired-choose-file qute-filename)))
 
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
@@ -47,7 +46,7 @@
 (global-set-key (kbd "C-s-b") 'gbl/balance-window)
 (global-set-key (kbd "C-s-t") #'(lambda () (interactive) (gbl/toggle-transparency)))
 
-(global-set-key (kbd "s-q") 'gbl/kill-buffer-slipt-window)
+(global-set-key (kbd "s-q") 'gbl/kill-buffer-window)
 (global-set-key (kbd "s-Q") 'delete-window)
 (global-set-key (kbd "s-o") 'delete-other-windows)
 
@@ -105,148 +104,149 @@
 ()
 (general-define-key  :prefix gbl/leader
                      "SPC l" '(gbl/load-light-theme :which-key "Light theme")
-                     "SPC d" '(gbl/load-dark-theme :which-key "Dark theme"))
+                     "SPC d" '(gbl/load-dark-theme :which-key "Dark theme")
+                     "h" '(gbl/hydra-harpoon/body :wich-key "Harpoon")) 
 
 (general-define-key  :keymaps 'override :prefix gbl/leader
-	   gbl/leader	'(execute-extended-command :which-key "M-x")
-	   "RET"	'(bookmark-jump :which-key "Bookmarks")
-	   ;; "t"	'(toggle-truncate-lines :which-key "Toggle truncated lines")
-	   "s"	'(hydra-text-scale/body :which-key "Scale text")
-	   "r"	'(writeroom-mode :which-key "Writeroom mode")
-	   ","	'(switch-to-buffer :which-key "Switch to buffer")
-	   ";"	'(find-file :which-key "Find file"))
+	                 gbl/leader	'(execute-extended-command :which-key "M-x")
+	                 "RET"	'(bookmark-jump :which-key "Bookmarks")
+	                 ;; "t"	'(toggle-truncate-lines :which-key "Toggle truncated lines")
+	                 "s"	'(hydra-text-scale/body :which-key "Scale text")
+	                 "r"	'(writeroom-mode :which-key "Writeroom mode")
+	                 ","	'(switch-to-buffer :which-key "Switch to buffer")
+	                 ";"	'(find-file :which-key "Find file"))
 
 (general-define-key  :prefix gbl/leader
- "g" 	'(:ignore t :which-key "Magit")
- "g c" '(magit-clone :which-key "Magit Clone")
- "g i" '(magit-init :which-key "Magit Init")
- "g p" '(magit-push :which-key "Magit Push")
- "g F" '(magit-pull :which-key "Magit Pull")
- "g s" '(magit-status :which-key "Magit Status"))
+                     "g" 	'(:ignore t :which-key "Magit")
+                     "g c" '(magit-clone :which-key "Magit Clone")
+                     "g i" '(magit-init :which-key "Magit Init")
+                     "g p" '(magit-push :which-key "Magit Push")
+                     "g F" '(magit-pull :which-key "Magit Pull")
+                     "g s" '(magit-status :which-key "Magit Status"))
 
 (general-define-key  :prefix gbl/leader
-	   ;; Window Splits
-	   "w" '(:ignore t :which-key "Close window")
-	   "w c" '(delete-window :which-key "Close window")
-	   "w s" '(split-window-below :which-key "Split window")
-	   "w v" '(spit-window-right :which-key "Vsplit window")
-	   ;; Window selection
-	   "w h" '(windmove-left :which-key "Window left")
-	   "w j" '(windmove-down :which-key "Window down")
-	   "w k" '(windmove-up :which-key "Window up")
-	   "w l" '(windmove-right :which-key "Window right")
-	   ;; Window movement
-	   "w r" '(gbl/hydra-window-resizer/body :which-key "Resize window")
-	   ;; Custom window layout functions
-	   "w t" '(gbl/window-split-toggle :which-key "Window split toggle"))
+	                 ;; Window Splits
+	                 "w" '(:ignore t :which-key "Close window")
+	                 "w c" '(delete-window :which-key "Close window")
+	                 "w s" '(split-window-below :which-key "Split window")
+	                 "w v" '(spit-window-right :which-key "Vsplit window")
+	                 ;; Window selection
+	                 "w h" '(windmove-left :which-key "Window left")
+	                 "w j" '(windmove-down :which-key "Window down")
+	                 "w k" '(windmove-up :which-key "Window up")
+	                 "w l" '(windmove-right :which-key "Window right")
+	                 ;; Window movement
+	                 "w r" '(gbl/hydra-window-resizer/body :which-key "Resize window")
+	                 ;; Custom window layout functions
+	                 "w t" '(gbl/window-split-toggle :which-key "Window split toggle"))
 
 (general-define-key  :prefix gbl/super-leader
- "b"   '(:ignore t :which-key "Browsers")
+                     "b"   '(:ignore t :which-key "Browsers")
 
- "b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
- "b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
- "b c" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
- "d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
- "T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
- "t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
- "v" '((lambda () (interactive) (gbl/launcher "vlc" "")) :which-key "VLC")
- "m" '((lambda () (interactive) (gbl/launcher "hakuneko-desktop" "")) :which-key "MangaReader")
- "s" '((lambda () (interactive) (gbl/launcher "spotify" "")) :which-key "Spotify")
- "f" '((lambda () (interactive) (gbl/launcher "figma-linux" "")) :which-key "Figma")
- "g" '((lambda () (interactive) (gbl/launcher "gimp" "")) :which-key "Gimp")
- "P" '((lambda () (interactive) (gbl/launcher "pavucontrol" "")) :which-key "Pavucontrol")
+                     "b q" '((lambda () (interactive) (gbl/launcher "qutebrowser" "")) :which-key "Qutebrowser")
+                     "b f" '((lambda () (interactive) (gbl/launcher "firefox" "")) :which-key "Firefox")
+                     "b c" '((lambda () (interactive) (gbl/launcher "google-chrome-stable" "")) :which-key "Google Chrome")
+                     "d" '((lambda () (interactive) (gbl/launcher "discord" "")) :which-key "Discord")
+                     "T" '((lambda () (interactive) (gbl/launcher "telegram-desktop" "")) :which-key "Telegram Desktop")
+                     "t" '((lambda () (interactive) (gbl/launcher "alacritty" "")) :which-key "Alacritty")
+                     "v" '((lambda () (interactive) (gbl/launcher "vlc" "")) :which-key "VLC")
+                     "m" '((lambda () (interactive) (gbl/launcher "hakuneko-desktop" "")) :which-key "MangaReader")
+                     "s" '((lambda () (interactive) (gbl/launcher "spotify-launcher" "")) :which-key "Spotify")
+                     "f" '((lambda () (interactive) (gbl/launcher "figma-linux" "")) :which-key "Figma")
+                     "g" '((lambda () (interactive) (gbl/launcher "gimp" "")) :which-key "Gimp")
+                     "P" '((lambda () (interactive) (gbl/launcher "pavucontrol" "")) :which-key "Pavucontrol")
 
- "p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
- "k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
+                     "p" '((lambda () (interactive) (gbl/start-panel)) :which-key "Start Polybar")
+                     "k" '((lambda () (interactive) (gbl/kill-panel)) :which-key "Kill Polybar")
 
- "w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
- "e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
+                     "w" '((lambda () (interactive) (gbl/launcher "wifi-menu" "")) :which-key "Wifi Manager")
+                     "e" '((lambda () (interactive) (gbl/launcher "emoji" "")) :which-key "Emoji"))
 
 (general-define-key  :states '(normal visual) :keymaps 'override :prefix gbl/leader
- "d d" '(dired :which-key "Open dired")
- "d D" '((lambda () (interactive) (switch-to-buffer "*dashboard*")) :which-key "Open dired")
- "d j" '(dired-jump :which-key "Dired jump to current")
- "d p" '(peep-dired :which-key "Peep dired"))
-                     
+                     "d d" '(dired :which-key "Open dired")
+                     "d D" '((lambda () (interactive) (switch-to-buffer "*dashboard*")) :which-key "Open dired")
+                     "d j" '(dired-jump :which-key "Dired jump to current")
+                     "d p" '(peep-dired :which-key "Peep dired"))
+
 (general-define-key  :prefix gbl/leader ; Eshell general.el keybindings
- "E h" '(counsel-esh-history :which-key "Eshell history")
- "E s" '(eshell :which-key "Eshell"))
+                     "E h" '(counsel-esh-history :which-key "Eshell history")
+                     "E s" '(eshell :which-key "Eshell"))
 
 (general-define-key  :prefix gbl/leader
- "o e" '(elfeed :which-key "Open elfeed")
- "o c" '(org-capture :which-key "Org Capture")
- "o l" '(org-store-link :which-key "Org Store Link")
- "o v" '(vterm :which-key "Open vterm")
- "o s" '(eshell :which-key "Open eshell")
- "o t" '(term :which-key "Open term")
- "o d" '(dired-jump :which-key "Open dired")
- "o a" '(org-agenda :which-key "Open org-agenda")
- "o w" '(eww :which-key "Open eww")
-"o p" '(treemacs :which-key "Open project sidebar"))
+                     "o e" '(elfeed :which-key "Open elfeed")
+                     "o c" '(org-capture :which-key "Org Capture")
+                     "o l" '(org-store-link :which-key "Org Store Link")
+                     "o v" '(vterm :which-key "Open vterm")
+                     "o s" '(eshell :which-key "Open eshell")
+                     "o t" '(term :which-key "Open term")
+                     "o d" '(dired-jump :which-key "Open dired")
+                     "o a" '(org-agenda :which-key "Open org-agenda")
+                     "o w" '(eww :which-key "Open eww")
+                     "o p" '(treemacs :which-key "Open project sidebar"))
 
 (general-define-key  :prefix gbl/leader
- "p s" '(gbl/shutdown :which-key "Shutdown")
- "p l" '((lambda () (interactive) (gbl/exwm-logout)) :which-key "Log out")
- "p r" '(gbl/restart :which-key "Restart"))
+                     "p s" '(gbl/shutdown :which-key "Shutdown")
+                     "p l" '((lambda () (interactive) (gbl/exwm-logout)) :which-key "Log out")
+                     "p r" '(gbl/restart :which-key "Restart"))
 
 (general-define-key  :keymaps 'override :prefix gbl/leader
- "m m" '(org-mode :which-key "Restart org mode")
- "m h" '(org-toggle-heading :which-key "Toggle heading")
- "m i" '(org-toggle-item :which-key "Toggle item")
- "m ." '(counsel-org-goto :which-key "Counsel-org goto")
- "m b" '(org-babel-tangle :which-key "Org babel tangle")
- "m t" '(counsel-org-tag :which-key "Counsel org-tag")
- "m T" '(org-tags-view :which-key "Org tags view")
- "m w" '(org-todo-list :which-key "Org todo list"))
+                     "m m" '(org-mode :which-key "Restart org mode")
+                     "m h" '(org-toggle-heading :which-key "Toggle heading")
+                     "m i" '(org-toggle-item :which-key "Toggle item")
+                     "m ." '(counsel-org-goto :which-key "Counsel-org goto")
+                     "m b" '(org-babel-tangle :which-key "Org babel tangle")
+                     "m t" '(counsel-org-tag :which-key "Counsel org-tag")
+                     "m T" '(org-tags-view :which-key "Org tags view")
+                     "m w" '(org-todo-list :which-key "Org todo list"))
 
 (general-define-key  :prefix gbl/leader
- "w m" '(gbl/hydra-window-move/body :wich-key "Move window"))
+                     "w m" '(gbl/hydra-window-move/body :wich-key "Move window"))
 
 (general-define-key  :prefix gbl/leader
- "SPC v" '(hydra-volume-up/body :which-key "Change volume")
- "SPC t" '(consult-theme :which-key "Load theme")
- "SPC b" '(hydra-brightness-up/body :which-key "Change brightness")
- "SPC m" '(desktop-environment-toggle-mute :which-key "Toggle mute")
- "SPC M" '(desktop-environment-toggle-microphone-mute :which-key "Toggle microphone")
- "SPC s" '(desktop-environment-screenshot :which-key "Take screenshot"))
+                     "SPC v" '(hydra-volume-up/body :which-key "Change volume")
+                     "SPC t" '(consult-theme :which-key "Load theme")
+                     "SPC b" '(hydra-brightness-up/body :which-key "Change brightness")
+                     "SPC m" '(desktop-environment-toggle-mute :which-key "Toggle mute")
+                     "SPC M" '(desktop-environment-toggle-microphone-mute :which-key "Toggle microphone")
+                     "SPC s" '(desktop-environment-screenshot :which-key "Take screenshot"))
 
 
 (general-define-key  :prefix gbl/leader
- "f" '(:ignore t :which-key "Files")
- "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
- "f n" '((lambda () (interactive) (dired "~/Documents/notes/")) :which-key "Notes")
- "f M" '((lambda () (interactive) (dired "~/Music/")) :which-key "Music")
- "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
+                     "f" '(:ignore t :which-key "Files")
+                     "f d" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/")) :which-key "Dotfiles")
+                     "f n" '((lambda () (interactive) (dired "~/Documents/notes/")) :which-key "Notes")
+                     "f M" '((lambda () (interactive) (dired "~/Music/")) :which-key "Music")
+                     "f F" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Desktop")
 
-  "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
- "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
- "f b" '(gbl/go-to-books :wich-key "Books")
- "f q" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
- "f f" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/init.el")) :which-key "Emacs init.el")
- "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")
- "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
- "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org files")
+                     "f /" '((lambda () (interactive) (dired "/")) :which-key "Root")
+                     "f c" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.config/")) :which-key "Configs")
+                     "f b" '(gbl/go-to-books :wich-key "Books")
+                     "f q" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.config/qutebrowser/config.py")) :which-key "Qutebrowser File")
+                     "f f" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/init.el")) :which-key "Emacs init.el")
+                     "f g" '((lambda () (interactive) (dired "~/Git_repos/")) :which-key "Git repos")
+                     "f h" '((lambda () (interactive) (dired "~/")) :which-key "Home")
+                     "f o" '((lambda () (interactive) (dired "~/Documents/org/")) :which-key "Org files")
 
- "f D" '(:ignore t :which-key "Files")
+                     "f D" '(:ignore t :which-key "Files")
 
- "f m" '(:ignore t :which-key "Files")
- "f m m" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-maps.el")) :which-key "Maps")
- "f m d" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-dired.el")) :which-key "Dired Config")
- "f m M" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-magit.el")) :which-key "Magit Config")
- "f m D" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Exwm Config")
- "f m u" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-utils.el")) :which-key "Usefull Command")
- "f m c" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-conveniences.el")) :which-key "Conveniences")
- "f m l" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-langs.el")) :which-key "Dev Config")
- "f m o" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-org.el")) :which-key "Org Config")
- 
- "f e" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.emacs.d/")) :which-key "Emacs Directory")
- "f p" '((lambda () (interactive) (dired "~/Documents/personal/")) :which-key "Personal Directory"))
-
-
+                     "f m" '(:ignore t :which-key "Files")
+                     "f m m" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-maps.el")) :which-key "Maps")
+                     "f m d" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-dired.el")) :which-key "Dired Config")
+                     "f m M" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-magit.el")) :which-key "Magit Config")
+                     "f m D" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-desktop.el")) :which-key "Exwm Config")
+                     "f m u" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-utils.el")) :which-key "Usefull Command")
+                     "f m c" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-conveniences.el")) :which-key "Conveniences")
+                     "f m l" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-langs.el")) :which-key "Dev Config")
+                     "f m o" '((lambda () (interactive) (find-file "~/Git_repos/dotfiles/.emacs.d/gbl-modules/gbl-emacs-org.el")) :which-key "Org Config")
+                     
+                     "f e" '((lambda () (interactive) (dired "~/Git_repos/dotfiles/.emacs.d/")) :which-key "Emacs Directory")
+                     "f p" '((lambda () (interactive) (dired "~/Documents/personal/")) :which-key "Personal Directory"))
 
 
 
-;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
+
+
+                                        ;(global-set-key (kbd "C-;") 'counsel-switch-buffer)
 
 
 ;; This hydra function allows for control of volume

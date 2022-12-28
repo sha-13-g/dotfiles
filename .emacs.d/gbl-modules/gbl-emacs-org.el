@@ -108,7 +108,7 @@
           ("CANCELED" . org-done)))
 
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/Documents/org/gtd.org" "GTD")
+        '(("t" "Todo" entry (file+headline "~/Documents/org/gtd.org" "Getting Things Done")
            "** TODO %?\n %i\n %a")
           ("b" "Birthday" entry (file+headline "~/Documents/org/birthdays.org" "Birthdays")
               "** %?\n %^{Birthday}t %i\n %a")))

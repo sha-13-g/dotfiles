@@ -66,6 +66,7 @@
     ("figma-linux" (exwm-workspace-move-window 3))
     ("Pavucontrol" (exwm-floating-toggle-floating))
     ("mpv" (exwm-workspace-move-window 4))
+    ("Spotify" (exwm-workspace-move-window 4))
     ("ktouch" (exwm-workspace-move-window 5))
     ("qBittorrent" (exwm-workspace-move-window 7))
     ("VirtualBox Manager" (exwm-workspace-move-window 7))
@@ -97,12 +98,14 @@
 
   (add-hook 'exwm-manage-finish-hook #'gbl/configure-window-by-class)
 
+
   ;; (add-hook 'exwm-workspace-switch-hook #'gbl/send-polybar-exwm-workspace)
   ;; When EXWM finishes initialization, do some extra setup:
   (add-hook 'exwm-init-hook #'gbl/exwm-init-hook)
 
   (require 'exwm-systemtray)
   (exwm-systemtray-enable)
+
   ;; (setq exwm-workspace-warp-cursor nil)
 
   ;; ;; Window focus should follow the mouse pointer
@@ -172,7 +175,7 @@
   (setq exwm-input-global-keys
         `(
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\M-r] . exwm-reset)
+          ([?\M-r] . exwm-input-toggle-keyboard)
 
 		  ;; Toggle floating windows
 		  ([?\s-t] . exwm-floating-toggle-floating)
@@ -191,8 +194,6 @@
           ([?\s-d] . (lambda (command)
                        (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
-          ;; Switch workspace
-          ([?\s-r] . exwm-input-release-keyboard)
 
           ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
           ,@(mapcar (lambda (i)

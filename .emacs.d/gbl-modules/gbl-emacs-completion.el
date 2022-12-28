@@ -114,7 +114,6 @@
   :config (setq vertico-posframe-parameters
                 '((left . 0.1))))
 
-
 (use-package marginalia
   :after vertico
   :custom

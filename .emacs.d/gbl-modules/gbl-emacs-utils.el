@@ -5,13 +5,24 @@
 ;; (defub gbl/sudo-edit ()
 ;;   "Commands that "
 ;;   (interactive))
+(defun gbl/dired-choose-file (&optional file-handler)
+  (interactive "MSave filename to: ")
+  (let ((filename (dired-get-filename)))
+    (if file-handler
+        (progn
+          (find-file file-handler)
+          (insert filename)
+          (save-buffer)
+          (gbl/kill-buffer-window)))))
 
 (defun gbl/scroll-half-page-down()
   (interactive)
   (forward-line 20)
   (recenter nil nil))
 
-
+(defun gbl/search-web (query)
+  (interactive "MQuery: ")
+  (gbl/launcher "qutebrowser" query))
 
 (defun gbl/scroll-half-page-up()
   (interactive)
@@ -165,6 +176,23 @@
   (interactive)
   (insert "\t"))
 
+
+(defhydra gbl/hydra-harpoon ()
+  "Harpoon"
+  ("j" (harpoon-go-to-1) "Go to 1")
+  ("f" (harpoon-go-to-2) "Go to 2")
+  ("k" (harpoon-go-to-3) "Go to 3")
+  ("d" (harpoon-go-to-4) "Go to 4")
+  ("l" (harpoon-go-to-5) "Go to 5")
+  ("s" (harpoon-go-to-6) "Go to 6")
+  ("m" (harpoon-go-to-7) "Go to 7")
+  ("q" (harpoon-go-to-8) "Go to 8")  
+  ("u" (harpoon-go-to-9) "Go to 9")
+  ("M" (harpoon-toggle-quick-menu) "Menu")
+  ("<space>" (harpoon-add-file) "Add current file")
+  ("<escape>" nil "Quit" :exit t))
+
+
 (defhydra gbl/hydra-bongo(:timeout 10)
   "This hydra define a set on function that resize a window"
   ("s" (bongo-start/stop) "Bongo Start/Stop")
@@ -209,7 +237,7 @@
     (set-frame-parameter (selected-frame) 'alpha
                          (setq gbl/frame-transparency-v '(70 . 70)))))
 
-(defun gbl/kill-buffer-slipt-window ()
+(defun gbl/kill-buffer-window ()
   "a function for delete slip window and kill the buffer."
   (interactive)
   (kill-buffer)

@@ -191,12 +191,12 @@
 	(load-theme 'doom-solarized-light t)
 	(setq-default input-block "#F9F2D9")))
 
-(load-theme 'catppuccin-mocha)
+(load-theme 'catppuccin-macchiato t)
+
 ;; Adding upport for emojis and icons
 (use-package all-the-icons)
 
 (use-package ef-themes)
-
 
 (use-package emojify
   :hook (after-init . global-emojify-mode))
