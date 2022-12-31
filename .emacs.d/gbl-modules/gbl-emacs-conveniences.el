@@ -151,9 +151,9 @@
 (use-package dashboard										  
     :init
   (setq dashboard-center-content t
-        dashboard-banner-logo-title "I WILL BE THE FASTEST AND THE GREATEST SOFTWARE ENGENEER"
+        dashboard-banner-logo-title "I WILL BE  THE GREATEST AND THE FASTEST\nSOFTWARE ENGENEER IN THE WORLD"
         dashboard-startup-banner "~/Git_repos/dotfiles/bg/flat_icons/saturn-resize.png"
-		dashboard-footer "I CAN DO IT, I'M CAPABLE OF THAT!!!\nI WILL DO IT, BECAUSE I'M A WINNER!!!\nI MUST DO IT, BECAUSE MY MAMAN IS COUNTING ON ME, MY GRAND PARENT ARE COUNTING ON ME.\nI CAN'T LOOSE"
+        dashboard-footer-messages '("I can do it" "I must do it, because of my mom-she is counting on me" "I will get my Bachelor's Degree. It's for my mom" "I will")
         dashbord-set-heading-items t
         dashboard-set-file-icons t
         dashboard-items '((recents  . 5)

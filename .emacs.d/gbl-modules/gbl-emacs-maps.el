@@ -20,7 +20,8 @@
 (global-set-key (kbd "C-S-k") #'gbl/scroll-half-page-up)
 
 (global-set-key (kbd "C-c n n") #'denote)
-(global-set-key (kbd "C-c n t") #'denote-type)
+(global-set-key (kbd "C-c n a") #'denote-keywords-add)
+(global-set-key (kbd "C-c n N") #'denote-type)
 (global-set-key (kbd "C-c n d") #'denote-date)
 (global-set-key (kbd "C-c n s") #'denote-subdirectory)
 (global-set-key (kbd "C-c n T") #'denote-template)

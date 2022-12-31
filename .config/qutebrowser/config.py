@@ -258,8 +258,7 @@ c.fileselect.handler = 'external'
 # the file to be written to. If not contained in any argument, the
 # standard output of the command is read instead.
 # Type: ShellCommand
-# c.fileselect.single_file.command = ['alacritty', '-e', 'ranger', '--choosefile={}']
-c.fileselect.single_file.command = ['emacsclient', '-e', '(progn (setq qute-filename \"{}\")  (dired "~/"))']
+c.fileselect.single_file.command = ['emacsclient', '-e', '(progn (setq qute-filename "{}")  (dired "~/"))']
 
 # Command (and arguments) to use for selecting multiple files in forms.
 # The command should write the selected file paths to the specified file
@@ -268,17 +267,15 @@ c.fileselect.single_file.command = ['emacsclient', '-e', '(progn (setq qute-file
 # contained in any argument, the   standard output of the command is
 # read instead.
 # Type: ShellCommand
-# c.fileselect.multiple_files.command = ['alacritty', '-e', 'ranger', '--choosefiles={}']
-c.fileselect.multiple_files.command = ['emacsclient', '-e', '(progn (setq qute-filename \"{}\")  (dired "~/"))']
+c.fileselect.multiple_files.command = ['emacsclient', '-e', '(progn (setq qute-filename "{}")  (dired "~/"))']
 
 # Command (and arguments) to use for selecting a single folder in forms.
 # The command should write the selected folder path to the specified
 # file or stdout. The following placeholders are defined: * `{}`:
 # Filename of the file to be written to. If not contained in any
 # argument, the   standard output of the command is read instead.
-# Type: ShellCommandn
-# c.fileselect.folder.command = ['alacritty', '-e', 'ranger', '--choosedir={}']
-c.fileselect.folder.command = ['emacsclient', '-e', '(progn (setq qute-filename \"{}\")  (dired "~/"))']
+# Type: ShellCommand
+c.fileselect.folder.command = ['emacsclient', '-e', '(progn (setq qute-filename "{}")  (dired "~/"))']
 
 # CSS border value for hints.
 # Type: String
@@ -648,6 +645,18 @@ c.colors.tabs.selected.even.fg = '#f8f8f2'
 # Background color of selected even tabs.
 # Type: QtColor
 c.colors.tabs.selected.even.bg = '#282a36'
+
+# Render all web contents using a dark theme. Example configurations
+# from Chromium's `chrome://flags`:  - "With simple HSL/CIELAB/RGB-based
+# inversion": Set   `colors.webpage.darkmode.algorithm` accordingly.  -
+# "With selective image inversion": Set
+# `colors.webpage.darkmode.policy.images` to `smart`.  - "With selective
+# inversion of non-image elements": Set
+# `colors.webpage.darkmode.threshold.text` to 150 and
+# `colors.webpage.darkmode.threshold.background` to 205.  - "With
+# selective inversion of everything": Combines the two variants   above.
+# Type: Bool
+c.colors.webpage.darkmode.enabled = True
 
 # Bindings for normal mode
 config.bind('<Alt+e>', 'run-with-count 8 scroll up')

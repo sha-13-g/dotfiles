@@ -66,7 +66,7 @@
   (setq gbl-dired-image-viewers '("feh" "sxiv"))
   (setq gbl-dired-media-players '("mpv" "vlc"))
   (setq gbl-dired-media-extensions
-        "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)")
+        "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\|ts\\)")
   (setq gbl-dired-image-extensions
         "\\.\\(png\\|jpe?g\\|tiff\\)")
   (setq dired-guess-shell-alist-user ; those are the defaults for ! and & in Dired
