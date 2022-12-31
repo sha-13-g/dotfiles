@@ -90,7 +90,8 @@
     (call-interactively 'set-mark-command)
     (end-of-visual-line)
     (call-interactively 'kill-ring-save)
-    (kill-buffer (current-buffer))))
+    (kill-buffer (current-buffer))
+    (delete-window)))
 
 (defun gbl/bongo-buffer ()
   (interactive)
