@@ -1,0 +1,38 @@
+;; Emacs-W3 HTTP cookies file
+;; Automatically generated file!!! DO NOT EDIT!!!
+
+(setq url-cookie-storage
+ '((".bing.com"
+  [url-cookie "SUID" "M" "Mon, 02-Jan-2023 02:17:36 GMT" "/" ".bing.com" nil]
+  [url-cookie "SRCHHPGUSR" "SRCHLANG=fr" "Thu, 28-Nov-2024 15:50:13 GMT" "/" ".bing.com" nil]
+  [url-cookie "SRCHUSR" "DOB=20221128" "Thu, 28-Nov-2024 15:50:13 GMT" "/" ".bing.com" nil]
+  [url-cookie "SRCHUID" "V=2&GUID=D65ACB5AF6794B39B4A04386F67A82C6&dmnchg=1" "Thu, 28-Nov-2024 15:50:13 GMT" "/" ".bing.com" nil]
+  [url-cookie "SRCHD" "AF=NOFORM" "Thu, 28-Nov-2024 15:50:13 GMT" "/" ".bing.com" nil]
+  [url-cookie "_EDGE_V" "1" "Sat, 23-Dec-2023 15:50:13 GMT" "/" ".bing.com" nil])
+ (".stackoverflow.com"
+  [url-cookie "prov" "c825928d-a87f-5b40-10f8-439ac257bb1c" "Fri, 01-Jan-2055 00:00:00 GMT" "/" ".stackoverflow.com" nil])
+ (".google.com"
+  [url-cookie "NID" "511=Em14Aa9ltiL2pVXVVR9P7b72GV1z2pdVwFVwnFbcM6rAkR2XD8XuPedDgISurSmHkwuqKagxuqa8L3SG-ujIIlARMMFZkfklngGIsGogJz_xgC0MZfB1IimermJA-L1q2tn77j0crY5fCOnHOCyTXGD-ab0VkboFPaoIjxbCV2A" "Sat, 10-Jun-2023 10:22:26 GMT" "/" ".google.com" nil])
+ ("www.bing.com"
+  [url-cookie "MUIDB" "3D879AAB0ED36E782E1788C10F946F40" "Fri, 26-Jan-2024 19:11:25 GMT" "/" "www.bing.com" nil]))
+)
+(setq url-cookie-secure-storage
+ '((".google.com"
+  [url-cookie "1P_JAR" "2022-12-09-10" "Sun, 08-Jan-2023 10:22:26 GMT" "/" ".google.com" t]
+  [url-cookie "AEC" "AakniGPZM2GHQSSCbKf-2F-aeiEURJI1DKwb3hegi6WV_ajUauzz2ufwCnE" "Wed, 07-Jun-2023 10:22:26 GMT" "/" ".google.com" t])
+ ("github.com"
+  [url-cookie "logged_in" "no" "Thu, 14 Dec 2023 15:35:24 GMT" "/" "github.com" t]
+  [url-cookie "_octo" "GH1.1.415399208.1671032124" "Thu, 14 Dec 2023 15:35:24 GMT" "/" "github.com" t])
+ ("en.wikipedia.org"
+  [url-cookie "WMF-Last-Access" "14-Dec-2022" "Sun, 15 Jan 2023 00:00:00 GMT" "/" "en.wikipedia.org" t])
+ (".wikipedia.org"
+  [url-cookie "WMF-Last-Access-Global" "14-Dec-2022" "Sun, 15 Jan 2023 00:00:00 GMT" "/" ".wikipedia.org" t])
+ (".bing.com"
+  [url-cookie "btstkn" "tVFl6uH5DJZ4XJSLe%252F65fDRz1zdirRkWGDGPZUlG8H1oY5X09vHwLzKWukytBck%252FOioGI9fnbx9buCIXVHLikXCqRlV8oko6koT%252BvTZACNU%253D" "Sun, 01-Jan-2023 22:27:37 GMT" "/" ".bing.com" t]
+  [url-cookie "MUID" "3D879AAB0ED36E782E1788C10F946F40" "Sat, 23-Dec-2023 15:50:13 GMT" "/" ".bing.com" t]))
+)
+
+;; Local Variables:
+;; version-control: never
+;; no-byte-compile: t
+;; End:

@@ -1,0 +1,25 @@
+npm init
+npm install
+npm install --force
+lsblk 
+node main.js 
+node main.js 
+node main.js 
+node main.js 
+node main.js 
+node main.js 
+node main.js 
+node
+l
+ll
+find-file
+(find-file "~/Documents/org/git_tokken")
+ll
+cd Documents
+cd
+ll
+ls
+nmcli dev wifi
+find . name Do
+rm -vrf /var/guix/ /gnu/
+bash
