@@ -150,7 +150,7 @@
 (require 'gbl-emacs-langs)
 (require 'gbl-emacs-org)
 (require 'gbl-emacs-magit)
-(require 'gbl-emacs-email)
+;; (require 'gbl-emacs-email)
 ;; (require 'gbl-emacs-bongo)
 (require 'gbl-emacs-shell)
 ;; (require 'gbl-emacs-desktop)
@@ -201,15 +201,6 @@
 (use-package emojify
   :hook (after-init . global-emojify-mode))
 
-(use-package afternoon-theme
-  :diminish t)
-
-(use-package flatui-theme
-  :diminish t)
-
-(use-package vampyricdark-theme
-  :diminish t)
-
 (use-package catppuccin-theme
   :config
   (setq catppuccin-height-title1 1.5))
@@ -228,9 +219,6 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 20)))
-
-(use-package minions
-  :after doom-modeline)
 
 (use-package rich-minority
   :diminish t)
@@ -315,176 +303,6 @@
 (defun gbl/lsp-mode-setup ()
   (setq lsp-headline-breadcrumb-segmments '(path-up-to-project file symbols))
   (lsp-headline-breadcrumb-mode))
-
-;;;; Languages Servers
-
-;; (use-package blacken
-;; :diminish t)
-;; (use-package py-autopep8
-;; :diminish t)
-;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
-;; (use-package elpy
-;;   :config
-;;   (elpy-enable))
-;; (use-package lsp-mode
-;;   :init
-;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-;;          (js-mode . lsp-deferred)
-;;          (python-mode . lsp-deferred)
-;;          ;; if you want which-key integration
-;;          (lsp-mode . lsp-enable-which-key-integration))
-;;   :commands (lsp lsp-deferred))
-
-
-
-;; (use-package lsp-ui
-;;    :ensure t
-;;    :config
-;;    (setq lsp-ui-sideline-ignore-duplicate t)
-;;    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-;; (use-package lsp-pyright
-;;   :hook (python-mode . (lambda ()
-;;                           (require 'lsp-pyright)
-;;                           (lsp))))
-;; (require 'eglot)
-
-;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-
-;; (add-hook 'c-mode-hook 'eglot-ensure)
-;; (add-hook 'c++-mode-hook 'eglot-ensure)
-;; (add-hook 'typescript-mode-hook 'eglot-ensure)
-;; (add-hook 'js-mode-hook 'eglot-ensure)
-;; (add-hook 'python-mode-hook 'eglot-ensure)
-;; (add-hook 'html-mode-hook 'eglot-ensure)
-;; (add-hook 'css-mode-hook 'eglot-ensure)
-
-;;; Org Mode
-;; (defun org-mode-setup ()
-;;   (org-indent-mode)
-;;   (variable-pitch-mode 1)
-;;   (auto-fill-mode 0)
-;;   (visual-line-mode 1)
-;;   (setq evil-auto-indent nil))
-
-;; (use-package org
-;;   :hook (org-mode . org-mode-setup)
-;;   :config
-;;   (setq org-ellipsis " ▼ " 
-;; 		org-hide-emphasis-markers t))
-
-;; (setq org-directory "~/documents/org/"
-;; 	  org-agenda-files '("~/documents/org/") ; NOTE: This is a list, more files can be added later
-;; 	  org-default-notes-file (expand-file-name "Notes.org" org-directory))
-
-;; ;; This overides GNU default
-;; (setq org-link-abbrev-alist
-;; 	  '(("google" . "https://www.google.com/search?q=")
-;; 		("arch-wiki" . "https://wiki.archlinux.org/index.php")
-;; 		("freebsd-forum" . "https://forums.freebsd.org") ; I don't know if this one works.
-;; 		("duckduckgo" . "https://duckduckgo.com/?q=")
-;; 		("wiby" . "https://wiby.me/?q=")
-;; 		("wikipedia" . "https://en.wikipedia.org/wiki")
-;; 		("reddit" . "https://old.reddit.com/r/")))
-
-;; (setq org-todo-keywords
-;; 	  '((sequence
-;; 		 "TODO(t)"
-;; 		 "NEXT(n)"
-;; 		 "PROJ(p)"
-;; 		 "HOWEWORK(h)"
-;; 		 "CHOICE(C)"
-;; 		 "BOOK(b)"
-;; 		 "WAIT(w)"
-;; 		 "|"
-;; 		 "DONE(d)"
-;; 		 "CANCELLED(c)" )))
-
-;; (setq org-tag-alist
-;;     '((:startgroup)
-;;        ; put mutually exclusive tags here
-;;        (:endgroup)
-;;        ("@errand" . ?e)
-;;        ("@home" . ?h)
-;;        ("@work" . ?w)
-;;        ("agenda" . ?a)
-;;        ("planning" . ?p)
-;;        ("publish" . ?p)
-;;        ("batch" . ?b)
-;;        ("note" . ?n)
-;;        ("idea" . ?i)))
-
-;; (use-package org-tempo
-;;   :ensure nil)
-
-;; ;; Make sure that babel code blocks evaluate code correctly
-;; (setq org-src-fontify-natively t
-;; 	  org-src-tab-acts-natively t
-;; 	  org-confirm-babel-evaluate nil
-;; 	  org-edit-src-content-indentation 0)
-
-;; (setq org-blank-before-new-entry (quote ((heading . nil)
-;; 										 (plain-list-item . nil))))
-
-;; ;; Make sure that python code can be executed inside a babel code block
-;; (org-babel-do-load-languages
-;;  'org-babel-load-languages
-;;  '((emacs-lisp . t)
-;;    (python . t)
-;;    (plantuml . t)))
-
-;; ;; Use cooler and more diffrenciated bullets
-;; (use-package org-bullets
-;;   :after org
-;;   :hook (org-mode . org-bullets-mode))
-
-;; ;; Configuration of Font faces and sizes within org documents
-;; (with-eval-after-load 'org-faces ; Must be wrapped in =with-eval-after-load=
-;;  ;; Diffrenciate headers based on size
-;;  (dolist (face '((org-level-1 . 1.2)
-;; 				  (org-level-2 . 1.1)
-;; 				  (org-level-3 . 1.05)
-;; 				  (org-level-4 . 1.0)
-;; 				  (org-level-5 . 1.1) ; Back to normal
-;; 				  (org-level-6 . 1.1)
-;; 				  (org-level-7 . 1.1)
-;; 				  (org-level-8 . 1.1)))
-;; 	(set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
-
-;;  ;; Needs fixing:
-;;  ;; Choosing what elements of an org-document should be represented in what font face.
-;;  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-;;  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-;;  ;; (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitched-pitch))
-;;  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;;  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;;  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-;;  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
-
-;; ;; Center org-mode documents in the center of the screen
-;; (defun org-mode-visual-fill ()
-;;   ; Proportions:
-;;   (setq visual-fill-column-width 75
-;; 		visual-fill-column-center-text t)
-;;   (visual-fill-column-mode 1)) ; Activate
-
-;; ;; The centering of documents depends on the following package:
-;; (use-package visual-fill-column
-;;   :hook (org-mode . org-mode-visual-fill))
-
-;; ;; 'Latex' from Org-mode
-;; (use-package biblio
-;;   :diminish) ; Quick BibTex refrences, sometimes.
-;;  ; Quick BibTex refrences, sometimes.
-
-;; (setq org-latex-listings 'minted
-;; 	  org-latex-packages-alist '(("" "minted")))
-
-;; (setq org-latex-pdf-process
-;; 	  '("pdflatex -interaction nonstopmode -output-directory %o %f"))
 
 ;; Emacs Mail
                                         ;(use-package mu4e

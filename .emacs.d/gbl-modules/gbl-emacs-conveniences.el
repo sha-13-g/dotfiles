@@ -16,8 +16,6 @@
 
 ;; (use-package aria2)
 
-(use-package devdocs)
-
 (use-package denote
   :config
   (setq denote-file-type "text"))
@@ -66,19 +64,6 @@
          :engines (list (gts-bing-engine) (gts-google-engine))
          :render (gts-buffer-render))))
 
-(use-package which-key
-    :diminish t
-    :init
-    (setq which-key-sort-order #'which-key-key-order-alpha ; order alphabetically
-          which-key-sort-uppercase-first nil
-          which-key-add-column-adding 1
-          which-key-min-display-lines 4
-          which-key-idle-delay 0.3 ; wait 0.3 seconds before showing suggestions
-          which-key-allow-imprecise-window-fit nil
-          which-key-seperator " -> ")
-    :config
-    (which-key-mode))
-
 (use-package projectile
     :config (projectile-mode)
     :bind-keymap (("C-c p" . projectile-command-map))
@@ -87,14 +72,6 @@
     (when (file-directory-p "~/Documents/projects/")
       (setq projectile-project-search-path '("~/Documents/projects/")))
     (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package smooth-scrolling
-    :diminish t
-    :config
-    (smooth-scrolling-mode 1))
-
-(use-package dimmer
-    :config (dimmer-mode))
 
 (use-package hydra
     :diminish t)
@@ -126,9 +103,6 @@
 (use-package sudo-edit
     :diminish t)
 
-(use-package writeroom-mode
-    :diminish t)
-
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -136,9 +110,6 @@
     :config
   (savehist-mode))
 
-(use-package origami
-    :config
-  (global-origami-mode))
 
 (use-package harpoon)
 
@@ -147,22 +118,6 @@
   (gcmh-mode 1)
   (setq gc-cons-threshold (* 2 1000 1000)
         gc-cons-percentage 0.6))
-
-(use-package dashboard										  
-    :init
-  (setq dashboard-center-content t
-        dashboard-banner-logo-title "I WILL BE  THE GREATEST AND THE FASTEST\nSOFTWARE ENGENEER IN THE WORLD"
-        dashboard-startup-banner "~/Git_repos/dotfiles/bg/flat_icons/saturn-resize.png"
-        dashboard-footer-messages '("I can do it" "I must do it, because of my mom-she is counting on me" "I will get my Bachelor's Degree. It's for my mom" "I will")
-        dashbord-set-heading-items t
-        dashboard-set-file-icons t
-        dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5)
-                          (registers . 5)))
-  :config													  
-  (dashboard-setup-startup-hook))
 
 (defun my-nov-window-configuration-change-hook ()
   (my-nov-post-html-render-hook)
@@ -195,33 +150,6 @@
     (setq visual-fill-column-center-text t)
     (add-hook 'nov-mode-hook 'visual-line-mode)
     (add-hook 'nov-mode-hook 'visual-fill-column-mode))
-
-;; (use-package justify-kp
-;;   :config
-;;   (defun my-nov-window-configuration-change-hook ()
-;;     (my-nov-post-html-render-hook)
-;;     (remove-hook 'window-configuration-change-hook
-;;                  'my-nov-window-configuration-change-hook
-;;                  t))
-
-;;   (defun my-nov-post-html-render-hook ()
-;;     (if (get-buffer-window)
-;;         (let ((max-width (pj-line-width))
-;;               buffer-read-only)
-;;           (save-excursion
-;;             (goto-char (point-min))
-;;             (while (not (eobp))
-;;               (when (not (looking-at "^[[:space:]]*$"))
-;;                 (goto-char (line-end-position))
-;;                 (when (> (shr-pixel-column) max-width)
-;;                   (goto-char (line-beginning-position))
-;;                   (pj-justify)))
-;;               (forward-line 1))))
-;;       (add-hook 'window-configuration-change-hook
-;;                 'my-nov-window-configuration-change-hook
-;;                 nil t))))
-;; (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook))
-
 
 (use-package multiple-cursors
     :bind (("C-S-c C-S-c" . mc/edit-lines)
