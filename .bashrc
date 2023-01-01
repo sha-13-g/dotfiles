@@ -7,15 +7,19 @@
 
 alias ls='ls --color=auto'
 alias l='exa --icons'
+alias lt='exa --tree --icons'
 alias la='exa -a --icons'
+alias lat='exa -a --tree --icons'
 alias ll='exa -l --icons'
+alias llt='exa -l --tree --icons'
 alias lla='exa -la --icons'
+alias llat='exa -la --tree --icons'
 
 alias w='wiki-search'
 alias wh='wiki-search-html'
 
 alias p='sudo pacman -S'
-alias ps='sudo pacman -sS'
+alias pS='sudo pacman -sS'
 alias py='sudo pacman -Sy'
 alias pr='sudo pacman -R'
 alias puy='sudo pacman -Suy'
@@ -26,6 +30,7 @@ alias ta='tmux a'
 alias tas='tmux a -t'
 alias ts='tmux ls'
 alias tk='tmux kill-session -t'
+alias tn='tmux new -s'
 
 alias nw='nmcli dev wifi'
 alias nc='nmcli dev wifi con'

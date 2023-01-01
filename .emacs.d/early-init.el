@@ -96,7 +96,6 @@
 	  indent-tabs-mode t)
 (setq user-full-name "Ganfina Brice-Loic"
 	  user-mail-address "ganfinab@gmail.com")
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 (setq inhibit-startup-message t)
 (setq create-lockfiles nil)
 

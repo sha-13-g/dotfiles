@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 mkdir -pv ~/Git_repos/
+mkdir -pv ~/.config/
 
 git clone https://sha-13-g/dotfiles.git ~/Git_repos/dotfiles/
 
@@ -17,7 +18,7 @@ xdg-user-dirs-update
 
 #(cd ~/Documents && git clone https://github.com/sha-13-g/org)
 
-#systemctl start networkmanager.service
+systemctl start networkmanager.service
 #systemctl enable ly.service
 #systemctl disable getty@tty2.service
 
@@ -28,13 +29,10 @@ sudo ln -sv ~/Git_repos/dotfiles/.emacs.d/exwm/exwm.desktop /usr/share/xsessions
 sudo ln -sv ~/Git_repos/dotfiles/.bashrc ~/
 sudo ln -sv ~/Git_repos/dotfiles/.bash_profile ~/
 
-mkdir -pv ~/.config/
 
-sudo ln -sv ~/Git_repos/dotfiles/.config/ ~/.config
+sudo ln -sv ~/Git_repos/dotfiles/.config/* ~/.config/
 sudo ln -sv ~/Git_repos/dotfiles/.emacs.d/ .emacs.d
 sudo ln -sv ~/Git_repos/dotfiles/.xinitrc ~/
-
-# systemctl enable ly.service
 
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 
