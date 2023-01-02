@@ -5,6 +5,13 @@
 ;; (defub gbl/sudo-edit ()
 ;;   "Commands that "
 ;;   (interactive))
+
+(defun gbl/vterm()
+  (interactive)
+  (split-window-horizontally)
+  (windmove-right)
+  (vterm))
+
 (defun gbl/dired-choose-file (&optional file-handler)
   (interactive "MSave filename to: ")
   (let ((filename (dired-get-filename)))

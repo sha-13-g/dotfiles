@@ -207,7 +207,7 @@
 
   (exwm-input-set-key (kbd "<s-tab>") 'other-window)
   (exwm-input-set-key (kbd "s-v") 'split-window-right)
-  (exwm-input-set-key (kbd "<s-return>") 'vterm)
+  (exwm-input-set-key (kbd "<s-return>") 'gbl/vterm)
   (exwm-input-set-key (kbd "s-s") 'split-window-below)
 
 
