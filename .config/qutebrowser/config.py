@@ -309,7 +309,7 @@ c.tabs.padding = {'top': 2, 'right': 2, 'bottom': 2, 'left': 2}
 
 # Open a new window for every tab.
 # Type: Bool
-c.tabs.tabs_are_windows = True
+c.tabs.tabs_are_windows = False
 
 # Width (in pixels) of the progress indicator (0 to disable).
 # Type: Int

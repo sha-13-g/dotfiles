@@ -16,9 +16,9 @@
 
 ;; (use-package aria2)
 
-(use-package denote
-  :config
-  (setq denote-file-type "text"))
+;; (use-package denote
+;;   :config
+;;   (setq denote-file-type "text"))
 
 (use-package tab-bar
   :ensure nil

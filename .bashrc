@@ -18,11 +18,11 @@ alias llat='exa -la --tree --icons'
 alias w='wiki-search'
 alias wh='wiki-search-html'
 
-alias p='sudo pacman -S'
+alias p='sudo apt-get install'
 alias pS='sudo pacman -sS'
-alias py='sudo pacman -Sy'
-alias pr='sudo pacman -R'
-alias puy='sudo pacman -Suy'
+alias py='sudo apt-get update'
+alias pr='sudo apt-get remove'
+alias puy='sudo apt-get upgrade'
 alias pU="sudo pacman -U" 
 
 alias t='tmux'
@@ -52,7 +52,10 @@ alias sc='sudo cp -rv'
 alias f='sudo fdisk -l'
 alias lb='lsblk'
 
-alias gc='git clone'
+alias gc='git commit -a'
+alias gC='git clone'
+alias gs='git status'
+alias ga='git add'
 alias gs='git status'
 alias gp='git push'
 alias gP='git pull'
@@ -63,16 +66,6 @@ alias gS='git stash'
 
 PS1='[\u@\h \W]\$ '
 
-/usr/share/z/z.sh
-export PATH=/home/gbl13/.local/bin:/usr/share/z:/home/gbl13/.guix-profile/bin:$PATH
+# /usr/share/z/z.sh
+# export PATH=/home/gbl13/.local/bin:/usr/share/z:/home/gbl13/.guix-profile/bin:$PATH
 
-
-# Automatically added by the Guix install script.
-if [ -n "$GUIX_ENVIRONMENT" ]; then
-    if [[ $PS1 =~ (.*)"\\$" ]]; then
-        PS1="${BASH_REMATCH[1]} [env]\\\$ "
-    fi
-fi
-
-GUIX_PROFILE="/home/gbl13/.guix-profile"
-. "$GUIX_PROFILE/etc/profile"

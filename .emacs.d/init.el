@@ -136,13 +136,13 @@
 ;; (require 'jsshell-bundle)
 ;; (require 'js-comint)
 
-(require 'gbl-emacs-utils)
 (require 'gbl-emacs-conveniences)
+(require 'gbl-emacs-utils)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-completion)
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
-(require 'gbl-emacs-desktop)
+;; (require 'gbl-emacs-desktop)
 ;; (require 'gbl-emacs-evil)
 (require 'gbl-emacs-modeline)
 (require 'gbl-emacs-dired)
@@ -223,28 +223,6 @@
 (use-package rich-minority
   :diminish t)
 
-;; File manager for emacs, incuded package within emacs 27
-;; (use-package dired
-;;   :ensure nil
-;;   :hook ((dired-mode . dired-hide-details-mode)
-;; 		 (dired-mode . hl-line-mode))
-;;   :commands (dired dired-jumo)
-;;   :bind (("C-x C-j" . dired-jump))
-;;   :custom
-;;   ((dired-listing-switched "-AGFhlv --group-directories-first --time-style=long-iso")
-;;   (dired-recursive-copies 'always)
-;;   (dired-recursive-deletes 'always)
-;;   (delete-by-moving-to-trash t)
-;;   (dired-dwim-target t)
-;;   (dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
-;;   (dired-make-directory-clickable t) ; Emacs 29.1
-;;   (dired-free-space nil) ; Emacs 29.1
-;;   (dired-mouse-drag-files t))
-;;   :config
-;;   (evil-collection-define-key 'normal 'dired-mode-map ; VIM keybindings for navigating directories
-;; 	"h" 'dired-up-directory
-;; 	"l" 'dired-find-file))
-
 (use-package term
   :config
   (setq explicit-shell-file-name "bash")) ; "powershell.exe" for windows
@@ -305,38 +283,38 @@
   (lsp-headline-breadcrumb-mode))
 
 ;; Emacs Mail
-                                        ;(use-package mu4e
-                                        ;  :ensure nil
-                                        ;  :load-path /usr/share/emacs/site-lisp/mu4e/
-                                        ;  :defer 20
-                                        ;  :config
-                                        ;  (setq mu4e-change-filenames-when-moving t) ; Refresh mail using isync every 10 minutes
-                                        ;
-                                        ;  ;; Refresh mail using isync every 10 mins
-                                        ;  (setq mu4e-update-interval (* 10 60)
-                                        ;		mu4e-get-mail-command "mbsync 0a"
-                                        ;		mu4e-maildir "~/Mail")
-                                        ;  
-                                        ;  (setq mu4e-drafts-folder "/[Gmail]/Drafts"
-                                        ;		mu4e-sent-folder "/[Gmail]/Sent Mail"
-                                        ;		mu4e-refile-folder "/[Gmail]/All Mail"
-                                        ;		mu4e-trash-folder "/[Gmail]/Trash")
-                                        ;
-                                        ;  ;; Quick Access to the following folders:
-                                        ;  (setq mu4e-maildir-shortcuts
-                                        ;		'((:maildir "/Inbox"				:key ?i)
-                                        ;		  (:maildir "/[Gmail]/Sent Mail"	:key ?s)
-                                        ;		  (:maildir "/[Gmail]/Trash"		:key ?t)
-                                        ;		  (:maildir "/[Gmail]/Drafts"		:key ?d)
-                                        ;		  (:maildir "/[Gmail]/All Mail"		:key ?a)))
-                                        ;
-                                        ;  ;; You can create bookmarked queries:
-                                        ;  (setq mu4e-bookmarks
-                                        ;		'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?i)
-                                        ;		  (:name "Today's messages" :query "date:today..now" :key ?t)
-                                        ;		  (:name "Last 7 days" :query "date:6d..now" :hide-unread t :key ?w)
-                                        ;		  (:name "Messages with images" :query "mime:image/*" :key ?p)))
-                                        ;
-                                        ;  (mu4e t))
+;;(use-package mu4e
+;;  :ensure nil
+;;  :load-path /usr/share/emacs/site-lisp/mu4e/
+;;  :defer 20
+;;  :config
+;;  (setq mu4e-change-filenames-when-moving t) ; Refresh mail using isync every 10 minutes
+;;
+;;  ;; Refresh mail using isync every 10 mins
+;;  (setq mu4e-update-interval (* 10 60)
+;;		mu4e-get-mail-command "mbsync 0a"
+;;		mu4e-maildir "~/Mail")
+;;  
+;;  (setq mu4e-drafts-folder "/[Gmail]/Drafts"
+;;		mu4e-sent-folder "/[Gmail]/Sent Mail"
+;;		mu4e-refile-folder "/[Gmail]/All Mail"
+;;		mu4e-trash-folder "/[Gmail]/Trash")
+;;
+;;  ;; Quick Access to the following folders:
+;;  (setq mu4e-maildir-shortcuts
+;;		'((:maildir "/Inbox"				:key ?i)
+;;		  (:maildir "/[Gmail]/Sent Mail"	:key ?s)
+;;		  (:maildir "/[Gmail]/Trash"		:key ?t)
+;;		  (:maildir "/[Gmail]/Drafts"		:key ?d)
+;;		  (:maildir "/[Gmail]/All Mail"		:key ?a)))
+;;
+;;  ;; You can create bookmarked queries:
+;;  (setq mu4e-bookmarks
+;;		'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed" :key ?i)
+;;		  (:name "Today's messages" :query "date:today..now" :key ?t)
+;;		  (:name "Last 7 days" :query "date:6d..now" :hide-unread t :key ?w)
+;;		  (:name "Messages with images" :query "mime:image/*" :key ?p)))
+;;
+;;  (mu4e t))
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'set-goal-column 'disabled nil)
