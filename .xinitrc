@@ -51,17 +51,15 @@ fi
 
 
 xhost +SI:localuser:$USER
+# xss-lock -- slock &
+# lxpolkit &
+# picom &
 
-xss-lock -- slock &
-
-lxpolkit &
-xrdb ~/Git_repos/dotfiles/.emacs.d/exwm/Xresources 
+xrdb ~/dotfiles/.emacs.d/exwm/.Xresources 
 
 xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
 
-exec picom &
-exec nitrogen --restore &
-
 setxkbmap -layout 'fr' -variant 'us-azerty' -model 'pc105' -option 'ctrl:swapcaps' 
 
+feh --bg-scale ~/dotfiles/bg/wp2123907-attack-on-titan-hd-wallpapers.png
 exec dbus-launch --exit-with-session emacs -mm --debug-init 

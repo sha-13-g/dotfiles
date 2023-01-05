@@ -72,19 +72,6 @@
     ("VirtualBox Manager" (exwm-workspace-move-window 7))
     ("vlc" (exwm-workspace-move-window 4))))
 
-(use-package desktop-environment
-  :after exwm
-  :bind (:map desktop-environment-mode-map
-			  ("s-l" . nil)
-			  ("s-l" . windmove-right))
-  :config (desktop-environment-mode)
-  :custom
-  (desktop-environment-brightness-small-increment "2%+")
-  (desktop-environment-brightness-small-decrement "2%-")
-
-  (desktop-environment-brightness-normal-increment "5%+")
-  (desktop-environment-brightness-normal-decrement "5%-"))
-
 (use-package exwm
   :config
   ;; Set the default number of workspaces
@@ -177,11 +164,12 @@
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
           ([?\M-r] . exwm-input-toggle-keyboard)
 
+
 		  ;; Toggle floating windows
 		  ([?\s-t] . exwm-floating-toggle-floating)
 
 		  ;; Toggle fullscreen
-		  ([?\s-F] . exwm-layout-toggle-fullscreen)
+		  ([?\s-f] . exwm-layout-toggle-fullscreen)
 
 		  ;; ([?\s-w] . exwm-workspace-switch)
 
@@ -209,17 +197,29 @@
   (exwm-input-set-key (kbd "s-v") 'split-window-right)
   (exwm-input-set-key (kbd "<s-return>") 'gbl/vterm)
   (exwm-input-set-key (kbd "s-s") 'split-window-below)
-
-
   (exwm-enable))
 
-(gbl/launcher "qutebrowser" "")
-(gbl/launcher "alacritty" "")
-(gbl/run-in-bg "nm-applet")
-(gbl/run-in-bg "blueman-applet")
+;; (gbl/launcher "qutebrowser" "")
+;; (gbl/launcher "alacritty" "")
+;; (gbl/run-in-bg "nm-applet")
+;; (gbl/run-in-bg "blueman-applet")
 ;; /launcher "discord" "")
 ;; (gbl/run-in-bg "dunst")
 ;; (gbl/run-in-bg "pasystray")
 ;; (gbl/launcher "mpv")
 
+(use-package desktop-environment
+  :after exwm
+  :bind (:map desktop-environment-mode-map
+			  ("s-l" . nil)
+			  ("s-l" . windmove-right))
+  :config (desktop-environment-mode)
+  :custom
+  (desktop-environment-brightness-small-increment "2%+")
+  (desktop-environment-brightness-small-decrement "2%-")
+
+  (desktop-environment-brightness-normal-increment "5%+")
+  (desktop-environment-brightness-normal-decrement "5%-"))
+
 (provide 'gbl-emacs-desktop)
+

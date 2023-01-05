@@ -10,7 +10,7 @@
   (interactive)
   (split-window-horizontally)
   (windmove-right)
-  (vterm))
+  (term "bash"))
 
 (defun gbl/dired-choose-file (&optional file-handler)
   (interactive "MSave filename to: ")
@@ -68,13 +68,13 @@
   (kill-buffer)
   (tab-new)
   (tab-rename "Music")
-  (dired "~/Music/"))
+  (dired "~/music/"))
 
 (defun gbl/go-to-books()
   (interactive)
   (tab-new)
   (tab-rename "Books")
-  (dired "~/Documents/books/"))
+  (dired "~/books/"))
 
 (defun gbl/indent-buffer ()
   "Mark the all in the current buffer"
@@ -93,7 +93,7 @@
 (defun gbl/get-token ()
   (interactive)
   (save-excursion
-    (find-file "~/Documents/org/git_tokken")
+    (find-file "~/org/git_tokken")
     (call-interactively 'set-mark-command)
     (end-of-visual-line)
     (call-interactively 'kill-ring-save)
@@ -218,7 +218,7 @@
   ("q" nil "Quit" :exit t))
 
 (defun gbl/dired-bongo ()
-  (when (equal dired-directory "~/Music/")
+  (when (equal dired-directory "~/music/")
     (bongo-dired-library-mode 1)))
 
 

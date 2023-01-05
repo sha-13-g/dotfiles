@@ -100,10 +100,10 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+#bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+p focus parent
+# bindsym $mod+p focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -138,6 +138,8 @@ assign [class="qutebrowser"] number $ws2
 assign [class="firefox"] number $ws2
 assign [class="kitty"] number $ws10
 assign [class="Emacs"] number $ws1
+assign [class="Alacritty"] number $ws10
+assign [class="firefox"] number $ws2
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -189,6 +191,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         status_command i3status
+	position top
 }
 
 set $mode_launcher Launch: [q]utebrowser [f]irefox [e]macs
@@ -206,5 +209,10 @@ mode "$mode_launcher" {
 }
 
 
-exec_always no-startup-id qutebrowser
+exec_always --no-startup-id picom &
+exec_always --no-startup-id xinput set-prop "SynPS/2 Synaptics TouchPad" "libinput Tapping Enabled" 1
+exec_always --no-startup-id setxkbmap -layout 'fr' -variant 'us-azerty' -model 'pc105' -option 'ctrl:swapcaps' 
+exec_always --no-startup-id feh --bg-scale ~/dotfiles/bg/wp2123907-attack-on-titan-hd-wallpapers.png
+
+exec_always --no-startup-id qutebrowser
 # exec_always no-startup-id emacs

@@ -139,89 +139,85 @@
 (require 'gbl-emacs-conveniences)
 (require 'gbl-emacs-utils)
 (require 'gbl-emacs-modeline)
-(require 'gbl-emacs-completion)
+ (require 'gbl-emacs-completion)
 (require 'gbl-emacs-maps)
 (require 'gbl-emacs-window)
-;; (require 'gbl-emacs-desktop)
-;; (require 'gbl-emacs-evil)
-(require 'gbl-emacs-modeline)
 (require 'gbl-emacs-dired)
-(require 'gbl-emacs-eaf)
 (require 'gbl-emacs-langs)
+(require 'gbl-emacs-desktop)
 (require 'gbl-emacs-org)
 (require 'gbl-emacs-magit)
-;; (require 'gbl-emacs-email)
-;; (require 'gbl-emacs-bongo)
+;; (require 'gbl-emacs-write)
 (require 'gbl-emacs-shell)
-;; (require 'gbl-emacs-desktop)
 
 ;; setting up auto-package update so that packages are updated automatically
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7) ; Every seven days
-  (auto-package-update-prompt-before-update t) ; Ask permission first
-  (auto-package-update-hide-results t)) ; At 9:00AM
+;;(use-package auto-package-update
+;;  :custom
+;;  (auto-package-update-interval 7) ; Every seven days
+;;  (auto-package-update-prompt-before-update t) ; Ask permission first
+;;  (auto-package-update-hide-results t)) ; At 9:00AM
 
 ;; Real auto-save feature
 
-(use-package real-auto-save
-  :config (setq real-auto-save-interval 50)
-  :hook (prog-mode . real-auto-save-mode)
-  :hook (org-mode . real-auto-save-mode))
+;; (use-package real-auto-save
+;;   :config (setq real-auto-save-interval 50)
+;;   :hook (prog-mode . real-auto-save-mode)
+;;   :hook (org-mode . real-auto-save-mode))
 
 ;; Using 'doom-themes' as a theme repository
-(use-package doom-themes
-  :config
-  ;; Disable italics and bold
-  (setq doom-themes-enable-bold nil
-		doom-themes-enable-italic nil)
+;; (use-package doom-themes
+;;   :config
+;;   ;; Disable italics and bold
+;;   (setq doom-themes-enable-bold nil
+;; 		doom-themes-enable-italic nil)
 
   ;; Function for switching to light theme:
-  (defun gbl/load-dark-theme ()
-	(interactive)
-	
-	(disable-theme 'doom-solarized-light)
-	(load-theme 'doom-dracula t))
+;;   (defun gbl/load-dark-theme ()
+;; 	(interactive)
+;; 	
+;; 	(disable-theme 'doom-solarized-light)
+;; 	(load-theme 'doom-dracula t))
+;; 
+;;   ;; Function for switching to light theme
+;;   (defun gbl/load-light-theme ()
+;; 	(interactive)
+;; 
+;; 	(disable-theme 'doom-dracula)
+;; 	(load-theme 'doom-solarized-light t)
+;; 	(setq-default input-block "#F9F2D9")))
 
-  ;; Function for switching to light theme
-  (defun gbl/load-light-theme ()
-	(interactive)
 
-	(disable-theme 'doom-dracula)
-	(load-theme 'doom-solarized-light t)
-	(setq-default input-block "#F9F2D9")))
-
-(load-theme 'catppuccin-macchiato t)
 
 ;; Adding upport for emojis and icons
-(use-package all-the-icons)
+;; (use-package all-the-icons)
 
-(use-package ef-themes)
+;;(use-package ef-themes)
 
-(use-package emojify
-  :hook (after-init . global-emojify-mode))
+;; (use-package emojify
+;;  :hook (after-init . global-emojify-mode))
 
 (use-package catppuccin-theme
   :config
-  (setq catppuccin-height-title1 1.5))
+  (setq catppuccin-height-title1 1.5)
+  (load-theme 'catppuccin-macchiato t))
 ;;;; Completion
 
 ;; Installing vertico
 ;; vertico is an autocompletion engine for Emacs, vertico-rich allows suggestions to have descriptions
 
 ;; Using Winum to label open windows
-(use-package winum
-  :config (winum-mode))
+;;(use-package winum
+;;  :config (winum-mode))
 
 (use-package diminish
   :diminish t)
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 20)))
+;;(use-package doom-modeline
+;;  :init (doom-modeline-mode 1)
+;;  :custom ((doom-modeline-height 20)))
 
-(use-package rich-minority
-  :diminish t)
+;;(use-package rich-minority
+;;  :diminish t)
 
 (use-package term
   :config

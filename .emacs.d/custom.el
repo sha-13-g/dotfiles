@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-	 '(cape harpoon denote cmake-mode yasnippet-snippets web-mode web-beautify vertico-posframe use-package typescript-mode trashed tempel sudo-edit recursion-indicator rainbow-delimiters python-pytest plantuml-mode peep-dired pdf-tools pcmpl-args orderless nov multiple-cursors marginalia keycast helpful go-translate general gcmh forge flycheck emmet-mode embark-consult dired-subtree dired-single dap-mode consult-yasnippet company-box autothemer all-the-icons-dired)))
+   '(olivetti yasnippet-snippets winum web-mode web-beautify vterm vertico-posframe use-package trashed tide tempel sudo-edit rich-minority recursion-indicator real-auto-save rainbow-delimiters python-pytest plantuml-mode peep-dired pdf-tools pcmpl-args pass org-modern orderless nov multiple-cursors minions marginalia keycast js2-mode helpful harpoon go-translate git general gcmh forge exwm eterm-256color emojify emmet-mode embark-consult elfeed-goodies eglot ef-themes doom-themes doom-modeline dired-subtree dired-single diminish desktop-environment denote dap-mode consult-yasnippet company-box catppuccin-theme cape bongo autothemer auto-package-update all-the-icons-dired)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

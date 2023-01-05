@@ -48,7 +48,7 @@
          ("C-c M" . consult-minor-mode-menu)
          ("C-c o" . consult-outline)
          ("C-c i" . consult-imenu)
-         ("C-c F" . consult-flymake)
+;;         ("C-c F" . consult-flymake)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame

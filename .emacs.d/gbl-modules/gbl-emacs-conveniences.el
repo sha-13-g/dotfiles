@@ -16,9 +16,10 @@
 
 ;; (use-package aria2)
 
-;; (use-package denote
-;;   :config
-;;   (setq denote-file-type "text"))
+(use-package denote
+  :config
+  (setq denote-file-type "text"
+        denote-directory "~/documents/notes/"))
 
 (use-package tab-bar
   :ensure nil
@@ -30,11 +31,11 @@
   
 
 
-(use-package go-translate
-    :config
-
-  (setq gts-translate-list
-        '(("en" "fr")))
+;; (use-package go-translate
+;;     :config
+;; 
+;;   (setq gts-translate-list
+;;         '(("en" "fr")))
 
   ;; (setq gts-default-translator (gts-translator :engines (gts-bing-engine)))
   ;; (setq gts-default-translator
@@ -58,11 +59,11 @@
   ;;                 (gts-posframe-pop-render))
   ;;                (t (gts-buffer-render))))))
 
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
-         :engines (list (gts-bing-engine) (gts-google-engine))
-         :render (gts-buffer-render))))
+;;  (setq gts-default-translator
+;;        (gts-translator
+;;         :picker (gts-prompt-picker)
+;;         :engines (list (gts-bing-engine) (gts-google-engine))
+;;         :render (gts-buffer-render))))
 
 (use-package projectile
     :config (projectile-mode)
@@ -77,11 +78,11 @@
     :diminish t)
 
 
-(use-package frame
-    :diminish t
-    :ensure nil
-    :config
-    (window-divider-mode))
+;; (use-package frame
+;;     :diminish t
+;;     :ensure nil
+;;     :config
+;;     (window-divider-mode))
 
 ;; (use-package exwm-edit
 ;;   :diminish t)
@@ -111,7 +112,7 @@
   (savehist-mode))
 
 
-(use-package harpoon)
+;;(use-package harpoon)
 
 (use-package gcmh
     :config
@@ -119,43 +120,43 @@
   (setq gc-cons-threshold (* 2 1000 1000)
         gc-cons-percentage 0.6))
 
-(defun my-nov-window-configuration-change-hook ()
-  (my-nov-post-html-render-hook)
-  (remove-hook 'window-configuration-change-hook
-               'my-nov-window-configuration-change-hook
-               t))
-(defun my-nov-post-html-render-hook ()
-  (if (get-buffer-window)
-      (let ((max-width (pj-line-width))
-            buffer-read-only)
-        (save-excursion
-          (goto-char (point-min))
-          (while (not (eobp))
-            (when (not (looking-at "^[[:space:]]*$"))
-              (goto-char (line-end-position))
-              (when (> (shr-pixel-column) max-width)
-                (goto-char (line-beginning-position))
-                (pj-justify)))
-            (forward-line 1))))
-      (add-hook 'window-configuration-change-hook
-                'my-nov-window-configuration-change-hook
-                nil t)))
+;;(defun my-nov-window-configuration-change-hook ()
+;;  (my-nov-post-html-render-hook)
+;;  (remove-hook 'window-configuration-change-hook
+;;               'my-nov-window-configuration-change-hook
+;;               t))
+;;(defun my-nov-post-html-render-hook ()
+;;  (if (get-buffer-window)
+;;      (let ((max-width (pj-line-width))
+;;            buffer-read-only)
+;;        (save-excursion
+;;          (goto-char (point-min))
+;;          (while (not (eobp))
+;;            (when (not (looking-at "^[[:space:]]*$"))
+;;              (goto-char (line-end-position))
+;;              (when (> (shr-pixel-column) max-width)
+;;                (goto-char (line-beginning-position))
+;;                (pj-justify)))
+;;            (forward-line 1))))
+;;      (add-hook 'window-configuration-change-hook
+;;                'my-nov-window-configuration-change-hook
+;;                nil t)))
 
-(use-package nov
-    :config (setq nov-unzip-program (executable-find "bsdtar")
-                  nov-unzip-args '("-xC" directory "-f" filename))
-    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-    (setq nov-text-width t)
-    (setq nov-text-width 80)
-    (setq visual-fill-column-center-text t)
-    (add-hook 'nov-mode-hook 'visual-line-mode)
-    (add-hook 'nov-mode-hook 'visual-fill-column-mode))
+;;(use-package nov
+;;    :config (setq nov-unzip-program (executable-find "bsdtar")
+;;                  nov-unzip-args '("-xC" directory "-f" filename))
+;;    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+;;    (setq nov-text-width t)
+;;    (setq nov-text-width 80)
+;;    (setq visual-fill-column-center-text t)
+;;    (add-hook 'nov-mode-hook 'visual-line-mode)
+;;    (add-hook 'nov-mode-hook 'visual-fill-column-mode))
 
-(use-package multiple-cursors
-    :bind (("C-S-c C-S-c" . mc/edit-lines)
-           ("C->" . mc/mark-next-like-this)
-           ("C-<" . mc/mark-previous-like-this)
-           ("C-c C-<" . mc/mark-all-like-this)))
+;;(use-package multiple-cursors
+;;    :bind (("C-S-c C-S-c" . mc/edit-lines)
+;;           ("C->" . mc/mark-next-like-this)
+;;           ("C-<" . mc/mark-previous-like-this)
+;;           ("C-c C-<" . mc/mark-all-like-this)))
 
 (use-package forge
     :after magit)

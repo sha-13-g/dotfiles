@@ -662,6 +662,8 @@ c.colors.webpage.darkmode.enabled = True
 config.bind('<Alt+e>', 'run-with-count 8 scroll up')
 config.bind('<Alt+f>', 'run-with-count 8 scroll down')
 config.bind('B', 'hint links spawn mpv {hint-url}')
+config.bind('J', 'tab-prev')
+config.bind('K', 'tab-next')
 config.bind('aMG', 'open https://mail.google.com/mail/u/0/#inbox')
 config.bind('aMg', 'open https://mail.proton.me/u/1/inbox')
 config.bind('aSf', 'open https://facebook.com/')

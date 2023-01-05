@@ -18,11 +18,11 @@ alias llat='exa -la --tree --icons'
 alias w='wiki-search'
 alias wh='wiki-search-html'
 
-alias p='sudo apt-get install'
+alias p='sudo pacman -S'
 alias pS='sudo pacman -sS'
-alias py='sudo apt-get update'
-alias pr='sudo apt-get remove'
-alias puy='sudo apt-get upgrade'
+alias py='sudo pacman -Sy'
+alias pr='sudo pacman -R'
+alias puy='sudo pacman -Suyy'
 alias pU="sudo pacman -U" 
 
 alias t='tmux'

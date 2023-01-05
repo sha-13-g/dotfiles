@@ -3,7 +3,7 @@
 xhost +SI:localuser:$USER
 xss-lock -- slock &
 lxpolkit &
-xrdb ~/Git_repos/dotfiles/.emacs.d/exwm/Xresources 
+xrdb ~/dotfiles/.emacs.d/exwm/Xresources 
 
 exec picom &
 exec nitrogen --restore &

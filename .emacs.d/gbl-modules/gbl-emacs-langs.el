@@ -26,8 +26,8 @@
 (use-package yasnippet-snippets
   :after yasnippet)
 
-(use-package consult-yasnippet
-  :after yasnippet)
+;; (use-package consult-yasnippet
+;;   :after yasnippet)
 
 ;;; YAML (yaml-mode)
 ;; (use-package yaml-mode
@@ -89,10 +89,11 @@
           flymake-mode-line-note-counter ""))
 
   (let ((map flymake-mode-map))
-    (define-key map (kbd "C-c ! s") #'flymake-start)
-    (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
-    (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
-    (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
+    (define-key map (kbd "C-c F s") #'flymake-start)
+    (define-key map (kbd "C-c F F") #'consult-flymake)
+    (define-key map (kbd "C-c F d") #'flymake-show-buffer-diagnostics) ; Emacs28
+    (define-key map (kbd "C-c F n") #'flymake-goto-next-error)
+    (define-key map (kbd "C-c F p") #'flymake-goto-prev-error)))
 
 ;;; Eldoc (elisp live documentation feedback)
 (use-package eldoc

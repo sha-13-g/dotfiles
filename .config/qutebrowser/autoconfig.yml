@@ -6,5 +6,46 @@
 
 config_version: 2
 settings:
-  colors.webpage.darkmode.enabled:
-    global: true
+  bindings.commands:
+    global:
+      command:
+        <Ctrl+j>: completion-item-focus next
+        <Ctrl+k>: completion-item-focus prev
+      normal:
+        <Alt+e>: run-with-count 8 scroll up
+        <Alt+f>: run-with-count 8 scroll down
+        B: hint links spawn mpv {hint-url}
+        J: tab-prev
+        K: tab-next
+        aMG: open https://mail.google.com/mail/u/0/#inbox
+        aMg: open https://mail.proton.me/u/1/inbox
+        aSf: open https://facebook.com/
+        aSl: open  https://linkedin.com/
+        aSr: open https://reddit.com/
+        aSt: open  https://twitter.com/
+        aT: open  https://twitch.tv/
+        aY: open -t https://youtube.com/
+        ab: open https://www.betmomo.com/#/
+        ad: open https://www.pdfdrive.com/
+        ag: open https://github.com/
+        amb: open https://mangabuddy.com/users/bookmark
+        amn: open https://manganato.com/
+        amr: open https://mangareader.to/home
+        amt: open https://manhwatop.com/
+        amw: open https://www.webtoons.com/en/
+        as: open https://open.spotify.com/
+        at: open https://twitch.tv
+        aur: open https://aur.archlinux.org/
+        ay: open https://youtube.com/
+        az: open https://libgen.li/
+        cs: config-source
+        d: null
+        dc: download-cancel
+        dd: tab-close
+        dl: youtube-dl {url}
+        dr: download-retry
+        m: null
+        mf: spawn -d firefox {url}
+        mv: spawn -d mpv {url}
+        sf: config-write-py -f
+        sm: set-mark
