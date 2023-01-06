@@ -200,7 +200,7 @@
   (exwm-enable))
 
 ;; (gbl/launcher "qutebrowser" "")
-;; (gbl/launcher "alacritty" "")
+(gbl/launcher "kitty" "")
 ;; (gbl/run-in-bg "nm-applet")
 ;; (gbl/run-in-bg "blueman-applet")
 ;; /launcher "discord" "")

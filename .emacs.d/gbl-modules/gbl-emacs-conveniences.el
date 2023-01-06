@@ -26,44 +26,43 @@
   :bind (("C-c t" . gbl/hydra-tab-bar/body))
   :config
   (setq tab-bar-tab-hints t
-        tab-bar-show 'never)
-  (tab-bar-mode 1))
+        tab-bar-show 3)
+  (tab-bar-mode 1)
+  (tab-bar-rename-tab "Emacs"))
   
+(use-package go-translate
+    :config
 
+  (setq gts-translate-list
+        '(("en" "fr")))
 
-;; (use-package go-translate
-;;     :config
-;; 
-;;   (setq gts-translate-list
-;;         '(("en" "fr")))
+(setq gts-default-translator (gts-translator :engines (gts-bing-engine)))
+(setq gts-default-translator
+      (gts-translator
+       :picker
+       (lambda ()
+         (cond ((equal major-mode 'pdf-view-mode)
+                (gts-noprompt-picker :texter (gts-current-or-selection-texter)))
+               (t (gts-prompt-picker))))
+       :engines
+       (lambda ()
+         (cond ((equal major-mode 'pdf-view-mode)
+                (gts-bing-engine))
+               (t (list
+                   (gts-bing-engine)
+                   (gts-google-engine :parser (gts-google-summary-parser))
+                   (gts-google-rpc-engine)))))
+       :render
+       (lambda ()
+         (cond ((equal major-mode 'pdf-view-mode)
+                (gts-posframe-pop-render))
+               (t (gts-buffer-render))))))
 
-  ;; (setq gts-default-translator (gts-translator :engines (gts-bing-engine)))
-  ;; (setq gts-default-translator
-  ;;       (gts-translator
-  ;;        :picker
-  ;;        (lambda ()
-  ;;          (cond ((equal major-mode 'pdf-view-mode)
-  ;;                 (gts-noprompt-picker :texter (gts-current-or-selection-texter)))
-  ;;                (t (gts-prompt-picker))))
-  ;;        :engines
-  ;;        (lambda ()
-  ;;          (cond ((equal major-mode 'pdf-view-mode)
-  ;;                 (gts-bing-engine))
-  ;;                (t (list
-  ;;                    (gts-bing-engine)
-  ;;                    (gts-google-engine :parser (gts-google-summary-parser))
-  ;;                    (gts-google-rpc-engine)))))
-  ;;        :render
-  ;;        (lambda ()
-  ;;          (cond ((equal major-mode 'pdf-view-mode)
-  ;;                 (gts-posframe-pop-render))
-  ;;                (t (gts-buffer-render))))))
-
-;;  (setq gts-default-translator
-;;        (gts-translator
-;;         :picker (gts-prompt-picker)
-;;         :engines (list (gts-bing-engine) (gts-google-engine))
-;;         :render (gts-buffer-render))))
+(setq gts-default-translator
+      (gts-translator
+       :picker (gts-prompt-picker)
+       :engines (list (gts-bing-engine) (gts-google-engine))
+       :render (gts-buffer-render))))
 
 (use-package projectile
     :config (projectile-mode)
@@ -105,14 +104,15 @@
     :diminish t)
 
 (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
+  :config
+  (rainbow-delimiters-mode))
 
 (use-package savehist
     :config
   (savehist-mode))
 
 
-;;(use-package harpoon)
+;; (use-package harpoon)
 
 (use-package gcmh
     :config
@@ -162,3 +162,4 @@
     :after magit)
 
 (provide 'gbl-emacs-conveniences)
+

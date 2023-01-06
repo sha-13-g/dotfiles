@@ -1,11 +1,16 @@
+
 (global-set-key (kbd "C-c y l") 'consult-yasnippet)
 (global-set-key (kbd "C-c y d") 'yas-describe-tables)
 (global-set-key (kbd "C-c y n") 'yas-new-snippet)
 
 (global-set-key (kbd "C-c w") 'gbl/search-web)
 
+(global-set-key (kbd "C-c s r") 'replace-regexp)
+(global-set-key (kbd "C-c s g") 'consult-grep)
+(global-set-key (kbd "C-c s f") 'consult-find)
+
 (global-set-key (kbd "C-c b") 'gbl/hydra-bongo/body)
-(global-set-key (kbd "C-c s") 'gbl/scratch-buffer)
+(global-set-key (kbd "C-c S") 'gbl/scratch-buffer)
 
 (global-set-key (kbd "C-c C-x r") 'org-clock-report)
 (global-set-key (kbd "C-c C-x ;") 'org-timer-set-timer)
