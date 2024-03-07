@@ -31,4 +31,4 @@ vim.opt.updatetime = 50
 vim.opt.eadirection = "hor"
 
 vim.cmd.syntax = "on"
-vim.cmd.colorscheme("slate")
+--vim.cmd.colorscheme("slate")
