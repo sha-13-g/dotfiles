@@ -5,6 +5,7 @@ lsp.preset("recommended")
 lsp.ensure_installed({
   'tsserver',
   'intelephense',
+  'rust_analyzer',
   'lua_ls',
 })
 
