@@ -4,6 +4,7 @@ lsp.preset("recommended")
 
 lsp.ensure_installed({
   'tsserver',
+  'emmet_ls',
   'intelephense',
   'rust_analyzer',
   'lua_ls',
@@ -20,6 +21,13 @@ lsp.configure('lua-language-server', {
     }
 })
 
+lsp.configure('emmet-language-server', {
+    autostart = false
+})
+
+lsp.configure('emmet_ls', {
+  filetypes = {"php", "astro", "css", "eruby", "html", "htmldjango", "javascriptreact", "less", "pug", "sass", "scss", "svelte", "typescriptreact", "vue" }
+})
 
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
